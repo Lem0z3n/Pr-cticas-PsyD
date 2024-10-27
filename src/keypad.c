@@ -1,4 +1,4 @@
-/*
+
 #include <s3c44b0x.h>
 #include <s3cev40.h>
 #include <timers.h>
@@ -22,7 +22,7 @@ uint8 keypad_scan( void )
         else if( (aux & 0x1) == 0 )
             return KEYPAD_KEY3;
     }
-	aux = *( KEYPAD_ADDR + ... );
+	aux = *( KEYPAD_ADDR + 0x1a );
 	if( (aux & 0x0f) != 0x0f )
 	{
 		if( (aux & 0x8) == 0 )
@@ -34,24 +34,50 @@ uint8 keypad_scan( void )
 		else if( (aux & 0x1) == 0 )
 			return KEYPAD_KEY7;
 	}
-    ...
-
+	aux = *( KEYPAD_ADDR + 0x16 );
+		if( (aux & 0x0f) != 0x0f )
+		{
+			if( (aux & 0x8) == 0 )
+				return KEYPAD_KEY8;
+			else if( (aux & 0x4) == 0 )
+				return KEYPAD_KEY9;
+			else if( (aux & 0x2) == 0 )
+				return KEYPAD_KEYA;
+			else if( (aux & 0x1) == 0 )
+				return KEYPAD_KEYB;
+		}
+	aux = *( KEYPAD_ADDR + 0x0e );
+			if( (aux & 0x0f) != 0x0f )
+			{
+				if( (aux & 0x8) == 0 )
+					return KEYPAD_KEYC;
+				else if( (aux & 0x4) == 0 )
+					return KEYPAD_KEYD;
+				else if( (aux & 0x2) == 0 )
+					return KEYPAD_KEYE;
+				else if( (aux & 0x1) == 0 )
+					return KEYPAD_KEYF;
+			}
     return KEYPAD_FAILURE;
 }
 
 uint8 keypad_pressed( void )
 {
-    ...
+    return keypad_scan() != KEYPAD_FAILURE;
 }
 
 void keypad_open( void (*isr)(void) )
 {
-    ...    
+	pISR_KEYPAD = (uint32) isr;
+	EXTINTPND = 0x0;
+	I_ISPC |= BIT_EINT1;
+	INTMSK &= ~(BIT_GLOBAL | BIT_EINT1);
 }
 
 void keypad_close( void )
 {
-    ...    
+	INTMSK |= (BIT_EINT1);
+	pISR_KEYPAD  = (uint32) isr_KEYPAD_dummy;
 }
 
 #if KEYPAD_IO_METHOD == POOLING
@@ -64,17 +90,50 @@ void keypad_init( void )
 
 uint8 keypad_getchar( void )
 {
-    ...    
+	uint8 scan_code,aux= keypad_scan();
+	while((aux) == KEYPAD_FAILURE){
+		aux = keypad_scan();
+	}
+	sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
+	scan_code = aux;
+	while(keypad_scan() != KEYPAD_FAILURE);
+	sw_delay_ms( KEYPAD_KEYUP_DELAY );
+	return scan_code;
 }
 
 uint8 keypad_getchartime( uint16 *ms )
 {
-    ...    
+    uint8 scancode;
+
+    while((keypad_scan() == KEYPAD_FAILURE ) );
+    timer3_start();
+    sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
+
+    scancode = keypad_scan();
+
+    while( (keypad_scan() == !KEYPAD_FAILURE ) );
+    *ms = timer3_stop() / 10;
+    sw_delay_ms( KEYPAD_KEYUP_DELAY );
+
+    return scancode;
 }
 
 uint8 keypad_timeout_getchar( uint16 ms )
 {
-    ...    
+	uint8 scancode = KEYPAD_TIMEOUT;
+
+    while((keypad_scan() == KEYPAD_FAILURE )&& ms>0)
+    	sw_delay_ms(1);
+    if(ms == 0) return scancode;
+
+    sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
+
+	scancode = keypad_scan();
+
+	while((keypad_scan() != KEYPAD_FAILURE ));
+	sw_delay_ms( KEYPAD_KEYUP_DELAY );
+
+	return scancode;
 }
 
 #elif KEYPAD_IO_METHOD == INTERRUPT
@@ -135,5 +194,3 @@ static void timer0_up_isr( void )
 #else
 	#error No se ha definido el metodo de E/S del keypad
 #endif
-
-*/
