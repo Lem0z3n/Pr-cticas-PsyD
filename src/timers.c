@@ -114,7 +114,7 @@ uint16 timer3_stop( void )
 
 void timer3_start_timeout( uint16 n ) 
 {
-    TCFG0 = (TCFG0 & ~(0xff << 8)) | (199 << 8);          
+    TCFG0 = (TCFG0 & ~(0xff << 8)) | (199 << 8);         //0.1 ms
     TCFG1 = (TCFG1 & ~(0xf << 12)) | (4 << 12);
     
     TCNTB3 = n; 

@@ -48,11 +48,12 @@ uint8 pb_getchartime( uint16 *ms )
     while((pb_scan() == PB_FAILURE ) );
     timer3_start();
     sw_delay_ms( PB_KEYDOWN_DELAY );
+    sw_delay_ms( PB_KEYDOWN_DELAY );
     
     scancode = pb_scan();
     
-    while( (pb_scan() == !PB_FAILURE ) );
-    *ms = timer3_stop() / 10;
+    while( (pb_scan() != PB_FAILURE ) );
+    *ms = timer3_stop()/10;
     sw_delay_ms( PB_KEYUP_DELAY );
 
     return scancode;
@@ -61,16 +62,17 @@ uint8 pb_getchartime( uint16 *ms )
 uint8 pb_timeout_getchar( uint16 ms )
 {
 	uint8 scancode = PB_TIMEOUT;
-
-    while((pb_scan() == PB_FAILURE )&& ms>0)
-    	sw_delay_ms(1);
+	ms *= 10;
+	timer3_start_timeout(ms);
+    while((pb_scan() == PB_FAILURE ) && !timer3_timeout());
     if(ms == 0) return scancode;
 
     sw_delay_ms( PB_KEYDOWN_DELAY );
 
 	scancode = pb_scan();
 
-	while((pb_scan() != PB_FAILURE ));
+	while((pb_scan() != PB_FAILURE ) && !timer3_timeout());
+	if(timer3_timeout()) return PB_TIMEOUT;
 	sw_delay_ms( PB_KEYUP_DELAY );
 
 	return scancode;

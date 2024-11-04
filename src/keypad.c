@@ -103,34 +103,34 @@ uint8 keypad_getchar( void )
 
 uint8 keypad_getchartime( uint16 *ms )
 {
-    uint8 scancode;
+	uint8 scancode;
 
-    while((keypad_scan() == KEYPAD_FAILURE ) );
-    timer3_start();
-    sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
+	while( (keypad_scan() == KEYPAD_FAILURE ));
+	timer3_start();
+	sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
+	sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
 
-    scancode = keypad_scan();
+	scancode = keypad_scan();
 
-    while( (keypad_scan() == !KEYPAD_FAILURE ) );
-    *ms = timer3_stop() / 10;
-    sw_delay_ms( KEYPAD_KEYUP_DELAY );
+	while(keypad_scan() != KEYPAD_FAILURE );
+	*ms = timer3_stop() / 10;
+	sw_delay_ms( KEYPAD_KEYUP_DELAY );
 
-    return scancode;
+	return scancode;
 }
 
 uint8 keypad_timeout_getchar( uint16 ms )
 {
 	uint8 scancode = KEYPAD_TIMEOUT;
-
-    while((keypad_scan() == KEYPAD_FAILURE )&& ms>0)
-    	sw_delay_ms(1);
-    if(ms == 0) return scancode;
-
+	ms *= 10;
+	timer3_start_timeout(ms);
+    while((keypad_scan() == KEYPAD_FAILURE ) && !timer3_timeout());
     sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
 
 	scancode = keypad_scan();
 
-	while((keypad_scan() != KEYPAD_FAILURE ));
+	while((keypad_scan() != KEYPAD_FAILURE ) && !timer3_timeout());
+	if(timer3_timeout()) return KEYPAD_TIMEOUT;
 	sw_delay_ms( KEYPAD_KEYUP_DELAY );
 
 	return scancode;
