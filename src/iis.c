@@ -15,9 +15,9 @@ void iis_init( uint8 mode )
 
     if( iomode == IIS_POLLING )
     {
-        IISMOD  = ((1<<0)|(1<<3)|(3<<6));
+        IISMOD  = IISMOD | ((1<<0)|(1<<3)|(3<<6)|(0<<8));
         IISFCON = ((1<<9)|(1<<8));
-        IISCON  =  ((3<<0));
+        IISCON  = IISCON | ((3<<0)|(0<<4)| (0 <<5));
     }
     if( iomode == IIS_DMA )
     {
@@ -37,7 +37,7 @@ static void isr_bdma0( void )
 
 inline void iis_putSample( int16 ch0, int16 ch1 )
 {
-    while( ((IISFCON & 0xf0) >> 4) > 6 );
+    while( ((IISFCON & (0xf << 4)) >> 4) > 6 );
     IISFIF = ch0;
     IISFIF = ch1;
 }
@@ -85,7 +85,7 @@ void iis_rec( int16 *buffer, uint32 length )
     	        {
     	            ch1 = buffer[i++];
     	            ch2 = buffer[i++];
-    	            iis_getSample( ch1, ch2 );
+    	            iis_getSample( &ch1, &ch2 );
     	        }
     if( iomode == IIS_DMA )
     {

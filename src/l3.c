@@ -7,7 +7,7 @@
 
 void L3_init( void )
 {
-	PDATB = PDATB | (1<<4)| (1<<5);
+	PDATB = PDATB | (3 << 4) ;
 }
 
 void L3_putByte( uint8 byte, uint8 mode )
@@ -24,7 +24,7 @@ void L3_putByte( uint8 byte, uint8 mode )
     for( i=0; i<8; i++ )
     {
         PDATB = PDATB | (0<<4)| (mode<<5);
-        PDATA = PDATA | (byte[i] << 9);
+        PDATA = PDATA | (((byte >> (7 - i)) & 0x01)  << 9);
         SHORT_DELAY;    
         PDATB = PDATB | (1<<4)| (mode<<5);;
         SHORT_DELAY;
