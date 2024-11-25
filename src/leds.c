@@ -11,17 +11,17 @@ void leds_init( void )
 
 void led_on( uint8 led )
 {
-    PCONB &= ~(led << 9);
+    PDATB &= ~(led << 9);
 }
 
 void led_off( uint8 led )
 {
-	PCONB |= (led << 9);
+	PDATB |= (led << 9);
 }
 
 void led_toggle( uint8 led )
 {
-	PCONB ^= (led << 9);
+	PDATB ^= (led << 9);
 }
 
 uint8 led_status( uint8 led )

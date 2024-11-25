@@ -26,7 +26,7 @@ void uda1341ts_init( void )
     L3_putByte( EA | (2), L3_DATA_MODE ); 
     L3_putByte( ED | 1, L3_DATA_MODE );
   
-    uda1341ts_setvol( VOL_MED );
+    uda1341ts_setvol( VOL_MAX);
 
     uda1341ts_on( UDA_DAC );
     uda1341ts_on( UDA_ADC );
@@ -35,37 +35,37 @@ void uda1341ts_init( void )
 void uda1341ts_mute( uint8 on )
 {
 	L3_putByte( (ADDRESS << 2) | DATA0, L3_ADDR_MODE  );
-	L3_putByte((1<<7)|(on<<2),L3_DATA_MODE);
+	L3_putByte((2<<6)|(on<<2),L3_DATA_MODE);
 }
 
 void uda1341ts_on( uint8 converter )
 {
 	state |= converter;
-	L3_putByte( (ADDRESS << 2) | DATA0, L3_ADDR_MODE  );
-	L3_putByte((1<<7)|(state),L3_DATA_MODE);
+	L3_putByte( (ADDRESS << 2) | STATUS, L3_ADDR_MODE  );
+	L3_putByte((1<<7)| (1 << 5) |(state),L3_DATA_MODE);
 }
 
 void uda1341ts_off( uint8 converter )
 {
 	state &= ~(converter);
-	L3_putByte( (ADDRESS << 2) | DATA0, L3_ADDR_MODE  );
-	L3_putByte((1<<7)|(state),L3_DATA_MODE);
+	L3_putByte( (ADDRESS << 2) | STATUS, L3_ADDR_MODE  );
+	L3_putByte((1<<7)| (1 << 5) | (state),L3_DATA_MODE);
 }
 
 uint8 uda1341ts_status( uint8 converter )
 {
-    return (state && converter);
+    return state & converter;
 }
 
 void uda1341ts_setvol( uint8 vol )
 {
-	volume = 0x3f & ~(vol);
+	volume = VOL_MAX - vol;
 	L3_putByte( (ADDRESS << 2) | DATA0, L3_ADDR_MODE  );
 	L3_putByte(volume,L3_DATA_MODE);
 };
 
 uint8 uda1341ts_getvol( void )
 {
-    return ~volume;
+    return volume;
 };
 

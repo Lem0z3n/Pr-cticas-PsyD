@@ -16,7 +16,7 @@ void bdma0_init( void )
 void bdma0_open( void (*isr)(void) )
 {
     pISR_BDMA0 = (uint32) isr;
-    I_ISPC     |= BIT_BDMA0;
+    I_ISPC     = BIT_BDMA0;
     INTMSK    &= ~(BIT_GLOBAL | BIT_BDMA0);
 }
 
