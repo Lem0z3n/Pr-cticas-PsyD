@@ -183,29 +183,18 @@ void lcd_puthex( uint16 x, uint16 y, uint8 color, uint32 i )
 
 void lcd_putchar_x2( uint16 x, uint16 y, uint8 color, char ch )
 {
-    uint8 row, col;
-    uint8 *bitmap;
-    uint16 i=0,j=0;
+	uint8 row, col;
+	uint8 *bitmap;
 
-    bitmap = font + ch*16;
-    for( row=0; row<16; row++ ){
-
-        for( col=0; col<8; col++ ){
-            if( bitmap[row] & (0x80 >> col) ){
-            	lcd_putpixel(2*(x+col)-18, 2*(y+row) - y, color);
-            	lcd_putpixel(2*(x+col)-1-18, 2*(y+row) - y, color);
-            	lcd_putpixel(2*(x+col)-18, 2*(y+row)+1 - y, color);
-            	lcd_putpixel(2*(x+col)-1-18, 2*(y+row)+1 - y, color);
-
-            }
-            else{
-            	lcd_putpixel(2*(x+col)-18, 2*(y+row) - y, WHITE);
-            	lcd_putpixel(2*(x+col)-1-18, 2*(y+row) - y, WHITE);
-            	lcd_putpixel(2*(x+col)-18, 2*(y+row)+1 - y, WHITE);
-            	lcd_putpixel(2*(x+col)-1-18, 2*(y+row)+1 - y, WHITE);
-            }
-        }
-    }
+	bitmap = font + ch*16;
+	for( row=0; row<32; row++ )
+		for( col=0; col<16; col++ )
+			if( bitmap[row >> 1] & (0x80 >> (col >> 1)) ){
+				lcd_putpixel( x+col, y+row, color );
+			}
+			else{
+				lcd_putpixel( x+col, y+row, WHITE );
+			}
 }
 
 void lcd_puts_x2( uint16 x, uint16 y, uint8 color, char *s )

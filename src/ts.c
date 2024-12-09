@@ -26,7 +26,7 @@ void ts_init( void )
     timers_init();  
     lcd_init();
     adc_init();
-    PDATE = (PDATE & ~(0xf<<4)) | (11<<4); //Y- a GND
+    PDATE = (1 << 4)|(1 <<5)|(0 << 6)|(1 << 7) ; //Y- a GND
     sw_delay_ms( 1 );
     ts_on();
     ts_calibrate();
@@ -77,19 +77,23 @@ static void ts_calibrate( void )
         sw_delay_ms( TS_UP_DELAY );
 
         lcd_draw_box(314,234,319,239, BLACK, 1);
-        lcd_puts(260,230,BLACK,"presione aqui -->\n");
+        lcd_puts(200,210,BLACK,"presione aqui -->\n");
            
         while( ! ts_pressed() );
         sw_delay_ms( TS_DOWN_DELAY );
         ts_scan( &Vxmax, &Vymin );
         while( ts_pressed() );
         sw_delay_ms( TS_UP_DELAY );
-    
+
+        lcd_clear();
         lcd_draw_box((LCD_WIDTH/2)-3, (LCD_HEIGHT/2)-3,(LCD_WIDTH/2)+3, (LCD_HEIGHT/2)+3, BLACK,1);
-        lcd_puts(100,120,BLACK,"presione aqui -->\n");
+        lcd_puts(100,140,BLACK,"presione aqui ^\n");
 
+        while( ! ts_pressed() );
+        sw_delay_ms( TS_DOWN_DELAY );
         ts_getpos( &x, &y );      
-
+        while( ts_pressed() );
+		sw_delay_ms( TS_UP_DELAY );
 
     
     } while( (x > LCD_WIDTH/2+PX_ERROR) || (x < LCD_WIDTH/2-PX_ERROR) || (y > LCD_HEIGHT/2+PX_ERROR) || (y < LCD_HEIGHT/2-PX_ERROR) );
@@ -141,13 +145,13 @@ uint8 ts_timeout_getpos( uint16 *x, uint16 *y, uint16 ms )
 
 static void ts_scan( uint16 *Vx, uint16 *Vy )
 {
-    PDATE = (PDATE & ~(0xf<<4)) | (6<<4); //X- a GND, X+ a Vdd
+    PDATE = (0 << 4)| (1 << 5) |(1 << 6) | (0 <<7); //X- a GND, X+ a Vdd
     *Vx = adc_getSample( ADC_AIN1 );
     
-    PDATE = (PDATE & ~(0xf<<4)) |(9<<4); //Y- a GND, Y+ a Vdd
+    PDATE =  (1<<4) | (0<<5) | (0 <<6) | (1 << 7); //Y- a GND, Y+ a Vdd
     *Vy = adc_getSample( ADC_AIN0 );
     
-    PDATE = (PDATE & ~(0xf<<4)) | (11<<4); //Y- a GND
+    PDATE = (1 << 4)|(1 <<5)|(0 << 6)|(1 << 7); //Y- a GND
     sw_delay_ms( 1 );
 }
 
