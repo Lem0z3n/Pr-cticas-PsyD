@@ -1,0 +1,56 @@
+#include <s3c44b0x.h>
+#include <s3cev40.h>
+#include <common_types.h>
+#include <system.h>
+#include <leds.h>
+#include <segs.h>
+#include <uart.h>
+#include <pbs.h>
+#include <keypad.h>
+#include <timers.h>
+#include <rtc.h>
+#include <lcd.h>
+
+
+volatile boolean flagKeypad;
+uint8 mailbox;
+void isr_keypad( void ) __attribute__ ((interrupt ("IRQ")));
+
+void main(void)
+{
+    sys_init();
+    uart0_init();
+    keypad_init();
+    segs_init();
+
+
+    keypad_open( isr_keypad );
+    flagKeypad = FALSE;
+    while(1){
+    	if(flagKeypad){
+    		uart0_puts("la tecla pulsada ha sido 0x");
+    		uart0_puthex(mailbox);
+    		uart0_puts("\n");
+
+    		segs_putchar(mailbox);
+    		flagKeypad = FALSE;
+    	}
+    }
+}
+
+
+
+
+
+
+void isr_keypad( void )
+{
+	switch( mailbox = keypad_getchar() )
+		{
+			case KEYPAD_FAILURE:
+				break;
+			default:
+				flagKeypad = TRUE;
+		}
+    I_ISPC = BIT_KEYPAD;
+}

@@ -1,0 +1,68 @@
+#include <s3c44b0x.h>
+#include <s3cev40.h>
+#include <common_types.h>
+#include <system.h>
+#include <leds.h>
+#include <segs.h>
+#include <uart.h>
+#include <pbs.h>
+#include <keypad.h>
+#include <timers.h>
+#include <rtc.h>
+#include <lcd.h>
+
+uint8 segs_countdown( uint8 initVal );
+void isr_segs( void ) __attribute__ ((interrupt ("IRQ")));
+void isr_keypad( void ) __attribute__ ((interrupt ("IRQ")));
+
+uint8 dispVal=0;
+volatile boolean flagKeypad;
+
+void main(void)
+{
+	segs_init();
+	timers_init();
+	uart0_init();
+	uint8 initVal;
+	uart0_puts( " De un número para poner el display 7 segmentos(9 al 0)\n" );
+
+	uint16 scancode;
+
+	while(1){
+		initVal = (uint8) uart0_getint();
+		if(initVal < 10){
+			segs_countdown(initVal);
+		}
+		else {
+			uart0_puts("por favor introduzca un número menor que 9.\n");
+		}
+
+	}
+
+}
+
+
+uint8 segs_countdown( uint8 initVal )
+{
+	if(initVal>0)
+	{
+		dispVal = initVal;
+		timer0_open_ms(isr_segs, 1000, 1);
+	}
+	else
+	{
+		timer0_close();
+		//segs_putchar(dispVal);
+	}
+
+	return segs_status();
+}
+
+void isr_segs( void )
+{
+	segs_putchar(dispVal);
+	if(!dispVal)timer0_close();
+	dispVal--;
+	I_ISPC = BIT_TIMER0;
+}
+

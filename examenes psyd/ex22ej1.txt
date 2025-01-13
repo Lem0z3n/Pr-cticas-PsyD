@@ -1,0 +1,93 @@
+#include <s3c44b0x.h>
+#include <s3cev40.h>
+#include <common_types.h>
+#include <system.h>
+#include <leds.h>
+#include <segs.h>
+#include <uart.h>
+#include <pbs.h>
+#include <keypad.h>
+#include <timers.h>
+#include <rtc.h>
+#include <lcd.h>
+
+#define TICKS_PER_SEC   (1000)
+
+volatile boolean flagTask1;
+volatile boolean flagTask2;
+volatile boolean flagTask3;
+
+void Task1( void );
+void Task2( void );
+void Task3( void );
+
+void isr_tick( void ) __attribute__ ((interrupt ("IRQ")));
+
+void main(void)
+{
+    sys_init();      /* Inicializa el sistema */
+    timers_init();
+    uart0_init();
+
+    timer0_open_tick( isr_tick, TICKS_PER_SEC );  /* Instala isr_tick como RTI del timer0  */
+
+    uart0_puts( "\n\n Ejecutando una aplicación foreground/background\n" );
+    uart0_puts( " -----------------------------------------------\n\n" ) ;
+    while(1)
+    {
+    	if(flagTask1){
+    		flagTask1=FALSE;
+    		Task1();
+    	}
+    	if(flagTask2){
+    		flagTask2=FALSE;
+    		Task2();
+    	}
+    	if(flagTask3){
+    		flagTask3=FALSE;
+    		Task3();
+    	}
+    }
+}
+
+
+void Task1( void )
+{
+	uart0_puts( " Task 1: En ejecución.\n" );
+}
+
+void Task2( void )
+{
+	uart0_puts( " Task 2: En ejecución.\n" );
+}
+
+void Task3( void )
+{
+	uart0_puts( " Task 3: En ejecución.\n" );
+}
+
+
+void isr_tick( void )
+{
+    static uint16 cont10ticks    = 100;
+    static uint16 cont20ticks   = 200;
+    static uint16 cont30ticks  = 300;
+
+    if( !(--cont10ticks) )
+    {
+        cont10ticks = 100;
+        flagTask1 = TRUE;
+    }
+    if( !(--cont20ticks) )
+    {
+        cont20ticks = 200;
+        flagTask2 = TRUE;
+    }
+    if( !(--cont30ticks) )
+    {
+        cont30ticks = 300;
+        flagTask3 = TRUE;
+    }
+
+    I_ISPC = BIT_TIMER0;
+};
