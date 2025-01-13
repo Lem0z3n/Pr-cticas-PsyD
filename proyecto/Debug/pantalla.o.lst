@@ -1,0 +1,1464 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"pantalla.c"
+  21              	.Ltext0:
+  22              		.file 1 "../pantalla.c"
+ 1090              		.align	2
+ 1091              		.global	plotTime
+ 1093              	plotTime:
+ 1094              	.LFB0:
+   1:../pantalla.c **** /*
+   2:../pantalla.c ****  * pantalla.c
+   3:../pantalla.c ****  *
+   4:../pantalla.c ****  *  Created on: 09/01/2025
+   5:../pantalla.c ****  *      Author: guill
+   6:../pantalla.c ****  */
+   7:../pantalla.c **** #include <lcd.h>
+   8:../pantalla.c **** #include <rtc.h>
+   9:../pantalla.c **** #include "proyecto.h"
+  10:../pantalla.c **** 
+  11:../pantalla.c **** void plotTime()
+  12:../pantalla.c **** {
+ 1095              		.loc 1 12 0
+ 1096              		.cfi_startproc
+ 1097              		@ Function supports interworking.
+ 1098              		@ args = 0, pretend = 0, frame = 8
+ 1099              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1100 0000 0DC0A0E1 		mov	ip, sp
+ 1101              	.LCFI0:
+ 1102              		.cfi_def_cfa_register 12
+ 1103 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1104 0008 04B04CE2 		sub	fp, ip, #4
+ 1105              		.cfi_offset 14, -8
+ 1106              		.cfi_offset 13, -12
+ 1107              		.cfi_offset 11, -16
+ 1108              	.LCFI1:
+ 1109              		.cfi_def_cfa 11, 4
+ 1110 000c 08D04DE2 		sub	sp, sp, #8
+  13:../pantalla.c **** 
+  14:../pantalla.c **** 	rtc_time_t rtc_time;
+  15:../pantalla.c **** 
+  16:../pantalla.c **** 	rtc_gettime(&rtc_time);
+ 1111              		.loc 1 16 0
+ 1112 0010 14304BE2 		sub	r3, fp, #20
+ 1113 0014 0300A0E1 		mov	r0, r3
+ 1114 0018 FEFFFFEB 		bl	rtc_gettime
+  17:../pantalla.c **** 
+  18:../pantalla.c **** 	lcd_puts(84,0,BLACK, rtc_stringDate(rtc_time));
+ 1115              		.loc 1 18 0
+ 1116 001c 14304BE2 		sub	r3, fp, #20
+ 1117 0020 030093E8 		ldmia	r3, {r0, r1}
+ 1118 0024 FEFFFFEB 		bl	rtc_stringDate
+ 1119 0028 0030A0E1 		mov	r3, r0
+ 1120 002c 5400A0E3 		mov	r0, #84
+ 1121 0030 0010A0E3 		mov	r1, #0
+ 1122 0034 0F20A0E3 		mov	r2, #15
+ 1123 0038 FEFFFFEB 		bl	lcd_puts
+  19:../pantalla.c **** }
+ 1124              		.loc 1 19 0
+ 1125 003c 0CD04BE2 		sub	sp, fp, #12
+ 1126 0040 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1127 0044 1EFF2FE1 		bx	lr
+ 1128              		.cfi_endproc
+ 1129              	.LFE0:
+ 1131              		.section	.rodata
+ 1132              		.align	2
+ 1133              	.LC0:
+ 1134 0000 50756C73 		.ascii	"Pulse la pantalla\000"
+ 1134      65206C61 
+ 1134      2070616E 
+ 1134      74616C6C 
+ 1134      6100
+ 1135 0012 0000     		.align	2
+ 1136              	.LC1:
+ 1137 0014 20207061 		.ascii	"  para comenzar  \000"
+ 1137      72612063 
+ 1137      6F6D656E 
+ 1137      7A617220 
+ 1137      2000
+ 1138 0026 0000     		.align	2
+ 1139              	.LC2:
+ 1140 0028 20484F52 		.ascii	" HORARIO DE FUNCIONAMIENTO \000"
+ 1140      4152494F 
+ 1140      20444520 
+ 1140      46554E43 
+ 1140      494F4E41 
+ 1141              		.align	2
+ 1142              	.LC3:
+ 1143 0044 646F6D3A 		.ascii	"dom: gratis\000"
+ 1143      20677261 
+ 1143      74697300 
+ 1144              		.align	2
+ 1145              	.LC4:
+ 1146 0050 6C756E3A 		.ascii	"lun: 09:00-21:00\000"
+ 1146      2030393A 
+ 1146      30302D32 
+ 1146      313A3030 
+ 1146      00
+ 1147 0061 000000   		.align	2
+ 1148              	.LC5:
+ 1149 0064 6D61723A 		.ascii	"mar: 09:00-21:00\000"
+ 1149      2030393A 
+ 1149      30302D32 
+ 1149      313A3030 
+ 1149      00
+ 1150 0075 000000   		.align	2
+ 1151              	.LC6:
+ 1152 0078 6D69653A 		.ascii	"mie: 09:00-21:00\000"
+ 1152      2030393A 
+ 1152      30302D32 
+ 1152      313A3030 
+ 1152      00
+ 1153 0089 000000   		.align	2
+ 1154              	.LC7:
+ 1155 008c 6A75653A 		.ascii	"jue: 09:00-21:00\000"
+ 1155      2030393A 
+ 1155      30302D32 
+ 1155      313A3030 
+ 1155      00
+ 1156 009d 000000   		.align	2
+ 1157              	.LC8:
+ 1158 00a0 7669653A 		.ascii	"vie: 09:00-21:00\000"
+ 1158      2030393A 
+ 1158      30302D32 
+ 1158      313A3030 
+ 1158      00
+ 1159 00b1 000000   		.align	2
+ 1160              	.LC9:
+ 1161 00b4 7361623A 		.ascii	"sab: 09:00-15:00\000"
+ 1161      2030393A 
+ 1161      30302D31 
+ 1161      353A3030 
+ 1161      00
+ 1162              		.text
+ 1163              		.align	2
+ 1164              		.global	plotWelcomeScreen
+ 1166              	plotWelcomeScreen:
+ 1167              	.LFB1:
+  20:../pantalla.c **** 
+  21:../pantalla.c **** void plotWelcomeScreen( void )
+  22:../pantalla.c **** {
+ 1168              		.loc 1 22 0
+ 1169              		.cfi_startproc
+ 1170              		@ Function supports interworking.
+ 1171              		@ args = 0, pretend = 0, frame = 0
+ 1172              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1173 0048 0DC0A0E1 		mov	ip, sp
+ 1174              	.LCFI2:
+ 1175              		.cfi_def_cfa_register 12
+ 1176 004c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1177 0050 04B04CE2 		sub	fp, ip, #4
+ 1178              		.cfi_offset 14, -8
+ 1179              		.cfi_offset 13, -12
+ 1180              		.cfi_offset 11, -16
+ 1181              	.LCFI3:
+ 1182              		.cfi_def_cfa 11, 4
+ 1183 0054 08D04DE2 		sub	sp, sp, #8
+  23:../pantalla.c **** 
+  24:../pantalla.c ****     lcd_clear();
+ 1184              		.loc 1 24 0
+ 1185 0058 FEFFFFEB 		bl	lcd_clear
+  25:../pantalla.c ****     lcd_puts_x2( 24, 48, BLACK, "Pulse la pantalla" );
+ 1186              		.loc 1 25 0
+ 1187 005c 1800A0E3 		mov	r0, #24
+ 1188 0060 3010A0E3 		mov	r1, #48
+ 1189 0064 0F20A0E3 		mov	r2, #15
+ 1190 0068 E4309FE5 		ldr	r3, .L3
+ 1191 006c FEFFFFEB 		bl	lcd_puts_x2
+  26:../pantalla.c ****     lcd_puts_x2( 24, 76, BLACK, "  para comenzar  " );
+ 1192              		.loc 1 26 0
+ 1193 0070 1800A0E3 		mov	r0, #24
+ 1194 0074 4C10A0E3 		mov	r1, #76
+ 1195 0078 0F20A0E3 		mov	r2, #15
+ 1196 007c D4309FE5 		ldr	r3, .L3+4
+ 1197 0080 FEFFFFEB 		bl	lcd_puts_x2
+  27:../pantalla.c ****     lcd_draw_box(0, 126, LCD_WIDTH-1 , LCD_HEIGHT-20, BLACK, 1);
+ 1198              		.loc 1 27 0
+ 1199 0084 0F30A0E3 		mov	r3, #15
+ 1200 0088 00308DE5 		str	r3, [sp, #0]
+ 1201 008c 0130A0E3 		mov	r3, #1
+ 1202 0090 04308DE5 		str	r3, [sp, #4]
+ 1203 0094 0000A0E3 		mov	r0, #0
+ 1204 0098 7E10A0E3 		mov	r1, #126
+ 1205 009c B8209FE5 		ldr	r2, .L3+8
+ 1206 00a0 DC30A0E3 		mov	r3, #220
+ 1207 00a4 FEFFFFEB 		bl	lcd_draw_box
+  28:../pantalla.c ****     lcd_puts(66, 122, BLACK, " HORARIO DE FUNCIONAMIENTO ");
+ 1208              		.loc 1 28 0
+ 1209 00a8 4200A0E3 		mov	r0, #66
+ 1210 00ac 7A10A0E3 		mov	r1, #122
+ 1211 00b0 0F20A0E3 		mov	r2, #15
+ 1212 00b4 A4309FE5 		ldr	r3, .L3+12
+ 1213 00b8 FEFFFFEB 		bl	lcd_puts
+  29:../pantalla.c ****     lcd_puts(24, 140, BLACK, "dom: gratis");
+ 1214              		.loc 1 29 0
+ 1215 00bc 1800A0E3 		mov	r0, #24
+ 1216 00c0 8C10A0E3 		mov	r1, #140
+ 1217 00c4 0F20A0E3 		mov	r2, #15
+ 1218 00c8 94309FE5 		ldr	r3, .L3+16
+ 1219 00cc FEFFFFEB 		bl	lcd_puts
+  30:../pantalla.c ****     lcd_puts(24, 156, BLACK, "lun: 09:00-21:00");
+ 1220              		.loc 1 30 0
+ 1221 00d0 1800A0E3 		mov	r0, #24
+ 1222 00d4 9C10A0E3 		mov	r1, #156
+ 1223 00d8 0F20A0E3 		mov	r2, #15
+ 1224 00dc 84309FE5 		ldr	r3, .L3+20
+ 1225 00e0 FEFFFFEB 		bl	lcd_puts
+  31:../pantalla.c ****     lcd_puts(24, 172, BLACK, "mar: 09:00-21:00");
+ 1226              		.loc 1 31 0
+ 1227 00e4 1800A0E3 		mov	r0, #24
+ 1228 00e8 AC10A0E3 		mov	r1, #172
+ 1229 00ec 0F20A0E3 		mov	r2, #15
+ 1230 00f0 74309FE5 		ldr	r3, .L3+24
+ 1231 00f4 FEFFFFEB 		bl	lcd_puts
+  32:../pantalla.c ****     lcd_puts(24, 188, BLACK, "mie: 09:00-21:00");
+ 1232              		.loc 1 32 0
+ 1233 00f8 1800A0E3 		mov	r0, #24
+ 1234 00fc BC10A0E3 		mov	r1, #188
+ 1235 0100 0F20A0E3 		mov	r2, #15
+ 1236 0104 64309FE5 		ldr	r3, .L3+28
+ 1237 0108 FEFFFFEB 		bl	lcd_puts
+  33:../pantalla.c ****     lcd_puts(166, 140, BLACK, "jue: 09:00-21:00");
+ 1238              		.loc 1 33 0
+ 1239 010c A600A0E3 		mov	r0, #166
+ 1240 0110 8C10A0E3 		mov	r1, #140
+ 1241 0114 0F20A0E3 		mov	r2, #15
+ 1242 0118 54309FE5 		ldr	r3, .L3+32
+ 1243 011c FEFFFFEB 		bl	lcd_puts
+  34:../pantalla.c ****     lcd_puts(166, 156, BLACK, "vie: 09:00-21:00");
+ 1244              		.loc 1 34 0
+ 1245 0120 A600A0E3 		mov	r0, #166
+ 1246 0124 9C10A0E3 		mov	r1, #156
+ 1247 0128 0F20A0E3 		mov	r2, #15
+ 1248 012c 44309FE5 		ldr	r3, .L3+36
+ 1249 0130 FEFFFFEB 		bl	lcd_puts
+  35:../pantalla.c ****     lcd_puts(166, 172, BLACK, "sab: 09:00-15:00");
+ 1250              		.loc 1 35 0
+ 1251 0134 A600A0E3 		mov	r0, #166
+ 1252 0138 AC10A0E3 		mov	r1, #172
+ 1253 013c 0F20A0E3 		mov	r2, #15
+ 1254 0140 34309FE5 		ldr	r3, .L3+40
+ 1255 0144 FEFFFFEB 		bl	lcd_puts
+  36:../pantalla.c **** 
+  37:../pantalla.c **** }
+ 1256              		.loc 1 37 0
+ 1257 0148 0CD04BE2 		sub	sp, fp, #12
+ 1258 014c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1259 0150 1EFF2FE1 		bx	lr
+ 1260              	.L4:
+ 1261              		.align	2
+ 1262              	.L3:
+ 1263 0154 00000000 		.word	.LC0
+ 1264 0158 14000000 		.word	.LC1
+ 1265 015c 3F010000 		.word	319
+ 1266 0160 28000000 		.word	.LC2
+ 1267 0164 44000000 		.word	.LC3
+ 1268 0168 50000000 		.word	.LC4
+ 1269 016c 64000000 		.word	.LC5
+ 1270 0170 78000000 		.word	.LC6
+ 1271 0174 8C000000 		.word	.LC7
+ 1272 0178 A0000000 		.word	.LC8
+ 1273 017c B4000000 		.word	.LC9
+ 1274              		.cfi_endproc
+ 1275              	.LFE1:
+ 1277              		.section	.rodata
+ 1278 00c5 000000   		.align	2
+ 1279              	.LC10:
+ 1280 00c8 53656C65 		.ascii	"Seleccione plaza\000"
+ 1280      6363696F 
+ 1280      6E652070 
+ 1280      6C617A61 
+ 1280      00
+ 1281              		.text
+ 1282              		.align	2
+ 1283              		.global	plotSelectionScreen
+ 1285              	plotSelectionScreen:
+ 1286              	.LFB2:
+  38:../pantalla.c **** 
+  39:../pantalla.c **** 
+  40:../pantalla.c **** void plotSelectionScreen( parking_t* places)
+  41:../pantalla.c **** {
+ 1287              		.loc 1 41 0
+ 1288              		.cfi_startproc
+ 1289              		@ Function supports interworking.
+ 1290              		@ args = 0, pretend = 0, frame = 24
+ 1291              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1292 0180 0DC0A0E1 		mov	ip, sp
+ 1293              	.LCFI4:
+ 1294              		.cfi_def_cfa_register 12
+ 1295 0184 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1296 0188 04B04CE2 		sub	fp, ip, #4
+ 1297              		.cfi_offset 14, -8
+ 1298              		.cfi_offset 13, -12
+ 1299              		.cfi_offset 11, -16
+ 1300              	.LCFI5:
+ 1301              		.cfi_def_cfa 11, 4
+ 1302 018c 20D04DE2 		sub	sp, sp, #32
+ 1303 0190 20000BE5 		str	r0, [fp, #-32]
+  42:../pantalla.c **** 	lcd_clear();
+ 1304              		.loc 1 42 0
+ 1305 0194 FEFFFFEB 		bl	lcd_clear
+  43:../pantalla.c **** 	lcd_puts_x2( 32, 32, BLACK, "Seleccione plaza" );
+ 1306              		.loc 1 43 0
+ 1307 0198 2000A0E3 		mov	r0, #32
+ 1308 019c 2010A0E3 		mov	r1, #32
+ 1309 01a0 0F20A0E3 		mov	r2, #15
+ 1310 01a4 18329FE5 		ldr	r3, .L11
+ 1311 01a8 FEFFFFEB 		bl	lcd_puts_x2
+  44:../pantalla.c **** 	lcd_draw_box(0, 64, LCD_WIDTH/4, 128, BLACK, 1);
+ 1312              		.loc 1 44 0
+ 1313 01ac 0F30A0E3 		mov	r3, #15
+ 1314 01b0 00308DE5 		str	r3, [sp, #0]
+ 1315 01b4 0130A0E3 		mov	r3, #1
+ 1316 01b8 04308DE5 		str	r3, [sp, #4]
+ 1317 01bc 0000A0E3 		mov	r0, #0
+ 1318 01c0 4010A0E3 		mov	r1, #64
+ 1319 01c4 5020A0E3 		mov	r2, #80
+ 1320 01c8 8030A0E3 		mov	r3, #128
+ 1321 01cc FEFFFFEB 		bl	lcd_draw_box
+  45:../pantalla.c **** 	lcd_draw_box(LCD_WIDTH/4, 64, LCD_WIDTH*2/4, 128, BLACK, 1);
+ 1322              		.loc 1 45 0
+ 1323 01d0 0F30A0E3 		mov	r3, #15
+ 1324 01d4 00308DE5 		str	r3, [sp, #0]
+ 1325 01d8 0130A0E3 		mov	r3, #1
+ 1326 01dc 04308DE5 		str	r3, [sp, #4]
+ 1327 01e0 5000A0E3 		mov	r0, #80
+ 1328 01e4 4010A0E3 		mov	r1, #64
+ 1329 01e8 A020A0E3 		mov	r2, #160
+ 1330 01ec 8030A0E3 		mov	r3, #128
+ 1331 01f0 FEFFFFEB 		bl	lcd_draw_box
+  46:../pantalla.c **** 	lcd_draw_box(LCD_WIDTH*2/4, 64, LCD_WIDTH*3/4, 128, BLACK, 1);
+ 1332              		.loc 1 46 0
+ 1333 01f4 0F30A0E3 		mov	r3, #15
+ 1334 01f8 00308DE5 		str	r3, [sp, #0]
+ 1335 01fc 0130A0E3 		mov	r3, #1
+ 1336 0200 04308DE5 		str	r3, [sp, #4]
+ 1337 0204 A000A0E3 		mov	r0, #160
+ 1338 0208 4010A0E3 		mov	r1, #64
+ 1339 020c F020A0E3 		mov	r2, #240
+ 1340 0210 8030A0E3 		mov	r3, #128
+ 1341 0214 FEFFFFEB 		bl	lcd_draw_box
+  47:../pantalla.c **** 	lcd_draw_box(LCD_WIDTH*3/4, 64, LCD_WIDTH-1, 128, BLACK, 1);
+ 1342              		.loc 1 47 0
+ 1343 0218 0F30A0E3 		mov	r3, #15
+ 1344 021c 00308DE5 		str	r3, [sp, #0]
+ 1345 0220 0130A0E3 		mov	r3, #1
+ 1346 0224 04308DE5 		str	r3, [sp, #4]
+ 1347 0228 F000A0E3 		mov	r0, #240
+ 1348 022c 4010A0E3 		mov	r1, #64
+ 1349 0230 90219FE5 		ldr	r2, .L11+4
+ 1350 0234 8030A0E3 		mov	r3, #128
+ 1351 0238 FEFFFFEB 		bl	lcd_draw_box
+  48:../pantalla.c **** 	lcd_draw_box(0, 128 , LCD_WIDTH/4, 192, BLACK, 1);
+ 1352              		.loc 1 48 0
+ 1353 023c 0F30A0E3 		mov	r3, #15
+ 1354 0240 00308DE5 		str	r3, [sp, #0]
+ 1355 0244 0130A0E3 		mov	r3, #1
+ 1356 0248 04308DE5 		str	r3, [sp, #4]
+ 1357 024c 0000A0E3 		mov	r0, #0
+ 1358 0250 8010A0E3 		mov	r1, #128
+ 1359 0254 5020A0E3 		mov	r2, #80
+ 1360 0258 C030A0E3 		mov	r3, #192
+ 1361 025c FEFFFFEB 		bl	lcd_draw_box
+  49:../pantalla.c **** 	lcd_draw_box(LCD_WIDTH/4, 128, LCD_WIDTH*2/4, 192, BLACK, 1);
+ 1362              		.loc 1 49 0
+ 1363 0260 0F30A0E3 		mov	r3, #15
+ 1364 0264 00308DE5 		str	r3, [sp, #0]
+ 1365 0268 0130A0E3 		mov	r3, #1
+ 1366 026c 04308DE5 		str	r3, [sp, #4]
+ 1367 0270 5000A0E3 		mov	r0, #80
+ 1368 0274 8010A0E3 		mov	r1, #128
+ 1369 0278 A020A0E3 		mov	r2, #160
+ 1370 027c C030A0E3 		mov	r3, #192
+ 1371 0280 FEFFFFEB 		bl	lcd_draw_box
+  50:../pantalla.c **** 	lcd_draw_box(LCD_WIDTH*2/4, 128, LCD_WIDTH*3/4, 192, BLACK, 1);
+ 1372              		.loc 1 50 0
+ 1373 0284 0F30A0E3 		mov	r3, #15
+ 1374 0288 00308DE5 		str	r3, [sp, #0]
+ 1375 028c 0130A0E3 		mov	r3, #1
+ 1376 0290 04308DE5 		str	r3, [sp, #4]
+ 1377 0294 A000A0E3 		mov	r0, #160
+ 1378 0298 8010A0E3 		mov	r1, #128
+ 1379 029c F020A0E3 		mov	r2, #240
+ 1380 02a0 C030A0E3 		mov	r3, #192
+ 1381 02a4 FEFFFFEB 		bl	lcd_draw_box
+  51:../pantalla.c **** 	lcd_draw_box(LCD_WIDTH*3/4, 128, LCD_WIDTH-1, 192, BLACK, 1);
+ 1382              		.loc 1 51 0
+ 1383 02a8 0F30A0E3 		mov	r3, #15
+ 1384 02ac 00308DE5 		str	r3, [sp, #0]
+ 1385 02b0 0130A0E3 		mov	r3, #1
+ 1386 02b4 04308DE5 		str	r3, [sp, #4]
+ 1387 02b8 F000A0E3 		mov	r0, #240
+ 1388 02bc 8010A0E3 		mov	r1, #128
+ 1389 02c0 00219FE5 		ldr	r2, .L11+4
+ 1390 02c4 C030A0E3 		mov	r3, #192
+ 1391 02c8 FEFFFFEB 		bl	lcd_draw_box
+  52:../pantalla.c **** 
+  53:../pantalla.c **** 	int i, x = LCD_WIDTH/16+8, y = 80;
+ 1392              		.loc 1 53 0
+ 1393 02cc 1C30A0E3 		mov	r3, #28
+ 1394 02d0 14300BE5 		str	r3, [fp, #-20]
+ 1395 02d4 5030A0E3 		mov	r3, #80
+ 1396 02d8 18300BE5 		str	r3, [fp, #-24]
+  54:../pantalla.c **** 	char id;
+  55:../pantalla.c **** 	for(i = 0; i < MAXPLACES; i++)
+ 1397              		.loc 1 55 0
+ 1398 02dc 0030A0E3 		mov	r3, #0
+ 1399 02e0 10300BE5 		str	r3, [fp, #-16]
+ 1400 02e4 300000EA 		b	.L6
+ 1401              	.L10:
+  56:../pantalla.c **** 	{
+  57:../pantalla.c **** 		if(places[i].free)
+ 1402              		.loc 1 57 0
+ 1403 02e8 10201BE5 		ldr	r2, [fp, #-16]
+ 1404 02ec 0230A0E1 		mov	r3, r2
+ 1405 02f0 8330A0E1 		mov	r3, r3, asl #1
+ 1406 02f4 023083E0 		add	r3, r3, r2
+ 1407 02f8 0331A0E1 		mov	r3, r3, asl #2
+ 1408 02fc 20201BE5 		ldr	r2, [fp, #-32]
+ 1409 0300 033082E0 		add	r3, r2, r3
+ 1410 0304 0130D3E5 		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 1411 0308 000053E3 		cmp	r3, #0
+ 1412 030c 0C00000A 		beq	.L7
+  58:../pantalla.c **** 		{
+  59:../pantalla.c **** 			lcd_putint_x2(x,y,BLACK, i+1);
+ 1413              		.loc 1 59 0
+ 1414 0310 14301BE5 		ldr	r3, [fp, #-20]
+ 1415 0314 0338A0E1 		mov	r3, r3, asl #16
+ 1416 0318 2318A0E1 		mov	r1, r3, lsr #16
+ 1417 031c 18301BE5 		ldr	r3, [fp, #-24]
+ 1418 0320 0338A0E1 		mov	r3, r3, asl #16
+ 1419 0324 2328A0E1 		mov	r2, r3, lsr #16
+ 1420 0328 10301BE5 		ldr	r3, [fp, #-16]
+ 1421 032c 013083E2 		add	r3, r3, #1
+ 1422 0330 0100A0E1 		mov	r0, r1
+ 1423 0334 0210A0E1 		mov	r1, r2
+ 1424 0338 0F20A0E3 		mov	r2, #15
+ 1425 033c FEFFFFEB 		bl	lcd_putint_x2
+ 1426 0340 0C0000EA 		b	.L8
+ 1427              	.L7:
+  60:../pantalla.c **** 		}
+  61:../pantalla.c **** 		else
+  62:../pantalla.c **** 		{
+  63:../pantalla.c **** 			id ='X';
+ 1428              		.loc 1 63 0
+ 1429 0344 5830A0E3 		mov	r3, #88
+ 1430 0348 19304BE5 		strb	r3, [fp, #-25]
+  64:../pantalla.c **** 			lcd_putchar_x2(x,y,BLACK,id);
+ 1431              		.loc 1 64 0
+ 1432 034c 14301BE5 		ldr	r3, [fp, #-20]
+ 1433 0350 0338A0E1 		mov	r3, r3, asl #16
+ 1434 0354 2318A0E1 		mov	r1, r3, lsr #16
+ 1435 0358 18301BE5 		ldr	r3, [fp, #-24]
+ 1436 035c 0338A0E1 		mov	r3, r3, asl #16
+ 1437 0360 2328A0E1 		mov	r2, r3, lsr #16
+ 1438 0364 19305BE5 		ldrb	r3, [fp, #-25]	@ zero_extendqisi2
+ 1439 0368 0100A0E1 		mov	r0, r1
+ 1440 036c 0210A0E1 		mov	r1, r2
+ 1441 0370 0F20A0E3 		mov	r2, #15
+ 1442 0374 FEFFFFEB 		bl	lcd_putchar_x2
+ 1443              	.L8:
+  65:../pantalla.c **** 		}
+  66:../pantalla.c **** 
+  67:../pantalla.c **** 		x += LCD_WIDTH/8;
+ 1444              		.loc 1 67 0
+ 1445 0378 14301BE5 		ldr	r3, [fp, #-20]
+ 1446 037c 283083E2 		add	r3, r3, #40
+ 1447 0380 14300BE5 		str	r3, [fp, #-20]
+  68:../pantalla.c **** 		if(i == 3) {
+ 1448              		.loc 1 68 0
+ 1449 0384 10301BE5 		ldr	r3, [fp, #-16]
+ 1450 0388 030053E3 		cmp	r3, #3
+ 1451 038c 0300001A 		bne	.L9
+  69:../pantalla.c **** 			x = LCD_WIDTH/16+8;
+ 1452              		.loc 1 69 0
+ 1453 0390 1C30A0E3 		mov	r3, #28
+ 1454 0394 14300BE5 		str	r3, [fp, #-20]
+  70:../pantalla.c **** 			y = 145;
+ 1455              		.loc 1 70 0
+ 1456 0398 9130A0E3 		mov	r3, #145
+ 1457 039c 18300BE5 		str	r3, [fp, #-24]
+ 1458              	.L9:
+  55:../pantalla.c **** 	for(i = 0; i < MAXPLACES; i++)
+ 1459              		.loc 1 55 0
+ 1460 03a0 10301BE5 		ldr	r3, [fp, #-16]
+ 1461 03a4 013083E2 		add	r3, r3, #1
+ 1462 03a8 10300BE5 		str	r3, [fp, #-16]
+ 1463              	.L6:
+  55:../pantalla.c **** 	for(i = 0; i < MAXPLACES; i++)
+ 1464              		.loc 1 55 0 is_stmt 0 discriminator 1
+ 1465 03ac 10301BE5 		ldr	r3, [fp, #-16]
+ 1466 03b0 070053E3 		cmp	r3, #7
+ 1467 03b4 CBFFFFDA 		ble	.L10
+  71:../pantalla.c **** 		}
+  72:../pantalla.c **** 
+  73:../pantalla.c **** 	}
+  74:../pantalla.c **** }
+ 1468              		.loc 1 74 0 is_stmt 1
+ 1469 03b8 0CD04BE2 		sub	sp, fp, #12
+ 1470 03bc 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1471 03c0 1EFF2FE1 		bx	lr
+ 1472              	.L12:
+ 1473              		.align	2
+ 1474              	.L11:
+ 1475 03c4 C8000000 		.word	.LC10
+ 1476 03c8 3F010000 		.word	319
+ 1477              		.cfi_endproc
+ 1478              	.LFE2:
+ 1480              		.section	.rodata
+ 1481 00d9 000000   		.align	2
+ 1482              	.LC11:
+ 1483 00dc 50756C73 		.ascii	"Pulse una plaza por favor.\000"
+ 1483      6520756E 
+ 1483      6120706C 
+ 1483      617A6120 
+ 1483      706F7220 
+ 1484              		.text
+ 1485              		.align	2
+ 1486              		.global	plotSelEnc
+ 1488              	plotSelEnc:
+ 1489              	.LFB3:
+  75:../pantalla.c **** 
+  76:../pantalla.c **** void plotSelEnc()
+  77:../pantalla.c **** {
+ 1490              		.loc 1 77 0
+ 1491              		.cfi_startproc
+ 1492              		@ Function supports interworking.
+ 1493              		@ args = 0, pretend = 0, frame = 0
+ 1494              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1495 03cc 0DC0A0E1 		mov	ip, sp
+ 1496              	.LCFI6:
+ 1497              		.cfi_def_cfa_register 12
+ 1498 03d0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1499 03d4 04B04CE2 		sub	fp, ip, #4
+ 1500              		.cfi_offset 14, -8
+ 1501              		.cfi_offset 13, -12
+ 1502              		.cfi_offset 11, -16
+ 1503              	.LCFI7:
+ 1504              		.cfi_def_cfa 11, 4
+  78:../pantalla.c **** 	lcd_puts( 32, LCD_HEIGHT - 35, BLACK, ("Pulse una plaza por favor."));
+ 1505              		.loc 1 78 0
+ 1506 03d8 2000A0E3 		mov	r0, #32
+ 1507 03dc CD10A0E3 		mov	r1, #205
+ 1508 03e0 0F20A0E3 		mov	r2, #15
+ 1509 03e4 0C309FE5 		ldr	r3, .L14
+ 1510 03e8 FEFFFFEB 		bl	lcd_puts
+  79:../pantalla.c **** }
+ 1511              		.loc 1 79 0
+ 1512 03ec 0CD04BE2 		sub	sp, fp, #12
+ 1513 03f0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1514 03f4 1EFF2FE1 		bx	lr
+ 1515              	.L15:
+ 1516              		.align	2
+ 1517              	.L14:
+ 1518 03f8 DC000000 		.word	.LC11
+ 1519              		.cfi_endproc
+ 1520              	.LFE3:
+ 1522              		.section	.rodata
+ 1523 00f7 00       		.align	2
+ 1524              	.LC12:
+ 1525 00f8 20544152 		.ascii	" TARIFAS \000"
+ 1525      49464153 
+ 1525      2000
+ 1526 0102 0000     		.align	2
+ 1527              	.LC13:
+ 1528 0104 50726563 		.ascii	"Precio por minuto: 0,01 euros\000"
+ 1528      696F2070 
+ 1528      6F72206D 
+ 1528      696E7574 
+ 1528      6F3A2030 
+ 1529 0122 0000     		.align	2
+ 1530              	.LC14:
+ 1531 0124 20457374 		.ascii	" Estancia minima:  20 minutos\000"
+ 1531      616E6369 
+ 1531      61206D69 
+ 1531      6E696D61 
+ 1531      3A202032 
+ 1532 0142 0000     		.align	2
+ 1533              	.LC15:
+ 1534 0144 20457374 		.ascii	" Estancia maxima: 240 minutos\000"
+ 1534      616E6369 
+ 1534      61206D61 
+ 1534      78696D61 
+ 1534      3A203234 
+ 1535 0162 0000     		.align	2
+ 1536              	.LC16:
+ 1537 0164 504C415A 		.ascii	"PLAZA \000"
+ 1537      412000
+ 1538 016b 00       		.align	2
+ 1539              	.LC17:
+ 1540 016c 43726564 		.ascii	"Credito:   ,   euros\000"
+ 1540      69746F3A 
+ 1540      2020202C 
+ 1540      20202065 
+ 1540      75726F73 
+ 1541 0181 000000   		.align	2
+ 1542              	.LC18:
+ 1543 0184 496E7365 		.ascii	"Inserte monedas\000"
+ 1543      72746520 
+ 1543      6D6F6E65 
+ 1543      64617300 
+ 1544              		.align	2
+ 1545              	.LC19:
+ 1546 0194 50756C73 		.ascii	"Pulse la pantalla para aceptar\000"
+ 1546      65206C61 
+ 1546      2070616E 
+ 1546      74616C6C 
+ 1546      61207061 
+ 1547              		.text
+ 1548              		.align	2
+ 1549              		.global	plotPaymentScreen
+ 1551              	plotPaymentScreen:
+ 1552              	.LFB4:
+  80:../pantalla.c **** 
+  81:../pantalla.c **** void plotPaymentScreen(parking_t parking, uint8 credit)
+  82:../pantalla.c **** {
+ 1553              		.loc 1 82 0
+ 1554              		.cfi_startproc
+ 1555              		@ Function supports interworking.
+ 1556              		@ args = 0, pretend = 0, frame = 16
+ 1557              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1558 03fc 0DC0A0E1 		mov	ip, sp
+ 1559              	.LCFI8:
+ 1560              		.cfi_def_cfa_register 12
+ 1561 0400 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1562 0404 04B04CE2 		sub	fp, ip, #4
+ 1563              		.cfi_offset 14, -8
+ 1564              		.cfi_offset 13, -12
+ 1565              		.cfi_offset 11, -16
+ 1566              	.LCFI9:
+ 1567              		.cfi_def_cfa 11, 4
+ 1568 0408 18D04DE2 		sub	sp, sp, #24
+ 1569 040c 18C04BE2 		sub	ip, fp, #24
+ 1570 0410 07008CE8 		stmia	ip, {r0, r1, r2}
+ 1571 0414 19304BE5 		strb	r3, [fp, #-25]
+  83:../pantalla.c **** 	lcd_clear();
+ 1572              		.loc 1 83 0
+ 1573 0418 FEFFFFEB 		bl	lcd_clear
+  84:../pantalla.c **** 	lcd_draw_box(0,16,LCD_WIDTH-1,70,BLACK,1);
+ 1574              		.loc 1 84 0
+ 1575 041c 0F30A0E3 		mov	r3, #15
+ 1576 0420 00308DE5 		str	r3, [sp, #0]
+ 1577 0424 0130A0E3 		mov	r3, #1
+ 1578 0428 04308DE5 		str	r3, [sp, #4]
+ 1579 042c 0000A0E3 		mov	r0, #0
+ 1580 0430 1010A0E3 		mov	r1, #16
+ 1581 0434 24219FE5 		ldr	r2, .L17
+ 1582 0438 4630A0E3 		mov	r3, #70
+ 1583 043c FEFFFFEB 		bl	lcd_draw_box
+  85:../pantalla.c **** 	lcd_puts(LCD_WIDTH/2-32, 16, BLACK, " TARIFAS ");
+ 1584              		.loc 1 85 0
+ 1585 0440 8000A0E3 		mov	r0, #128
+ 1586 0444 1010A0E3 		mov	r1, #16
+ 1587 0448 0F20A0E3 		mov	r2, #15
+ 1588 044c 10319FE5 		ldr	r3, .L17+4
+ 1589 0450 FEFFFFEB 		bl	lcd_puts
+  86:../pantalla.c **** 	lcd_puts(32,26,BLACK,"Precio por minuto: 0,01 euros");
+ 1590              		.loc 1 86 0
+ 1591 0454 2000A0E3 		mov	r0, #32
+ 1592 0458 1A10A0E3 		mov	r1, #26
+ 1593 045c 0F20A0E3 		mov	r2, #15
+ 1594 0460 00319FE5 		ldr	r3, .L17+8
+ 1595 0464 FEFFFFEB 		bl	lcd_puts
+  87:../pantalla.c **** 	lcd_puts(32,42,BLACK," Estancia minima:  20 minutos");
+ 1596              		.loc 1 87 0
+ 1597 0468 2000A0E3 		mov	r0, #32
+ 1598 046c 2A10A0E3 		mov	r1, #42
+ 1599 0470 0F20A0E3 		mov	r2, #15
+ 1600 0474 F0309FE5 		ldr	r3, .L17+12
+ 1601 0478 FEFFFFEB 		bl	lcd_puts
+  88:../pantalla.c **** 	lcd_puts(32,58,BLACK," Estancia maxima: 240 minutos");
+ 1602              		.loc 1 88 0
+ 1603 047c 2000A0E3 		mov	r0, #32
+ 1604 0480 3A10A0E3 		mov	r1, #58
+ 1605 0484 0F20A0E3 		mov	r2, #15
+ 1606 0488 E0309FE5 		ldr	r3, .L17+16
+ 1607 048c FEFFFFEB 		bl	lcd_puts
+  89:../pantalla.c **** 	lcd_puts_x2( 64, 80, BLACK, "PLAZA ");
+ 1608              		.loc 1 89 0
+ 1609 0490 4000A0E3 		mov	r0, #64
+ 1610 0494 5010A0E3 		mov	r1, #80
+ 1611 0498 0F20A0E3 		mov	r2, #15
+ 1612 049c D0309FE5 		ldr	r3, .L17+20
+ 1613 04a0 FEFFFFEB 		bl	lcd_puts_x2
+  90:../pantalla.c **** 	lcd_putint_x2( 64+48, 80, BLACK, parking.id);
+ 1614              		.loc 1 90 0
+ 1615 04a4 18305BE5 		ldrb	r3, [fp, #-24]	@ zero_extendqisi2
+ 1616 04a8 7000A0E3 		mov	r0, #112
+ 1617 04ac 5010A0E3 		mov	r1, #80
+ 1618 04b0 0F20A0E3 		mov	r2, #15
+ 1619 04b4 FEFFFFEB 		bl	lcd_putint_x2
+  91:../pantalla.c **** 	lcd_puts((LCD_WIDTH/2) -80, 80 + 50, BLACK, "Credito:   ,   euros");
+ 1620              		.loc 1 91 0
+ 1621 04b8 5000A0E3 		mov	r0, #80
+ 1622 04bc 8210A0E3 		mov	r1, #130
+ 1623 04c0 0F20A0E3 		mov	r2, #15
+ 1624 04c4 AC309FE5 		ldr	r3, .L17+24
+ 1625 04c8 FEFFFFEB 		bl	lcd_puts
+  92:../pantalla.c **** 	plotPayCredit(credit);
+ 1626              		.loc 1 92 0
+ 1627 04cc A8309FE5 		ldr	r3, .L17+28
+ 1628 04d0 19205BE5 		ldrb	r2, [fp, #-25]	@ zero_extendqisi2
+ 1629 04d4 0200A0E1 		mov	r0, r2
+ 1630 04d8 0FE0A0E1 		mov	lr, pc
+ 1631 04dc 13FF2FE1 		bx	r3
+  93:../pantalla.c **** 	plotPayDeadline(parking.deadline);
+ 1632              		.loc 1 93 0
+ 1633 04e0 98C09FE5 		ldr	ip, .L17+32
+ 1634 04e4 B6315BE1 		ldrh	r3, [fp, #-22]
+ 1635 04e8 B4215BE1 		ldrh	r2, [fp, #-20]
+ 1636 04ec 0228A0E1 		mov	r2, r2, asl #16
+ 1637 04f0 033082E1 		orr	r3, r2, r3
+ 1638 04f4 0020A0E3 		mov	r2, #0
+ 1639 04f8 0320A0E1 		mov	r2, r3
+ 1640 04fc B2315BE1 		ldrh	r3, [fp, #-18]
+ 1641 0500 10105BE5 		ldrb	r1, [fp, #-16]	@ zero_extendqisi2
+ 1642 0504 0118A0E1 		mov	r1, r1, asl #16
+ 1643 0508 031081E1 		orr	r1, r1, r3
+ 1644 050c 0030A0E3 		mov	r3, #0
+ 1645 0510 FF14C1E3 		bic	r1, r1, #-16777216
+ 1646 0514 FF3403E2 		and	r3, r3, #-16777216
+ 1647 0518 033081E1 		orr	r3, r1, r3
+ 1648 051c 0200A0E1 		mov	r0, r2
+ 1649 0520 0310A0E1 		mov	r1, r3
+ 1650 0524 0FE0A0E1 		mov	lr, pc
+ 1651 0528 1CFF2FE1 		bx	ip
+  94:../pantalla.c **** 	lcd_puts( (LCD_WIDTH/2) -56, LCD_HEIGHT - 55, BLACK, ("Inserte monedas"));
+ 1652              		.loc 1 94 0
+ 1653 052c 6800A0E3 		mov	r0, #104
+ 1654 0530 B910A0E3 		mov	r1, #185
+ 1655 0534 0F20A0E3 		mov	r2, #15
+ 1656 0538 44309FE5 		ldr	r3, .L17+36
+ 1657 053c FEFFFFEB 		bl	lcd_puts
+  95:../pantalla.c **** 	lcd_puts( 32, LCD_HEIGHT - 35, BLACK, ("Pulse la pantalla para aceptar"));
+ 1658              		.loc 1 95 0
+ 1659 0540 2000A0E3 		mov	r0, #32
+ 1660 0544 CD10A0E3 		mov	r1, #205
+ 1661 0548 0F20A0E3 		mov	r2, #15
+ 1662 054c 34309FE5 		ldr	r3, .L17+40
+ 1663 0550 FEFFFFEB 		bl	lcd_puts
+  96:../pantalla.c **** 
+  97:../pantalla.c **** }
+ 1664              		.loc 1 97 0
+ 1665 0554 0CD04BE2 		sub	sp, fp, #12
+ 1666 0558 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1667 055c 1EFF2FE1 		bx	lr
+ 1668              	.L18:
+ 1669              		.align	2
+ 1670              	.L17:
+ 1671 0560 3F010000 		.word	319
+ 1672 0564 F8000000 		.word	.LC12
+ 1673 0568 04010000 		.word	.LC13
+ 1674 056c 24010000 		.word	.LC14
+ 1675 0570 44010000 		.word	.LC15
+ 1676 0574 64010000 		.word	.LC16
+ 1677 0578 6C010000 		.word	.LC17
+ 1678 057c 00000000 		.word	plotPayCredit
+ 1679 0580 00000000 		.word	plotPayDeadline
+ 1680 0584 84010000 		.word	.LC18
+ 1681 0588 94010000 		.word	.LC19
+ 1682              		.cfi_endproc
+ 1683              	.LFE4:
+ 1685              		.align	2
+ 1686              		.global	plotPayCredit
+ 1688              	plotPayCredit:
+ 1689              	.LFB5:
+  98:../pantalla.c **** 
+  99:../pantalla.c **** void plotPayCredit(uint8 credit)
+ 100:../pantalla.c **** {
+ 1690              		.loc 1 100 0
+ 1691              		.cfi_startproc
+ 1692              		@ Function supports interworking.
+ 1693              		@ args = 0, pretend = 0, frame = 8
+ 1694              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1695 058c 0DC0A0E1 		mov	ip, sp
+ 1696              	.LCFI10:
+ 1697              		.cfi_def_cfa_register 12
+ 1698 0590 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1699 0594 04B04CE2 		sub	fp, ip, #4
+ 1700              		.cfi_offset 14, -8
+ 1701              		.cfi_offset 13, -12
+ 1702              		.cfi_offset 11, -16
+ 1703              	.LCFI11:
+ 1704              		.cfi_def_cfa 11, 4
+ 1705 0598 08D04DE2 		sub	sp, sp, #8
+ 1706 059c 0030A0E1 		mov	r3, r0
+ 1707 05a0 0D304BE5 		strb	r3, [fp, #-13]
+ 101:../pantalla.c **** 	lcd_putint((LCD_WIDTH/2), 80 + 50, BLACK, credit/100);
+ 1708              		.loc 1 101 0
+ 1709 05a4 0D205BE5 		ldrb	r2, [fp, #-13]	@ zero_extendqisi2
+ 1710 05a8 64309FE5 		ldr	r3, .L20
+ 1711 05ac 921383E0 		umull	r1, r3, r2, r3
+ 1712 05b0 A332A0E1 		mov	r3, r3, lsr #5
+ 1713 05b4 FF3003E2 		and	r3, r3, #255
+ 1714 05b8 A000A0E3 		mov	r0, #160
+ 1715 05bc 8210A0E3 		mov	r1, #130
+ 1716 05c0 0F20A0E3 		mov	r2, #15
+ 1717 05c4 FEFFFFEB 		bl	lcd_putint
+ 102:../pantalla.c **** 	lcd_putint((LCD_WIDTH/2)+16, 80 + 50, BLACK, credit%100);
+ 1718              		.loc 1 102 0
+ 1719 05c8 0D205BE5 		ldrb	r2, [fp, #-13]	@ zero_extendqisi2
+ 1720 05cc 40309FE5 		ldr	r3, .L20
+ 1721 05d0 921383E0 		umull	r1, r3, r2, r3
+ 1722 05d4 A312A0E1 		mov	r1, r3, lsr #5
+ 1723 05d8 0130A0E1 		mov	r3, r1
+ 1724 05dc 0331A0E1 		mov	r3, r3, asl #2
+ 1725 05e0 013083E0 		add	r3, r3, r1
+ 1726 05e4 0311A0E1 		mov	r1, r3, asl #2
+ 1727 05e8 013083E0 		add	r3, r3, r1
+ 1728 05ec 0331A0E1 		mov	r3, r3, asl #2
+ 1729 05f0 023063E0 		rsb	r3, r3, r2
+ 1730 05f4 FF3003E2 		and	r3, r3, #255
+ 1731 05f8 B000A0E3 		mov	r0, #176
+ 1732 05fc 8210A0E3 		mov	r1, #130
+ 1733 0600 0F20A0E3 		mov	r2, #15
+ 1734 0604 FEFFFFEB 		bl	lcd_putint
+ 103:../pantalla.c **** }
+ 1735              		.loc 1 103 0
+ 1736 0608 0CD04BE2 		sub	sp, fp, #12
+ 1737 060c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1738 0610 1EFF2FE1 		bx	lr
+ 1739              	.L21:
+ 1740              		.align	2
+ 1741              	.L20:
+ 1742 0614 1F85EB51 		.word	1374389535
+ 1743              		.cfi_endproc
+ 1744              	.LFE5:
+ 1746              		.section	.rodata
+ 1747 01b3 00       		.align	2
+ 1748              	.LC20:
+ 1749 01b4 46696E3A 		.ascii	"Fin: \000"
+ 1749      2000
+ 1750              		.text
+ 1751              		.align	2
+ 1752              		.global	plotPayDeadline
+ 1754              	plotPayDeadline:
+ 1755              	.LFB6:
+ 104:../pantalla.c **** 
+ 105:../pantalla.c **** void plotPayDeadline(rtc_time_t deadline)
+ 106:../pantalla.c **** {
+ 1756              		.loc 1 106 0
+ 1757              		.cfi_startproc
+ 1758              		@ Function supports interworking.
+ 1759              		@ args = 0, pretend = 0, frame = 8
+ 1760              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1761 0618 0DC0A0E1 		mov	ip, sp
+ 1762              	.LCFI12:
+ 1763              		.cfi_def_cfa_register 12
+ 1764 061c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1765 0620 04B04CE2 		sub	fp, ip, #4
+ 1766              		.cfi_offset 14, -8
+ 1767              		.cfi_offset 13, -12
+ 1768              		.cfi_offset 11, -16
+ 1769              	.LCFI13:
+ 1770              		.cfi_def_cfa 11, 4
+ 1771 0624 08D04DE2 		sub	sp, sp, #8
+ 1772 0628 14304BE2 		sub	r3, fp, #20
+ 1773 062c 030083E8 		stmia	r3, {r0, r1}
+ 107:../pantalla.c **** 	lcd_puts( (LCD_WIDTH/2) -100, 80 + 70, BLACK, "Fin: ");
+ 1774              		.loc 1 107 0
+ 1775 0630 3C00A0E3 		mov	r0, #60
+ 1776 0634 9610A0E3 		mov	r1, #150
+ 1777 0638 0F20A0E3 		mov	r2, #15
+ 1778 063c 2C309FE5 		ldr	r3, .L23
+ 1779 0640 FEFFFFEB 		bl	lcd_puts
+ 108:../pantalla.c **** 	lcd_puts( (LCD_WIDTH/2) -60, 80 + 70, BLACK, rtc_stringDate(deadline));
+ 1780              		.loc 1 108 0
+ 1781 0644 14304BE2 		sub	r3, fp, #20
+ 1782 0648 030093E8 		ldmia	r3, {r0, r1}
+ 1783 064c FEFFFFEB 		bl	rtc_stringDate
+ 1784 0650 0030A0E1 		mov	r3, r0
+ 1785 0654 6400A0E3 		mov	r0, #100
+ 1786 0658 9610A0E3 		mov	r1, #150
+ 1787 065c 0F20A0E3 		mov	r2, #15
+ 1788 0660 FEFFFFEB 		bl	lcd_puts
+ 109:../pantalla.c **** }
+ 1789              		.loc 1 109 0
+ 1790 0664 0CD04BE2 		sub	sp, fp, #12
+ 1791 0668 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1792 066c 1EFF2FE1 		bx	lr
+ 1793              	.L24:
+ 1794              		.align	2
+ 1795              	.L23:
+ 1796 0670 B4010000 		.word	.LC20
+ 1797              		.cfi_endproc
+ 1798              	.LFE6:
+ 1800              		.section	.rodata
+ 1801 01ba 0000     		.align	2
+ 1802              	.LC21:
+ 1803 01bc 4D617472 		.ascii	"Matricula: ?\000"
+ 1803      6963756C 
+ 1803      613A203F 
+ 1803      00
+ 1804              		.text
+ 1805              		.align	2
+ 1806              		.global	plotLicPlateScreen
+ 1808              	plotLicPlateScreen:
+ 1809              	.LFB7:
+ 110:../pantalla.c **** 
+ 111:../pantalla.c **** void plotLicPlateScreen(parking_t parking)
+ 112:../pantalla.c **** {
+ 1810              		.loc 1 112 0
+ 1811              		.cfi_startproc
+ 1812              		@ Function supports interworking.
+ 1813              		@ args = 0, pretend = 0, frame = 16
+ 1814              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1815 0674 0DC0A0E1 		mov	ip, sp
+ 1816              	.LCFI14:
+ 1817              		.cfi_def_cfa_register 12
+ 1818 0678 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1819 067c 04B04CE2 		sub	fp, ip, #4
+ 1820              		.cfi_offset 14, -8
+ 1821              		.cfi_offset 13, -12
+ 1822              		.cfi_offset 11, -16
+ 1823              	.LCFI15:
+ 1824              		.cfi_def_cfa 11, 4
+ 1825 0680 10D04DE2 		sub	sp, sp, #16
+ 1826 0684 18304BE2 		sub	r3, fp, #24
+ 1827 0688 070083E8 		stmia	r3, {r0, r1, r2}
+ 113:../pantalla.c **** 	lcd_clear();
+ 1828              		.loc 1 113 0
+ 1829 068c FEFFFFEB 		bl	lcd_clear
+ 114:../pantalla.c **** 	lcd_puts_x2( 64, 40, BLACK, "PLAZA ");
+ 1830              		.loc 1 114 0
+ 1831 0690 4000A0E3 		mov	r0, #64
+ 1832 0694 2810A0E3 		mov	r1, #40
+ 1833 0698 0F20A0E3 		mov	r2, #15
+ 1834 069c 78309FE5 		ldr	r3, .L26
+ 1835 06a0 FEFFFFEB 		bl	lcd_puts_x2
+ 115:../pantalla.c **** 	lcd_putint_x2( 64+48, 40, BLACK, parking.id);
+ 1836              		.loc 1 115 0
+ 1837 06a4 18305BE5 		ldrb	r3, [fp, #-24]	@ zero_extendqisi2
+ 1838 06a8 7000A0E3 		mov	r0, #112
+ 1839 06ac 2810A0E3 		mov	r1, #40
+ 1840 06b0 0F20A0E3 		mov	r2, #15
+ 1841 06b4 FEFFFFEB 		bl	lcd_putint_x2
+ 116:../pantalla.c **** 	lcd_puts((LCD_WIDTH/2) -100, 95, BLACK, "Matricula: ?");
+ 1842              		.loc 1 116 0
+ 1843 06b8 3C00A0E3 		mov	r0, #60
+ 1844 06bc 5F10A0E3 		mov	r1, #95
+ 1845 06c0 0F20A0E3 		mov	r2, #15
+ 1846 06c4 54309FE5 		ldr	r3, .L26+4
+ 1847 06c8 FEFFFFEB 		bl	lcd_puts
+ 117:../pantalla.c **** 	plotPayDeadline(parking.deadline);
+ 1848              		.loc 1 117 0
+ 1849 06cc B6315BE1 		ldrh	r3, [fp, #-22]
+ 1850 06d0 B4215BE1 		ldrh	r2, [fp, #-20]
+ 1851 06d4 0228A0E1 		mov	r2, r2, asl #16
+ 1852 06d8 033082E1 		orr	r3, r2, r3
+ 1853 06dc 0020A0E3 		mov	r2, #0
+ 1854 06e0 0320A0E1 		mov	r2, r3
+ 1855 06e4 B2315BE1 		ldrh	r3, [fp, #-18]
+ 1856 06e8 10105BE5 		ldrb	r1, [fp, #-16]	@ zero_extendqisi2
+ 1857 06ec 0118A0E1 		mov	r1, r1, asl #16
+ 1858 06f0 031081E1 		orr	r1, r1, r3
+ 1859 06f4 0030A0E3 		mov	r3, #0
+ 1860 06f8 FF14C1E3 		bic	r1, r1, #-16777216
+ 1861 06fc FF3403E2 		and	r3, r3, #-16777216
+ 1862 0700 033081E1 		orr	r3, r1, r3
+ 1863 0704 0200A0E1 		mov	r0, r2
+ 1864 0708 0310A0E1 		mov	r1, r3
+ 1865 070c FEFFFFEB 		bl	plotPayDeadline
+ 118:../pantalla.c **** }
+ 1866              		.loc 1 118 0
+ 1867 0710 0CD04BE2 		sub	sp, fp, #12
+ 1868 0714 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1869 0718 1EFF2FE1 		bx	lr
+ 1870              	.L27:
+ 1871              		.align	2
+ 1872              	.L26:
+ 1873 071c 64010000 		.word	.LC16
+ 1874 0720 BC010000 		.word	.LC21
+ 1875              		.cfi_endproc
+ 1876              	.LFE7:
+ 1878              		.align	2
+ 1879              		.global	plotLicPlateUpdate
+ 1881              	plotLicPlateUpdate:
+ 1882              	.LFB8:
+ 119:../pantalla.c **** 
+ 120:../pantalla.c **** void plotLicPlateUpdate(int16 licPlate)
+ 121:../pantalla.c **** {
+ 1883              		.loc 1 121 0
+ 1884              		.cfi_startproc
+ 1885              		@ Function supports interworking.
+ 1886              		@ args = 0, pretend = 0, frame = 8
+ 1887              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1888 0724 0DC0A0E1 		mov	ip, sp
+ 1889              	.LCFI16:
+ 1890              		.cfi_def_cfa_register 12
+ 1891 0728 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1892 072c 04B04CE2 		sub	fp, ip, #4
+ 1893              		.cfi_offset 14, -8
+ 1894              		.cfi_offset 13, -12
+ 1895              		.cfi_offset 11, -16
+ 1896              	.LCFI17:
+ 1897              		.cfi_def_cfa 11, 4
+ 1898 0730 08D04DE2 		sub	sp, sp, #8
+ 1899 0734 0030A0E1 		mov	r3, r0
+ 1900 0738 BE304BE1 		strh	r3, [fp, #-14]	@ movhi
+ 122:../pantalla.c **** 	lcd_puthex((LCD_WIDTH/2) -12, 95, BLACK, licPlate);
+ 1901              		.loc 1 122 0
+ 1902 073c FE305BE1 		ldrsh	r3, [fp, #-14]
+ 1903 0740 9400A0E3 		mov	r0, #148
+ 1904 0744 5F10A0E3 		mov	r1, #95
+ 1905 0748 0F20A0E3 		mov	r2, #15
+ 1906 074c FEFFFFEB 		bl	lcd_puthex
+ 123:../pantalla.c **** }
+ 1907              		.loc 1 123 0
+ 1908 0750 0CD04BE2 		sub	sp, fp, #12
+ 1909 0754 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1910 0758 1EFF2FE1 		bx	lr
+ 1911              		.cfi_endproc
+ 1912              	.LFE8:
+ 1914              		.section	.rodata
+ 1915 01c9 000000   		.align	2
+ 1916              	.LC22:
+ 1917 01cc 496E7472 		.ascii	"Introduzca una matricula valida por favor.\000"
+ 1917      6F64757A 
+ 1917      63612075 
+ 1917      6E61206D 
+ 1917      61747269 
+ 1918              		.text
+ 1919              		.align	2
+ 1920              		.global	plotLicPlateEnc
+ 1922              	plotLicPlateEnc:
+ 1923              	.LFB9:
+ 124:../pantalla.c **** 
+ 125:../pantalla.c **** void plotLicPlateEnc()
+ 126:../pantalla.c **** {
+ 1924              		.loc 1 126 0
+ 1925              		.cfi_startproc
+ 1926              		@ Function supports interworking.
+ 1927              		@ args = 0, pretend = 0, frame = 0
+ 1928              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1929 075c 0DC0A0E1 		mov	ip, sp
+ 1930              	.LCFI18:
+ 1931              		.cfi_def_cfa_register 12
+ 1932 0760 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1933 0764 04B04CE2 		sub	fp, ip, #4
+ 1934              		.cfi_offset 14, -8
+ 1935              		.cfi_offset 13, -12
+ 1936              		.cfi_offset 11, -16
+ 1937              	.LCFI19:
+ 1938              		.cfi_def_cfa 11, 4
+ 127:../pantalla.c **** 	lcd_puts( 16, LCD_HEIGHT - 35, BLACK, ("Introduzca una matricula valida por favor."));
+ 1939              		.loc 1 127 0
+ 1940 0768 1000A0E3 		mov	r0, #16
+ 1941 076c CD10A0E3 		mov	r1, #205
+ 1942 0770 0F20A0E3 		mov	r2, #15
+ 1943 0774 0C309FE5 		ldr	r3, .L30
+ 1944 0778 FEFFFFEB 		bl	lcd_puts
+ 128:../pantalla.c **** }
+ 1945              		.loc 1 128 0
+ 1946 077c 0CD04BE2 		sub	sp, fp, #12
+ 1947 0780 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1948 0784 1EFF2FE1 		bx	lr
+ 1949              	.L31:
+ 1950              		.align	2
+ 1951              	.L30:
+ 1952 0788 CC010000 		.word	.LC22
+ 1953              		.cfi_endproc
+ 1954              	.LFE9:
+ 1956              		.section	.rodata
+ 1957 01f7 00       		.align	2
+ 1958              	.LC23:
+ 1959 01f8 506C617A 		.ascii	"Plaza i pagada\000"
+ 1959      61206920 
+ 1959      70616761 
+ 1959      646100
+ 1960 0207 00       		.align	2
+ 1961              	.LC24:
+ 1962 0208 20202020 		.ascii	"    Fin: \000"
+ 1962      46696E3A 
+ 1962      2000
+ 1963 0212 0000     		.align	2
+ 1964              	.LC25:
+ 1965 0214 20202020 		.ascii	"    Que tenga un gran dia \000"
+ 1965      51756520 
+ 1965      74656E67 
+ 1965      6120756E 
+ 1965      20677261 
+ 1966              		.text
+ 1967              		.align	2
+ 1968              		.global	plotSucScreen
+ 1970              	plotSucScreen:
+ 1971              	.LFB10:
+ 129:../pantalla.c **** 
+ 130:../pantalla.c **** void plotSucScreen(parking_t parking)
+ 131:../pantalla.c **** {
+ 1972              		.loc 1 131 0
+ 1973              		.cfi_startproc
+ 1974              		@ Function supports interworking.
+ 1975              		@ args = 0, pretend = 0, frame = 16
+ 1976              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1977 078c 0DC0A0E1 		mov	ip, sp
+ 1978              	.LCFI20:
+ 1979              		.cfi_def_cfa_register 12
+ 1980 0790 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1981 0794 04B04CE2 		sub	fp, ip, #4
+ 1982              		.cfi_offset 14, -8
+ 1983              		.cfi_offset 13, -12
+ 1984              		.cfi_offset 11, -16
+ 1985              	.LCFI21:
+ 1986              		.cfi_def_cfa 11, 4
+ 1987 0798 10D04DE2 		sub	sp, sp, #16
+ 1988 079c 18304BE2 		sub	r3, fp, #24
+ 1989 07a0 070083E8 		stmia	r3, {r0, r1, r2}
+ 132:../pantalla.c **** 	lcd_clear();
+ 1990              		.loc 1 132 0
+ 1991 07a4 FEFFFFEB 		bl	lcd_clear
+ 133:../pantalla.c **** 	lcd_puts_x2( 32, LCD_HEIGHT /2-50, BLACK, ("Plaza i pagada") );
+ 1992              		.loc 1 133 0
+ 1993 07a8 2000A0E3 		mov	r0, #32
+ 1994 07ac 4610A0E3 		mov	r1, #70
+ 1995 07b0 0F20A0E3 		mov	r2, #15
+ 1996 07b4 A0309FE5 		ldr	r3, .L33
+ 1997 07b8 FEFFFFEB 		bl	lcd_puts_x2
+ 134:../pantalla.c **** 	lcd_putint_x2( 80, LCD_HEIGHT /2-50, BLACK, parking.id );
+ 1998              		.loc 1 134 0
+ 1999 07bc 18305BE5 		ldrb	r3, [fp, #-24]	@ zero_extendqisi2
+ 2000 07c0 5000A0E3 		mov	r0, #80
+ 2001 07c4 4610A0E3 		mov	r1, #70
+ 2002 07c8 0F20A0E3 		mov	r2, #15
+ 2003 07cc FEFFFFEB 		bl	lcd_putint_x2
+ 135:../pantalla.c **** 	lcd_puts( 32, LCD_HEIGHT /2 -12, BLACK, ("    Fin: "));
+ 2004              		.loc 1 135 0
+ 2005 07d0 2000A0E3 		mov	r0, #32
+ 2006 07d4 6C10A0E3 		mov	r1, #108
+ 2007 07d8 0F20A0E3 		mov	r2, #15
+ 2008 07dc 7C309FE5 		ldr	r3, .L33+4
+ 2009 07e0 FEFFFFEB 		bl	lcd_puts
+ 136:../pantalla.c **** 	lcd_puts( 104, LCD_HEIGHT /2 -12, BLACK, rtc_stringDate(parking.deadline));
+ 2010              		.loc 1 136 0
+ 2011 07e4 B6315BE1 		ldrh	r3, [fp, #-22]
+ 2012 07e8 B4215BE1 		ldrh	r2, [fp, #-20]
+ 2013 07ec 0228A0E1 		mov	r2, r2, asl #16
+ 2014 07f0 033082E1 		orr	r3, r2, r3
+ 2015 07f4 0020A0E3 		mov	r2, #0
+ 2016 07f8 0320A0E1 		mov	r2, r3
+ 2017 07fc B2315BE1 		ldrh	r3, [fp, #-18]
+ 2018 0800 10105BE5 		ldrb	r1, [fp, #-16]	@ zero_extendqisi2
+ 2019 0804 0118A0E1 		mov	r1, r1, asl #16
+ 2020 0808 031081E1 		orr	r1, r1, r3
+ 2021 080c 0030A0E3 		mov	r3, #0
+ 2022 0810 FF14C1E3 		bic	r1, r1, #-16777216
+ 2023 0814 FF3403E2 		and	r3, r3, #-16777216
+ 2024 0818 033081E1 		orr	r3, r1, r3
+ 2025 081c 0200A0E1 		mov	r0, r2
+ 2026 0820 0310A0E1 		mov	r1, r3
+ 2027 0824 FEFFFFEB 		bl	rtc_stringDate
+ 2028 0828 0030A0E1 		mov	r3, r0
+ 2029 082c 6800A0E3 		mov	r0, #104
+ 2030 0830 6C10A0E3 		mov	r1, #108
+ 2031 0834 0F20A0E3 		mov	r2, #15
+ 2032 0838 FEFFFFEB 		bl	lcd_puts
+ 137:../pantalla.c **** 	lcd_puts( 32, LCD_HEIGHT /2 + 50, BLACK, ("    Que tenga un gran dia "));
+ 2033              		.loc 1 137 0
+ 2034 083c 2000A0E3 		mov	r0, #32
+ 2035 0840 AA10A0E3 		mov	r1, #170
+ 2036 0844 0F20A0E3 		mov	r2, #15
+ 2037 0848 14309FE5 		ldr	r3, .L33+8
+ 2038 084c FEFFFFEB 		bl	lcd_puts
+ 138:../pantalla.c **** }
+ 2039              		.loc 1 138 0
+ 2040 0850 0CD04BE2 		sub	sp, fp, #12
+ 2041 0854 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2042 0858 1EFF2FE1 		bx	lr
+ 2043              	.L34:
+ 2044              		.align	2
+ 2045              	.L33:
+ 2046 085c F8010000 		.word	.LC23
+ 2047 0860 08020000 		.word	.LC24
+ 2048 0864 14020000 		.word	.LC25
+ 2049              		.cfi_endproc
+ 2050              	.LFE10:
+ 2052              		.section	.rodata
+ 2053 022f 00       		.align	2
+ 2054              	.LC26:
+ 2055 0230 506C617A 		.ascii	"Plaza i ocupada\000"
+ 2055      61206920 
+ 2055      6F637570 
+ 2055      61646100 
+ 2056              		.text
+ 2057              		.align	2
+ 2058              		.global	plotSelecFailure
+ 2060              	plotSelecFailure:
+ 2061              	.LFB11:
+ 139:../pantalla.c **** 
+ 140:../pantalla.c **** void plotSelecFailure(parking_t parking)
+ 141:../pantalla.c **** {
+ 2062              		.loc 1 141 0
+ 2063              		.cfi_startproc
+ 2064              		@ Function supports interworking.
+ 2065              		@ args = 0, pretend = 0, frame = 16
+ 2066              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2067 0868 0DC0A0E1 		mov	ip, sp
+ 2068              	.LCFI22:
+ 2069              		.cfi_def_cfa_register 12
+ 2070 086c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2071 0870 04B04CE2 		sub	fp, ip, #4
+ 2072              		.cfi_offset 14, -8
+ 2073              		.cfi_offset 13, -12
+ 2074              		.cfi_offset 11, -16
+ 2075              	.LCFI23:
+ 2076              		.cfi_def_cfa 11, 4
+ 2077 0874 10D04DE2 		sub	sp, sp, #16
+ 2078 0878 18304BE2 		sub	r3, fp, #24
+ 2079 087c 070083E8 		stmia	r3, {r0, r1, r2}
+ 142:../pantalla.c **** 	lcd_clear();
+ 2080              		.loc 1 142 0
+ 2081 0880 FEFFFFEB 		bl	lcd_clear
+ 143:../pantalla.c **** 	lcd_puts_x2( 32, LCD_HEIGHT /2-50, BLACK, ("Plaza i ocupada") );
+ 2082              		.loc 1 143 0
+ 2083 0884 2000A0E3 		mov	r0, #32
+ 2084 0888 4610A0E3 		mov	r1, #70
+ 2085 088c 0F20A0E3 		mov	r2, #15
+ 2086 0890 8C309FE5 		ldr	r3, .L36
+ 2087 0894 FEFFFFEB 		bl	lcd_puts_x2
+ 144:../pantalla.c **** 	lcd_putint_x2( 80, LCD_HEIGHT /2-50, BLACK, parking.id );
+ 2088              		.loc 1 144 0
+ 2089 0898 18305BE5 		ldrb	r3, [fp, #-24]	@ zero_extendqisi2
+ 2090 089c 5000A0E3 		mov	r0, #80
+ 2091 08a0 4610A0E3 		mov	r1, #70
+ 2092 08a4 0F20A0E3 		mov	r2, #15
+ 2093 08a8 FEFFFFEB 		bl	lcd_putint_x2
+ 145:../pantalla.c **** 	lcd_puts( 32, LCD_HEIGHT /2 + 38, BLACK, ("    Fin: "));
+ 2094              		.loc 1 145 0
+ 2095 08ac 2000A0E3 		mov	r0, #32
+ 2096 08b0 9E10A0E3 		mov	r1, #158
+ 2097 08b4 0F20A0E3 		mov	r2, #15
+ 2098 08b8 68309FE5 		ldr	r3, .L36+4
+ 2099 08bc FEFFFFEB 		bl	lcd_puts
+ 146:../pantalla.c **** 	lcd_puts( 104, LCD_HEIGHT /2 + 38, BLACK, rtc_stringDate(parking.deadline));
+ 2100              		.loc 1 146 0
+ 2101 08c0 B6315BE1 		ldrh	r3, [fp, #-22]
+ 2102 08c4 B4215BE1 		ldrh	r2, [fp, #-20]
+ 2103 08c8 0228A0E1 		mov	r2, r2, asl #16
+ 2104 08cc 033082E1 		orr	r3, r2, r3
+ 2105 08d0 0020A0E3 		mov	r2, #0
+ 2106 08d4 0320A0E1 		mov	r2, r3
+ 2107 08d8 B2315BE1 		ldrh	r3, [fp, #-18]
+ 2108 08dc 10105BE5 		ldrb	r1, [fp, #-16]	@ zero_extendqisi2
+ 2109 08e0 0118A0E1 		mov	r1, r1, asl #16
+ 2110 08e4 031081E1 		orr	r1, r1, r3
+ 2111 08e8 0030A0E3 		mov	r3, #0
+ 2112 08ec FF14C1E3 		bic	r1, r1, #-16777216
+ 2113 08f0 FF3403E2 		and	r3, r3, #-16777216
+ 2114 08f4 033081E1 		orr	r3, r1, r3
+ 2115 08f8 0200A0E1 		mov	r0, r2
+ 2116 08fc 0310A0E1 		mov	r1, r3
+ 2117 0900 FEFFFFEB 		bl	rtc_stringDate
+ 2118 0904 0030A0E1 		mov	r3, r0
+ 2119 0908 6800A0E3 		mov	r0, #104
+ 2120 090c 9E10A0E3 		mov	r1, #158
+ 2121 0910 0F20A0E3 		mov	r2, #15
+ 2122 0914 FEFFFFEB 		bl	lcd_puts
+ 147:../pantalla.c **** }
+ 2123              		.loc 1 147 0
+ 2124 0918 0CD04BE2 		sub	sp, fp, #12
+ 2125 091c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2126 0920 1EFF2FE1 		bx	lr
+ 2127              	.L37:
+ 2128              		.align	2
+ 2129              	.L36:
+ 2130 0924 30020000 		.word	.LC26
+ 2131 0928 08020000 		.word	.LC24
+ 2132              		.cfi_endproc
+ 2133              	.LFE11:
+ 2135              		.section	.rodata
+ 2136              		.align	2
+ 2137              	.LC27:
+ 2138 0240 53616C64 		.ascii	"Saldo max superado\000"
+ 2138      6F206D61 
+ 2138      78207375 
+ 2138      70657261 
+ 2138      646F00
+ 2139 0253 00       		.align	2
+ 2140              	.LC28:
+ 2141 0254 656C206D 		.ascii	"el maximo saldo es 2,40 euros\000"
+ 2141      6178696D 
+ 2141      6F207361 
+ 2141      6C646F20 
+ 2141      65732032 
+ 2142              		.text
+ 2143              		.align	2
+ 2144              		.global	plotPayExcessFailure
+ 2146              	plotPayExcessFailure:
+ 2147              	.LFB12:
+ 148:../pantalla.c **** 
+ 149:../pantalla.c **** void plotPayExcessFailure()
+ 150:../pantalla.c **** {
+ 2148              		.loc 1 150 0
+ 2149              		.cfi_startproc
+ 2150              		@ Function supports interworking.
+ 2151              		@ args = 0, pretend = 0, frame = 0
+ 2152              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2153 092c 0DC0A0E1 		mov	ip, sp
+ 2154              	.LCFI24:
+ 2155              		.cfi_def_cfa_register 12
+ 2156 0930 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2157 0934 04B04CE2 		sub	fp, ip, #4
+ 2158              		.cfi_offset 14, -8
+ 2159              		.cfi_offset 13, -12
+ 2160              		.cfi_offset 11, -16
+ 2161              	.LCFI25:
+ 2162              		.cfi_def_cfa 11, 4
+ 151:../pantalla.c **** 	lcd_clear();
+ 2163              		.loc 1 151 0
+ 2164 0938 FEFFFFEB 		bl	lcd_clear
+ 152:../pantalla.c **** 	lcd_puts_x2(16, (LCD_HEIGHT/2)-30, BLACK, "Saldo max superado");
+ 2165              		.loc 1 152 0
+ 2166 093c 1000A0E3 		mov	r0, #16
+ 2167 0940 5A10A0E3 		mov	r1, #90
+ 2168 0944 0F20A0E3 		mov	r2, #15
+ 2169 0948 20309FE5 		ldr	r3, .L39
+ 2170 094c FEFFFFEB 		bl	lcd_puts_x2
+ 153:../pantalla.c **** 	lcd_puts(40, (LCD_HEIGHT/2), BLACK, "el maximo saldo es 2,40 euros");
+ 2171              		.loc 1 153 0
+ 2172 0950 2800A0E3 		mov	r0, #40
+ 2173 0954 7810A0E3 		mov	r1, #120
+ 2174 0958 0F20A0E3 		mov	r2, #15
+ 2175 095c 10309FE5 		ldr	r3, .L39+4
+ 2176 0960 FEFFFFEB 		bl	lcd_puts
+ 154:../pantalla.c **** }
+ 2177              		.loc 1 154 0
+ 2178 0964 0CD04BE2 		sub	sp, fp, #12
+ 2179 0968 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2180 096c 1EFF2FE1 		bx	lr
+ 2181              	.L40:
+ 2182              		.align	2
+ 2183              	.L39:
+ 2184 0970 40020000 		.word	.LC27
+ 2185 0974 54020000 		.word	.LC28
+ 2186              		.cfi_endproc
+ 2187              	.LFE12:
+ 2189              		.section	.rodata
+ 2190 0272 0000     		.align	2
+ 2191              	.LC29:
+ 2192 0274 53616C64 		.ascii	"Saldo insuficiente\000"
+ 2192      6F20696E 
+ 2192      73756669 
+ 2192      6369656E 
+ 2192      746500
+ 2193 0287 00       		.align	2
+ 2194              	.LC30:
+ 2195 0288 656C2073 		.ascii	"el saldo minimo es 0,20 euros\000"
+ 2195      616C646F 
+ 2195      206D696E 
+ 2195      696D6F20 
+ 2195      65732030 
+ 2196 02a6 0000     		.text
+ 2197              		.align	2
+ 2198              		.global	plotPayInsufFailure
+ 2200              	plotPayInsufFailure:
+ 2201              	.LFB13:
+ 155:../pantalla.c **** 
+ 156:../pantalla.c **** void plotPayInsufFailure()
+ 157:../pantalla.c **** {
+ 2202              		.loc 1 157 0
+ 2203              		.cfi_startproc
+ 2204              		@ Function supports interworking.
+ 2205              		@ args = 0, pretend = 0, frame = 0
+ 2206              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2207 0978 0DC0A0E1 		mov	ip, sp
+ 2208              	.LCFI26:
+ 2209              		.cfi_def_cfa_register 12
+ 2210 097c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2211 0980 04B04CE2 		sub	fp, ip, #4
+ 2212              		.cfi_offset 14, -8
+ 2213              		.cfi_offset 13, -12
+ 2214              		.cfi_offset 11, -16
+ 2215              	.LCFI27:
+ 2216              		.cfi_def_cfa 11, 4
+ 158:../pantalla.c **** 	lcd_clear();
+ 2217              		.loc 1 158 0
+ 2218 0984 FEFFFFEB 		bl	lcd_clear
+ 159:../pantalla.c **** 	lcd_puts_x2(16, (LCD_HEIGHT/2)-30, BLACK, "Saldo insuficiente");
+ 2219              		.loc 1 159 0
+ 2220 0988 1000A0E3 		mov	r0, #16
+ 2221 098c 5A10A0E3 		mov	r1, #90
+ 2222 0990 0F20A0E3 		mov	r2, #15
+ 2223 0994 20309FE5 		ldr	r3, .L42
+ 2224 0998 FEFFFFEB 		bl	lcd_puts_x2
+ 160:../pantalla.c **** 	lcd_puts(40, (LCD_HEIGHT/2), BLACK, "el saldo minimo es 0,20 euros");
+ 2225              		.loc 1 160 0
+ 2226 099c 2800A0E3 		mov	r0, #40
+ 2227 09a0 7810A0E3 		mov	r1, #120
+ 2228 09a4 0F20A0E3 		mov	r2, #15
+ 2229 09a8 10309FE5 		ldr	r3, .L42+4
+ 2230 09ac FEFFFFEB 		bl	lcd_puts
+ 161:../pantalla.c **** }
+ 2231              		.loc 1 161 0
+ 2232 09b0 0CD04BE2 		sub	sp, fp, #12
+ 2233 09b4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2234 09b8 1EFF2FE1 		bx	lr
+ 2235              	.L43:
+ 2236              		.align	2
+ 2237              	.L42:
+ 2238 09bc 74020000 		.word	.LC29
+ 2239 09c0 88020000 		.word	.LC30
+ 2240              		.cfi_endproc
+ 2241              	.LFE13:
+ 2243              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 pantalla.c
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1090   .text:00000000 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1093   .text:00000000 plotTime
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1132   .rodata:00000000 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1166   .text:00000048 plotWelcomeScreen
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1263   .text:00000154 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1282   .text:00000180 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1285   .text:00000180 plotSelectionScreen
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1475   .text:000003c4 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1485   .text:000003cc $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1488   .text:000003cc plotSelEnc
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1518   .text:000003f8 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1548   .text:000003fc $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1551   .text:000003fc plotPaymentScreen
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1671   .text:00000560 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1688   .text:0000058c plotPayCredit
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1754   .text:00000618 plotPayDeadline
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1685   .text:0000058c $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1742   .text:00000614 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1751   .text:00000618 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1796   .text:00000670 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1805   .text:00000674 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1808   .text:00000674 plotLicPlateScreen
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1873   .text:0000071c $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1878   .text:00000724 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1881   .text:00000724 plotLicPlateUpdate
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1922   .text:0000075c plotLicPlateEnc
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1952   .text:00000788 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1967   .text:0000078c $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:1970   .text:0000078c plotSucScreen
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2046   .text:0000085c $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2057   .text:00000868 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2060   .text:00000868 plotSelecFailure
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2130   .text:00000924 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2143   .text:0000092c $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2146   .text:0000092c plotPayExcessFailure
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2184   .text:00000970 $d
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2197   .text:00000978 $a
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2200   .text:00000978 plotPayInsufFailure
+C:\Users\guill\AppData\Local\Temp\ccMcurTf.s:2238   .text:000009bc $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+rtc_gettime
+rtc_stringDate
+lcd_puts
+lcd_clear
+lcd_puts_x2
+lcd_draw_box
+lcd_putint_x2
+lcd_putchar_x2
+lcd_putint
+lcd_puthex

@@ -1,0 +1,2772 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"proyecto.c"
+  21              	.Ltext0:
+  22              		.file 1 "../proyecto.c"
+ 2167              		.align	2
+ 2168              		.global	main
+ 2170              	main:
+ 2171              	.LFB0:
+   1:../proyecto.c **** /*-------------------------------------------------------------------
+   2:../proyecto.c **** **
+   3:../proyecto.c **** **  Aplicacion demo bajo un kernel de planificacion no expropiativo
+   4:../proyecto.c **** 
+   5:../proyecto.c **** ** Proyecto desarrollado por Guillermo Lemonnier y Lucas Arranz,
+   6:../proyecto.c **** **
+   7:../proyecto.c **** ** basado en la demo inicial desarrollada por el profesor José Manuel Mendías Cuadros
+   8:../proyecto.c **** **
+   9:../proyecto.c **** **
+  10:../proyecto.c **** **-----------------------------------------------------------------*/
+  11:../proyecto.c **** 
+  12:../proyecto.c **** 
+  13:../proyecto.c **** #include <s3c44b0x.h>
+  14:../proyecto.c **** #include <s3cev40.h>
+  15:../proyecto.c **** #include <system.h>
+  16:../proyecto.c **** #include <leds.h>
+  17:../proyecto.c **** #include <segs.h>
+  18:../proyecto.c **** #include <uart.h>
+  19:../proyecto.c **** #include <rtc.h>
+  20:../proyecto.c **** #include <timers.h>
+  21:../proyecto.c **** #include <keypad.h>
+  22:../proyecto.c **** #include <lcd.h>
+  23:../proyecto.c **** #include <ts.h>
+  24:../proyecto.c **** 
+  25:../proyecto.c **** #include "kernelcoop.h"
+  26:../proyecto.c **** #include "pantalla.h"
+  27:../proyecto.c **** #include "proyecto.h"
+  28:../proyecto.c **** 
+  29:../proyecto.c **** 
+  30:../proyecto.c **** /////////////////////////////////////////////////////////////////////////////
+  31:../proyecto.c **** // Declaracion de recursos
+  32:../proyecto.c **** /////////////////////////////////////////////////////////////////////////////
+  33:../proyecto.c **** 
+  34:../proyecto.c **** parking_t parking[MAXPLACES];
+  35:../proyecto.c **** 
+  36:../proyecto.c **** struct mbox1 {                /* mailbox donde la coinsAcceptorTask indica a mainTask la moneda int
+  37:../proyecto.c ****     boolean flag;
+  38:../proyecto.c ****     boolean licPlateInput;
+  39:../proyecto.c ****     uint8   cents;
+  40:../proyecto.c ****     uint8  keyPress;
+  41:../proyecto.c **** } kpPressedMsg;
+  42:../proyecto.c **** 
+  43:../proyecto.c **** struct mbox2 {                /* mailbox donde la tsScanTask indica a mainTask la posicion de la pa
+  44:../proyecto.c ****     boolean flag;
+  45:../proyecto.c ****     uint16  x, y;
+  46:../proyecto.c **** } tsPressedMsg;
+  47:../proyecto.c **** 
+  48:../proyecto.c **** struct mbox3 {                 /* mailbox donde la mainTask indica a coinsMoverTask si debe aceptar
+  49:../proyecto.c ****     boolean flag;
+  50:../proyecto.c ****     boolean accept;
+  51:../proyecto.c **** } coinsMoverMsg;
+  52:../proyecto.c **** 
+  53:../proyecto.c **** 
+  54:../proyecto.c **** struct mbox5{
+  55:../proyecto.c **** 	boolean flag;	  /* mailbox donde la mainTask indica a ticketPrintTask que imprima un ticket */
+  56:../proyecto.c **** 	parking_t place;
+  57:../proyecto.c **** }ticketMsg;
+  58:../proyecto.c **** 
+  59:../proyecto.c **** 
+  60:../proyecto.c **** 
+  61:../proyecto.c **** /*******************************************************************/
+  62:../proyecto.c **** 
+  63:../proyecto.c **** void main( void )
+  64:../proyecto.c **** 
+  65:../proyecto.c **** {
+ 2172              		.loc 1 65 0
+ 2173              		.cfi_startproc
+ 2174              		@ Function supports interworking.
+ 2175              		@ args = 0, pretend = 0, frame = 0
+ 2176              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2177 0000 0DC0A0E1 		mov	ip, sp
+ 2178              	.LCFI0:
+ 2179              		.cfi_def_cfa_register 12
+ 2180 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2181 0008 04B04CE2 		sub	fp, ip, #4
+ 2182              		.cfi_offset 14, -8
+ 2183              		.cfi_offset 13, -12
+ 2184              		.cfi_offset 11, -16
+ 2185              	.LCFI1:
+ 2186              		.cfi_def_cfa 11, 4
+  66:../proyecto.c ****     
+  67:../proyecto.c ****     sys_init();      
+ 2187              		.loc 1 67 0
+ 2188 000c FEFFFFEB 		bl	sys_init
+  68:../proyecto.c ****     leds_init();
+ 2189              		.loc 1 68 0
+ 2190 0010 FEFFFFEB 		bl	leds_init
+  69:../proyecto.c ****     segs_init();
+ 2191              		.loc 1 69 0
+ 2192 0014 FEFFFFEB 		bl	segs_init
+  70:../proyecto.c ****     uart0_init();
+ 2193              		.loc 1 70 0
+ 2194 0018 FEFFFFEB 		bl	uart0_init
+  71:../proyecto.c ****     rtc_init();
+ 2195              		.loc 1 71 0
+ 2196 001c FEFFFFEB 		bl	rtc_init
+  72:../proyecto.c ****     timers_init();
+ 2197              		.loc 1 72 0
+ 2198 0020 FEFFFFEB 		bl	timers_init
+  73:../proyecto.c ****     keypad_init();
+ 2199              		.loc 1 73 0
+ 2200 0024 FEFFFFEB 		bl	keypad_init
+  74:../proyecto.c ****     lcd_init();
+ 2201              		.loc 1 74 0
+ 2202 0028 FEFFFFEB 		bl	lcd_init
+  75:../proyecto.c ****     ts_init();
+ 2203              		.loc 1 75 0
+ 2204 002c FEFFFFEB 		bl	ts_init
+  76:../proyecto.c **** 
+  77:../proyecto.c ****     lcd_on();
+ 2205              		.loc 1 77 0
+ 2206 0030 FEFFFFEB 		bl	lcd_on
+  78:../proyecto.c ****     ts_on();
+ 2207              		.loc 1 78 0
+ 2208 0034 FEFFFFEB 		bl	ts_on
+  79:../proyecto.c **** 
+  80:../proyecto.c ****     setup();
+ 2209              		.loc 1 80 0
+ 2210 0038 FEFFFFEB 		bl	setup
+  81:../proyecto.c **** 
+  82:../proyecto.c ****     scheduler_init();                       /* Inicializa el kernel */
+ 2211              		.loc 1 82 0
+ 2212 003c FEFFFFEB 		bl	scheduler_init
+  83:../proyecto.c **** 
+  84:../proyecto.c ****     create_task( tsScanTask,          5 );    /* Crea las tareas de la aplicacion... */
+ 2213              		.loc 1 84 0
+ 2214 0040 58009FE5 		ldr	r0, .L3
+ 2215 0044 0510A0E3 		mov	r1, #5
+ 2216 0048 FEFFFFEB 		bl	create_task
+  85:../proyecto.c ****     create_task( kpScanTask,   5 );    /* ... el kernel asigna la prioridad segun orden de creacion
+ 2217              		.loc 1 85 0
+ 2218 004c 50009FE5 		ldr	r0, .L3+4
+ 2219 0050 0510A0E3 		mov	r1, #5
+ 2220 0054 FEFFFFEB 		bl	create_task
+  86:../proyecto.c ****     create_task( mainTask,           10 );    /* ... las tareas mas frecuentes tienen mayor priorid
+ 2221              		.loc 1 86 0
+ 2222 0058 48009FE5 		ldr	r0, .L3+8
+ 2223 005c 0A10A0E3 		mov	r1, #10
+ 2224 0060 FEFFFFEB 		bl	create_task
+  87:../proyecto.c ****     create_task( coinsMoverTask,     10 );
+ 2225              		.loc 1 87 0
+ 2226 0064 40009FE5 		ldr	r0, .L3+12
+ 2227 0068 0A10A0E3 		mov	r1, #10
+ 2228 006c FEFFFFEB 		bl	create_task
+  88:../proyecto.c ****     create_task( clockTask,          10 );
+ 2229              		.loc 1 88 0
+ 2230 0070 38009FE5 		ldr	r0, .L3+16
+ 2231 0074 0A10A0E3 		mov	r1, #10
+ 2232 0078 FEFFFFEB 		bl	create_task
+  89:../proyecto.c ****     create_task( ticketPrinterTask,  10 );
+ 2233              		.loc 1 89 0
+ 2234 007c 30009FE5 		ldr	r0, .L3+20
+ 2235 0080 0A10A0E3 		mov	r1, #10
+ 2236 0084 FEFFFFEB 		bl	create_task
+  90:../proyecto.c **** 
+  91:../proyecto.c ****     timer0_open_tick( scheduler, TICKS_PER_SEC );  /* Instala scheduler como RTI del timer0  */
+ 2237              		.loc 1 91 0
+ 2238 0088 28009FE5 		ldr	r0, .L3+24
+ 2239 008c 6410A0E3 		mov	r1, #100
+ 2240 0090 FEFFFFEB 		bl	timer0_open_tick
+ 2241              	.L2:
+  92:../proyecto.c **** 
+  93:../proyecto.c ****     while( 1 )
+  94:../proyecto.c ****     {
+  95:../proyecto.c ****         sleep();                /* Entra en estado IDLE, sale por interrupcion */
+ 2242              		.loc 1 95 0 discriminator 1
+ 2243 0094 FEFFFFEB 		bl	sleep
+  96:../proyecto.c ****         dispacher();            /* Las tareas preparadas se ejecutan en esta hebra (background) en 
+ 2244              		.loc 1 96 0 discriminator 1
+ 2245 0098 FEFFFFEB 		bl	dispacher
+  97:../proyecto.c ****     }
+ 2246              		.loc 1 97 0 discriminator 1
+ 2247 009c FCFFFFEA 		b	.L2
+ 2248              	.L4:
+ 2249              		.align	2
+ 2250              	.L3:
+ 2251 00a0 00000000 		.word	tsScanTask
+ 2252 00a4 00000000 		.word	kpScanTask
+ 2253 00a8 00000000 		.word	mainTask
+ 2254 00ac 00000000 		.word	coinsMoverTask
+ 2255 00b0 00000000 		.word	clockTask
+ 2256 00b4 00000000 		.word	ticketPrinterTask
+ 2257 00b8 00000000 		.word	scheduler
+ 2258              		.cfi_endproc
+ 2259              	.LFE0:
+ 2261              		.align	2
+ 2262              		.global	mainTask
+ 2264              	mainTask:
+ 2265              	.LFB1:
+  98:../proyecto.c **** 
+  99:../proyecto.c **** }
+ 100:../proyecto.c **** 
+ 101:../proyecto.c **** /*******************************************************************/
+ 102:../proyecto.c **** 
+ 103:../proyecto.c **** /* 
+ 104:../proyecto.c **** ** Tarea principal, se activa cada 100 ms muestreando los mensajes enviados de otras tareas y actua
+ 105:../proyecto.c **** */
+ 106:../proyecto.c **** void mainTask( void )  
+ 107:../proyecto.c **** {
+ 2266              		.loc 1 107 0
+ 2267              		.cfi_startproc
+ 2268              		@ Function supports interworking.
+ 2269              		@ args = 0, pretend = 0, frame = 8
+ 2270              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2271 00bc 0DC0A0E1 		mov	ip, sp
+ 2272              	.LCFI2:
+ 2273              		.cfi_def_cfa_register 12
+ 2274 00c0 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2275 00c4 04B04CE2 		sub	fp, ip, #4
+ 2276              		.cfi_offset 14, -8
+ 2277              		.cfi_offset 13, -12
+ 2278              		.cfi_offset 11, -16
+ 2279              	.LCFI3:
+ 2280              		.cfi_def_cfa 11, 4
+ 2281 00c8 08D04DE2 		sub	sp, sp, #8
+ 108:../proyecto.c ****     static boolean init = TRUE;
+ 109:../proyecto.c ****     static enum { waiting, selection, error, payment, licPlateInput, success } state;
+ 110:../proyecto.c ****     static uint16 credit;
+ 111:../proyecto.c ****     static uint16 ticks;
+ 112:../proyecto.c ****     static uint8 placeSelected;
+ 113:../proyecto.c ****     static rtc_time_t og_deadline;
+ 114:../proyecto.c **** 
+ 115:../proyecto.c **** 
+ 116:../proyecto.c ****     if( init )
+ 2282              		.loc 1 116 0
+ 2283 00cc 4C399FE5 		ldr	r3, .L45
+ 2284 00d0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2285 00d4 000053E3 		cmp	r3, #0
+ 2286 00d8 3400000A 		beq	.L6
+ 2287              	.LBB2:
+ 117:../proyecto.c ****     {
+ 118:../proyecto.c ****         init   = FALSE;
+ 2288              		.loc 1 118 0
+ 2289 00dc 3C399FE5 		ldr	r3, .L45
+ 2290 00e0 0020A0E3 		mov	r2, #0
+ 2291 00e4 0020C3E5 		strb	r2, [r3, #0]
+ 119:../proyecto.c ****         plotWelcomeScreen();
+ 2292              		.loc 1 119 0
+ 2293 00e8 FEFFFFEB 		bl	plotWelcomeScreen
+ 120:../proyecto.c ****         credit = 0;
+ 2294              		.loc 1 120 0
+ 2295 00ec 30399FE5 		ldr	r3, .L45+4
+ 2296 00f0 0020A0E3 		mov	r2, #0
+ 2297 00f4 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 121:../proyecto.c ****         int i;
+ 122:../proyecto.c ****         for(i = 0; i < MAXPLACES; i++)
+ 2298              		.loc 1 122 0
+ 2299 00f8 0030A0E3 		mov	r3, #0
+ 2300 00fc 10300BE5 		str	r3, [fp, #-16]
+ 2301 0100 230000EA 		b	.L7
+ 2302              	.L8:
+ 123:../proyecto.c ****         {
+ 124:../proyecto.c ****         	parking[i].id = i+1;
+ 2303              		.loc 1 124 0 discriminator 2
+ 2304 0104 10301BE5 		ldr	r3, [fp, #-16]
+ 2305 0108 FF3003E2 		and	r3, r3, #255
+ 2306 010c 013083E2 		add	r3, r3, #1
+ 2307 0110 FF1003E2 		and	r1, r3, #255
+ 2308 0114 0C099FE5 		ldr	r0, .L45+8
+ 2309 0118 10201BE5 		ldr	r2, [fp, #-16]
+ 2310 011c 0230A0E1 		mov	r3, r2
+ 2311 0120 8330A0E1 		mov	r3, r3, asl #1
+ 2312 0124 023083E0 		add	r3, r3, r2
+ 2313 0128 0331A0E1 		mov	r3, r3, asl #2
+ 2314 012c 033080E0 		add	r3, r0, r3
+ 2315 0130 0120A0E1 		mov	r2, r1
+ 2316 0134 0020C3E5 		strb	r2, [r3, #0]
+ 125:../proyecto.c ****         	parking[i].free = TRUE;
+ 2317              		.loc 1 125 0 discriminator 2
+ 2318 0138 E8189FE5 		ldr	r1, .L45+8
+ 2319 013c 10201BE5 		ldr	r2, [fp, #-16]
+ 2320 0140 0230A0E1 		mov	r3, r2
+ 2321 0144 8330A0E1 		mov	r3, r3, asl #1
+ 2322 0148 023083E0 		add	r3, r3, r2
+ 2323 014c 0331A0E1 		mov	r3, r3, asl #2
+ 2324 0150 033081E0 		add	r3, r1, r3
+ 2325 0154 0120A0E3 		mov	r2, #1
+ 2326 0158 0120C3E5 		strb	r2, [r3, #1]
+ 126:../proyecto.c ****         	parking[i].licPlate = 0;
+ 2327              		.loc 1 126 0 discriminator 2
+ 2328 015c C4089FE5 		ldr	r0, .L45+8
+ 2329 0160 10201BE5 		ldr	r2, [fp, #-16]
+ 2330 0164 0810A0E3 		mov	r1, #8
+ 2331 0168 0230A0E1 		mov	r3, r2
+ 2332 016c 8330A0E1 		mov	r3, r3, asl #1
+ 2333 0170 023083E0 		add	r3, r3, r2
+ 2334 0174 0331A0E1 		mov	r3, r3, asl #2
+ 2335 0178 033080E0 		add	r3, r0, r3
+ 2336 017c 013083E0 		add	r3, r3, r1
+ 2337 0180 0020A0E3 		mov	r2, #0
+ 2338 0184 B220C3E1 		strh	r2, [r3, #2]	@ movhi
+ 122:../proyecto.c ****         for(i = 0; i < MAXPLACES; i++)
+ 2339              		.loc 1 122 0 discriminator 2
+ 2340 0188 10301BE5 		ldr	r3, [fp, #-16]
+ 2341 018c 013083E2 		add	r3, r3, #1
+ 2342 0190 10300BE5 		str	r3, [fp, #-16]
+ 2343              	.L7:
+ 122:../proyecto.c ****         for(i = 0; i < MAXPLACES; i++)
+ 2344              		.loc 1 122 0 is_stmt 0 discriminator 1
+ 2345 0194 10301BE5 		ldr	r3, [fp, #-16]
+ 2346 0198 070053E3 		cmp	r3, #7
+ 2347 019c D8FFFFDA 		ble	.L8
+ 127:../proyecto.c ****         }
+ 128:../proyecto.c ****         state = waiting;
+ 2348              		.loc 1 128 0 is_stmt 1
+ 2349 01a0 84389FE5 		ldr	r3, .L45+12
+ 2350 01a4 0020A0E3 		mov	r2, #0
+ 2351 01a8 0020C3E5 		strb	r2, [r3, #0]
+ 2352 01ac 180200EA 		b	.L5
+ 2353              	.L6:
+ 2354              	.LBE2:
+ 129:../proyecto.c ****     }
+ 130:../proyecto.c ****     else switch( state )
+ 2355              		.loc 1 130 0
+ 2356 01b0 74389FE5 		ldr	r3, .L45+12
+ 2357 01b4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2358 01b8 050053E3 		cmp	r3, #5
+ 2359 01bc 03F19F97 		ldrls	pc, [pc, r3, asl #2]
+ 2360 01c0 130200EA 		b	.L5
+ 2361              	.L16:
+ 2362 01c4 DC010000 		.word	.L10
+ 2363 01c8 54020000 		.word	.L11
+ 2364 01cc 3C090000 		.word	.L12
+ 2365 01d0 28040000 		.word	.L13
+ 2366 01d4 54060000 		.word	.L14
+ 2367 01d8 90080000 		.word	.L15
+ 2368              	.L10:
+ 131:../proyecto.c ****     {
+ 132:../proyecto.c ****         case waiting:                        /* Estado en donde rechaza monedas y espera la pulsaci
+ 133:../proyecto.c ****             if( tsPressedMsg.flag )                    /* Chequea si se ha pulsado la pantalla (men
+ 2369              		.loc 1 133 0
+ 2370 01dc 4C389FE5 		ldr	r3, .L45+16
+ 2371 01e0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2372 01e4 000053E3 		cmp	r3, #0
+ 2373 01e8 0B00000A 		beq	.L17
+ 134:../proyecto.c ****             {
+ 135:../proyecto.c ****                 tsPressedMsg.flag = FALSE;                 /* Marca el mensaje como leido */
+ 2374              		.loc 1 135 0
+ 2375 01ec 3C389FE5 		ldr	r3, .L45+16
+ 2376 01f0 0020A0E3 		mov	r2, #0
+ 2377 01f4 0020C3E5 		strb	r2, [r3, #0]
+ 136:../proyecto.c ****                 lcd_clear();                               /* Borra pantalla */
+ 2378              		.loc 1 136 0
+ 2379 01f8 FEFFFFEB 		bl	lcd_clear
+ 137:../proyecto.c ****                 plotSelectionScreen(parking);
+ 2380              		.loc 1 137 0
+ 2381 01fc 24089FE5 		ldr	r0, .L45+8
+ 2382 0200 FEFFFFEB 		bl	plotSelectionScreen
+ 138:../proyecto.c ****                 state = selection;                  /* Salta al estado selection ... */
+ 2383              		.loc 1 138 0
+ 2384 0204 20389FE5 		ldr	r3, .L45+12
+ 2385 0208 0120A0E3 		mov	r2, #1
+ 2386 020c 0020C3E5 		strb	r2, [r3, #0]
+ 139:../proyecto.c ****                 ticks = 1000;                               /* ... en el que debera permanecer un m
+ 2387              		.loc 1 139 0
+ 2388 0210 1C389FE5 		ldr	r3, .L45+20
+ 2389 0214 FA2FA0E3 		mov	r2, #1000
+ 2390 0218 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2391              	.L17:
+ 140:../proyecto.c ****             }    
+ 141:../proyecto.c ****             if( kpPressedMsg.flag )                /* Chequea si se ha introducido una moneda (mens
+ 2392              		.loc 1 141 0
+ 2393 021c 14389FE5 		ldr	r3, .L45+24
+ 2394 0220 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2395 0224 000053E3 		cmp	r3, #0
+ 2396 0228 EE01000A 		beq	.L39
+ 142:../proyecto.c ****             {
+ 143:../proyecto.c ****                 kpPressedMsg.flag = FALSE;              /* Marca el mensaje como leido */
+ 2397              		.loc 1 143 0
+ 2398 022c 04389FE5 		ldr	r3, .L45+24
+ 2399 0230 0020A0E3 		mov	r2, #0
+ 2400 0234 0020C3E5 		strb	r2, [r3, #0]
+ 144:../proyecto.c ****                 coinsMoverMsg.accept = FALSE;              /* Envia un mensaje para que la moneda s
+ 2401              		.loc 1 144 0
+ 2402 0238 FC379FE5 		ldr	r3, .L45+28
+ 2403 023c 0020A0E3 		mov	r2, #0
+ 2404 0240 0120C3E5 		strb	r2, [r3, #1]
+ 145:../proyecto.c ****                 coinsMoverMsg.flag   = TRUE;
+ 2405              		.loc 1 145 0
+ 2406 0244 F0379FE5 		ldr	r3, .L45+28
+ 2407 0248 0120A0E3 		mov	r2, #1
+ 2408 024c 0020C3E5 		strb	r2, [r3, #0]
+ 146:../proyecto.c ****             }    
+ 147:../proyecto.c ****             break;
+ 2409              		.loc 1 147 0
+ 2410 0250 EF0100EA 		b	.L5
+ 2411              	.L11:
+ 148:../proyecto.c ****         case selection:
+ 149:../proyecto.c ****         	if( !(--ticks) )                           /* Decrementa ticks y chequea si ha permanecido
+ 2412              		.loc 1 149 0
+ 2413 0254 D8379FE5 		ldr	r3, .L45+20
+ 2414 0258 B030D3E1 		ldrh	r3, [r3, #0]
+ 2415 025c 013043E2 		sub	r3, r3, #1
+ 2416 0260 0338A0E1 		mov	r3, r3, asl #16
+ 2417 0264 2328A0E1 		mov	r2, r3, lsr #16
+ 2418 0268 C4379FE5 		ldr	r3, .L45+20
+ 2419 026c B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2420 0270 BC379FE5 		ldr	r3, .L45+20
+ 2421 0274 B030D3E1 		ldrh	r3, [r3, #0]
+ 2422 0278 000053E3 		cmp	r3, #0
+ 2423 027c 0300001A 		bne	.L19
+ 150:../proyecto.c **** 			{
+ 151:../proyecto.c **** 				plotWelcomeScreen();                       /* Visualiza pantalla inicial */
+ 2424              		.loc 1 151 0
+ 2425 0280 FEFFFFEB 		bl	plotWelcomeScreen
+ 152:../proyecto.c **** 				state = waiting;                      /* Salta al estado demo_waiting */
+ 2426              		.loc 1 152 0
+ 2427 0284 A0379FE5 		ldr	r3, .L45+12
+ 2428 0288 0020A0E3 		mov	r2, #0
+ 2429 028c 0020C3E5 		strb	r2, [r3, #0]
+ 2430              	.L19:
+ 153:../proyecto.c **** 			}
+ 154:../proyecto.c ****         	if( kpPressedMsg.flag )                /* Chequea si se ha introducido una moneda (mensaje
+ 2431              		.loc 1 154 0
+ 2432 0290 A0379FE5 		ldr	r3, .L45+24
+ 2433 0294 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2434 0298 000053E3 		cmp	r3, #0
+ 2435 029c 0800000A 		beq	.L20
+ 155:../proyecto.c **** 			{
+ 156:../proyecto.c **** 				kpPressedMsg.flag = FALSE;              /* Marca el mensaje como leido */
+ 2436              		.loc 1 156 0
+ 2437 02a0 90379FE5 		ldr	r3, .L45+24
+ 2438 02a4 0020A0E3 		mov	r2, #0
+ 2439 02a8 0020C3E5 		strb	r2, [r3, #0]
+ 157:../proyecto.c **** 				coinsMoverMsg.accept = FALSE;              /* Envia un mensaje para que la moneda se devuelva *
+ 2440              		.loc 1 157 0
+ 2441 02ac 88379FE5 		ldr	r3, .L45+28
+ 2442 02b0 0020A0E3 		mov	r2, #0
+ 2443 02b4 0120C3E5 		strb	r2, [r3, #1]
+ 158:../proyecto.c **** 				coinsMoverMsg.flag   = TRUE;
+ 2444              		.loc 1 158 0
+ 2445 02b8 7C379FE5 		ldr	r3, .L45+28
+ 2446 02bc 0120A0E3 		mov	r2, #1
+ 2447 02c0 0020C3E5 		strb	r2, [r3, #0]
+ 2448              	.L20:
+ 159:../proyecto.c **** 			}
+ 160:../proyecto.c ****         	if( tsPressedMsg.flag )
+ 2449              		.loc 1 160 0
+ 2450 02c4 64379FE5 		ldr	r3, .L45+16
+ 2451 02c8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2452 02cc 000053E3 		cmp	r3, #0
+ 2453 02d0 C601000A 		beq	.L40
+ 161:../proyecto.c ****         	{
+ 162:../proyecto.c ****         		tsPressedMsg.flag = FALSE;                 /* Marca el mensaje como leido */
+ 2454              		.loc 1 162 0
+ 2455 02d4 54379FE5 		ldr	r3, .L45+16
+ 2456 02d8 0020A0E3 		mov	r2, #0
+ 2457 02dc 0020C3E5 		strb	r2, [r3, #0]
+ 163:../proyecto.c **** 				if(parking[(placeSelected = selectorTask())].free) //si se selecciona una plaza disponible vamo
+ 2458              		.loc 1 163 0
+ 2459 02e0 FEFFFFEB 		bl	selectorTask
+ 2460 02e4 0030A0E1 		mov	r3, r0
+ 2461 02e8 FF2003E2 		and	r2, r3, #255
+ 2462 02ec 4C379FE5 		ldr	r3, .L45+32
+ 2463 02f0 0020C3E5 		strb	r2, [r3, #0]
+ 2464 02f4 44379FE5 		ldr	r3, .L45+32
+ 2465 02f8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2466 02fc 0320A0E1 		mov	r2, r3
+ 2467 0300 20179FE5 		ldr	r1, .L45+8
+ 2468 0304 0230A0E1 		mov	r3, r2
+ 2469 0308 8330A0E1 		mov	r3, r3, asl #1
+ 2470 030c 023083E0 		add	r3, r3, r2
+ 2471 0310 0331A0E1 		mov	r3, r3, asl #2
+ 2472 0314 033081E0 		add	r3, r1, r3
+ 2473 0318 0130D3E5 		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 2474 031c 000053E3 		cmp	r3, #0
+ 2475 0320 2800000A 		beq	.L22
+ 164:../proyecto.c **** 				{
+ 165:../proyecto.c **** 					rtc_gettime(&og_deadline);
+ 2476              		.loc 1 165 0
+ 2477 0324 18079FE5 		ldr	r0, .L45+36
+ 2478 0328 FEFFFFEB 		bl	rtc_gettime
+ 166:../proyecto.c **** 					parking[placeSelected].deadline = og_deadline;	//establecer la fecha inicial de la plaza
+ 2479              		.loc 1 166 0
+ 2480 032c 0C379FE5 		ldr	r3, .L45+32
+ 2481 0330 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2482 0334 0320A0E1 		mov	r2, r3
+ 2483 0338 E8169FE5 		ldr	r1, .L45+8
+ 2484 033c 0230A0E1 		mov	r3, r2
+ 2485 0340 8330A0E1 		mov	r3, r3, asl #1
+ 2486 0344 023083E0 		add	r3, r3, r2
+ 2487 0348 0331A0E1 		mov	r3, r3, asl #2
+ 2488 034c 032081E0 		add	r2, r1, r3
+ 2489 0350 EC369FE5 		ldr	r3, .L45+36
+ 2490 0354 021082E2 		add	r1, r2, #2
+ 2491 0358 0320A0E1 		mov	r2, r3
+ 2492 035c 0730A0E3 		mov	r3, #7
+ 2493 0360 0100A0E1 		mov	r0, r1
+ 2494 0364 0210A0E1 		mov	r1, r2
+ 2495 0368 0320A0E1 		mov	r2, r3
+ 2496 036c FEFFFFEB 		bl	memcpy
+ 167:../proyecto.c **** 					plotPaymentScreen(parking[placeSelected],credit);
+ 2497              		.loc 1 167 0
+ 2498 0370 C8369FE5 		ldr	r3, .L45+32
+ 2499 0374 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2500 0378 0320A0E1 		mov	r2, r3
+ 2501 037c A0369FE5 		ldr	r3, .L45+4
+ 2502 0380 B030D3E1 		ldrh	r3, [r3, #0]
+ 2503 0384 FFC003E2 		and	ip, r3, #255
+ 2504 0388 98169FE5 		ldr	r1, .L45+8
+ 2505 038c 0230A0E1 		mov	r3, r2
+ 2506 0390 8330A0E1 		mov	r3, r3, asl #1
+ 2507 0394 023083E0 		add	r3, r3, r2
+ 2508 0398 0331A0E1 		mov	r3, r3, asl #2
+ 2509 039c 033081E0 		add	r3, r1, r3
+ 2510 03a0 070093E8 		ldmia	r3, {r0, r1, r2}
+ 2511 03a4 0C30A0E1 		mov	r3, ip
+ 2512 03a8 FEFFFFEB 		bl	plotPaymentScreen
+ 168:../proyecto.c **** 					state = payment;
+ 2513              		.loc 1 168 0
+ 2514 03ac 78369FE5 		ldr	r3, .L45+12
+ 2515 03b0 0320A0E3 		mov	r2, #3
+ 2516 03b4 0020C3E5 		strb	r2, [r3, #0]
+ 169:../proyecto.c **** 					ticks = 500;
+ 2517              		.loc 1 169 0
+ 2518 03b8 74369FE5 		ldr	r3, .L45+20
+ 2519 03bc 7D2FA0E3 		mov	r2, #500
+ 2520 03c0 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 170:../proyecto.c **** 
+ 171:../proyecto.c **** 				} else if(placeSelected != 10){ // si no vamos a la pantalla de error
+ 172:../proyecto.c **** 
+ 173:../proyecto.c **** 					ticks = 300;
+ 174:../proyecto.c **** 					plotSelecFailure(parking[placeSelected]);
+ 175:../proyecto.c **** 					state = error;
+ 176:../proyecto.c **** 				} else {
+ 177:../proyecto.c **** 					plotSelEnc();
+ 178:../proyecto.c **** 				}
+ 179:../proyecto.c ****         	}
+ 180:../proyecto.c ****         	break;
+ 2521              		.loc 1 180 0
+ 2522 03c4 920100EA 		b	.L5
+ 2523              	.L22:
+ 171:../proyecto.c **** 				} else if(placeSelected != 10){ // si no vamos a la pantalla de error
+ 2524              		.loc 1 171 0
+ 2525 03c8 70369FE5 		ldr	r3, .L45+32
+ 2526 03cc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2527 03d0 0A0053E3 		cmp	r3, #10
+ 2528 03d4 1100000A 		beq	.L23
+ 173:../proyecto.c **** 					ticks = 300;
+ 2529              		.loc 1 173 0
+ 2530 03d8 54369FE5 		ldr	r3, .L45+20
+ 2531 03dc 4B2FA0E3 		mov	r2, #300
+ 2532 03e0 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 174:../proyecto.c **** 					plotSelecFailure(parking[placeSelected]);
+ 2533              		.loc 1 174 0
+ 2534 03e4 54369FE5 		ldr	r3, .L45+32
+ 2535 03e8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2536 03ec 0320A0E1 		mov	r2, r3
+ 2537 03f0 30169FE5 		ldr	r1, .L45+8
+ 2538 03f4 0230A0E1 		mov	r3, r2
+ 2539 03f8 8330A0E1 		mov	r3, r3, asl #1
+ 2540 03fc 023083E0 		add	r3, r3, r2
+ 2541 0400 0331A0E1 		mov	r3, r3, asl #2
+ 2542 0404 033081E0 		add	r3, r1, r3
+ 2543 0408 070093E8 		ldmia	r3, {r0, r1, r2}
+ 2544 040c FEFFFFEB 		bl	plotSelecFailure
+ 175:../proyecto.c **** 					state = error;
+ 2545              		.loc 1 175 0
+ 2546 0410 14369FE5 		ldr	r3, .L45+12
+ 2547 0414 0220A0E3 		mov	r2, #2
+ 2548 0418 0020C3E5 		strb	r2, [r3, #0]
+ 2549              		.loc 1 180 0
+ 2550 041c 7C0100EA 		b	.L5
+ 2551              	.L23:
+ 177:../proyecto.c **** 					plotSelEnc();
+ 2552              		.loc 1 177 0
+ 2553 0420 FEFFFFEB 		bl	plotSelEnc
+ 2554              		.loc 1 180 0
+ 2555 0424 7A0100EA 		b	.L5
+ 2556              	.L13:
+ 181:../proyecto.c ****         case payment:
+ 182:../proyecto.c ****         	if( !(--ticks) )                           /* Decrementa ticks y chequea si ha permanecido
+ 2557              		.loc 1 182 0
+ 2558 0428 04369FE5 		ldr	r3, .L45+20
+ 2559 042c B030D3E1 		ldrh	r3, [r3, #0]
+ 2560 0430 013043E2 		sub	r3, r3, #1
+ 2561 0434 0338A0E1 		mov	r3, r3, asl #16
+ 2562 0438 2328A0E1 		mov	r2, r3, lsr #16
+ 2563 043c F0359FE5 		ldr	r3, .L45+20
+ 2564 0440 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2565 0444 E8359FE5 		ldr	r3, .L45+20
+ 2566 0448 B030D3E1 		ldrh	r3, [r3, #0]
+ 2567 044c 000053E3 		cmp	r3, #0
+ 2568 0450 0300001A 		bne	.L24
+ 183:../proyecto.c **** 			{
+ 184:../proyecto.c **** 				plotWelcomeScreen();                       /* Visualiza pantalla inicial */
+ 2569              		.loc 1 184 0
+ 2570 0454 FEFFFFEB 		bl	plotWelcomeScreen
+ 185:../proyecto.c **** 				state = waiting;                      /* Salta al estado demo_waiting */
+ 2571              		.loc 1 185 0
+ 2572 0458 CC359FE5 		ldr	r3, .L45+12
+ 2573 045c 0020A0E3 		mov	r2, #0
+ 2574 0460 0020C3E5 		strb	r2, [r3, #0]
+ 2575              	.L24:
+ 186:../proyecto.c **** 			}
+ 187:../proyecto.c ****         	if( kpPressedMsg.flag )                /* Chequea si se ha introducido una moneda (mensaje
+ 2576              		.loc 1 187 0
+ 2577 0464 CC359FE5 		ldr	r3, .L45+24
+ 2578 0468 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2579 046c 000053E3 		cmp	r3, #0
+ 2580 0470 4900000A 		beq	.L25
+ 188:../proyecto.c **** 			{
+ 189:../proyecto.c **** 				kpPressedMsg.flag   = FALSE;           /* Marca el mensaje como leido */
+ 2581              		.loc 1 189 0
+ 2582 0474 BC359FE5 		ldr	r3, .L45+24
+ 2583 0478 0020A0E3 		mov	r2, #0
+ 2584 047c 0020C3E5 		strb	r2, [r3, #0]
+ 190:../proyecto.c **** 				credit += kpPressedMsg.cents;          /* Incrementa el saldo */
+ 2585              		.loc 1 190 0
+ 2586 0480 B0359FE5 		ldr	r3, .L45+24
+ 2587 0484 0230D3E5 		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 2588 0488 0320A0E1 		mov	r2, r3
+ 2589 048c 90359FE5 		ldr	r3, .L45+4
+ 2590 0490 B030D3E1 		ldrh	r3, [r3, #0]
+ 2591 0494 033082E0 		add	r3, r2, r3
+ 2592 0498 0338A0E1 		mov	r3, r3, asl #16
+ 2593 049c 2328A0E1 		mov	r2, r3, lsr #16
+ 2594 04a0 7C359FE5 		ldr	r3, .L45+4
+ 2595 04a4 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 191:../proyecto.c **** 				updateDeadline(credit,&parking[placeSelected].deadline); // Actualiza la fecha de salida.
+ 2596              		.loc 1 191 0
+ 2597 04a8 74359FE5 		ldr	r3, .L45+4
+ 2598 04ac B030D3E1 		ldrh	r3, [r3, #0]
+ 2599 04b0 FF1003E2 		and	r1, r3, #255
+ 2600 04b4 84359FE5 		ldr	r3, .L45+32
+ 2601 04b8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2602 04bc 0320A0E1 		mov	r2, r3
+ 2603 04c0 0230A0E1 		mov	r3, r2
+ 2604 04c4 8330A0E1 		mov	r3, r3, asl #1
+ 2605 04c8 023083E0 		add	r3, r3, r2
+ 2606 04cc 0331A0E1 		mov	r3, r3, asl #2
+ 2607 04d0 50259FE5 		ldr	r2, .L45+8
+ 2608 04d4 023083E0 		add	r3, r3, r2
+ 2609 04d8 023083E2 		add	r3, r3, #2
+ 2610 04dc 0100A0E1 		mov	r0, r1
+ 2611 04e0 0310A0E1 		mov	r1, r3
+ 2612 04e4 FEFFFFEB 		bl	updateDeadline
+ 192:../proyecto.c **** 				plotPayCredit(credit);
+ 2613              		.loc 1 192 0
+ 2614 04e8 34359FE5 		ldr	r3, .L45+4
+ 2615 04ec B030D3E1 		ldrh	r3, [r3, #0]
+ 2616 04f0 FF3003E2 		and	r3, r3, #255
+ 2617 04f4 0300A0E1 		mov	r0, r3
+ 2618 04f8 FEFFFFEB 		bl	plotPayCredit
+ 193:../proyecto.c **** 				plotPayDeadline(parking[placeSelected].deadline);
+ 2619              		.loc 1 193 0
+ 2620 04fc 3C359FE5 		ldr	r3, .L45+32
+ 2621 0500 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2622 0504 0320A0E1 		mov	r2, r3
+ 2623 0508 18159FE5 		ldr	r1, .L45+8
+ 2624 050c 0230A0E1 		mov	r3, r2
+ 2625 0510 8330A0E1 		mov	r3, r3, asl #1
+ 2626 0514 023083E0 		add	r3, r3, r2
+ 2627 0518 0331A0E1 		mov	r3, r3, asl #2
+ 2628 051c 033081E0 		add	r3, r1, r3
+ 2629 0520 B220D3E1 		ldrh	r2, [r3, #2]
+ 2630 0524 B410D3E1 		ldrh	r1, [r3, #4]
+ 2631 0528 0118A0E1 		mov	r1, r1, asl #16
+ 2632 052c 021081E1 		orr	r1, r1, r2
+ 2633 0530 0020A0E3 		mov	r2, #0
+ 2634 0534 0120A0E1 		mov	r2, r1
+ 2635 0538 B610D3E1 		ldrh	r1, [r3, #6]
+ 2636 053c 0830D3E5 		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 2637 0540 0338A0E1 		mov	r3, r3, asl #16
+ 2638 0544 011083E1 		orr	r1, r3, r1
+ 2639 0548 0030A0E3 		mov	r3, #0
+ 2640 054c FF14C1E3 		bic	r1, r1, #-16777216
+ 2641 0550 FF3403E2 		and	r3, r3, #-16777216
+ 2642 0554 033081E1 		orr	r3, r1, r3
+ 2643 0558 0200A0E1 		mov	r0, r2
+ 2644 055c 0310A0E1 		mov	r1, r3
+ 2645 0560 FEFFFFEB 		bl	plotPayDeadline
+ 194:../proyecto.c **** 				ticks = 500;                              /* Restaura el tiempo maximo sin actividad que perman
+ 2646              		.loc 1 194 0
+ 2647 0564 C8349FE5 		ldr	r3, .L45+20
+ 2648 0568 7D2FA0E3 		mov	r2, #500
+ 2649 056c B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 195:../proyecto.c **** 				if(credit > 240){
+ 2650              		.loc 1 195 0
+ 2651 0570 AC349FE5 		ldr	r3, .L45+4
+ 2652 0574 B030D3E1 		ldrh	r3, [r3, #0]
+ 2653 0578 F00053E3 		cmp	r3, #240
+ 2654 057c 0600009A 		bls	.L25
+ 196:../proyecto.c **** 					credit = 0;
+ 2655              		.loc 1 196 0
+ 2656 0580 9C349FE5 		ldr	r3, .L45+4
+ 2657 0584 0020A0E3 		mov	r2, #0
+ 2658 0588 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 197:../proyecto.c **** 					plotPayExcessFailure();
+ 2659              		.loc 1 197 0
+ 2660 058c FEFFFFEB 		bl	plotPayExcessFailure
+ 198:../proyecto.c **** 					state = error;
+ 2661              		.loc 1 198 0
+ 2662 0590 94349FE5 		ldr	r3, .L45+12
+ 2663 0594 0220A0E3 		mov	r2, #2
+ 2664 0598 0020C3E5 		strb	r2, [r3, #0]
+ 2665              	.L25:
+ 199:../proyecto.c **** 				}
+ 200:../proyecto.c **** 			}
+ 201:../proyecto.c ****         	if( tsPressedMsg.flag )                    /* Chequea si se ha pulsado la pantalla (mensaj
+ 2666              		.loc 1 201 0
+ 2667 059c 8C349FE5 		ldr	r3, .L45+16
+ 2668 05a0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2669 05a4 000053E3 		cmp	r3, #0
+ 2670 05a8 1201000A 		beq	.L41
+ 202:../proyecto.c **** 			{
+ 203:../proyecto.c **** 				tsPressedMsg.flag = FALSE;                /* Marca el mensaje como leido */
+ 2671              		.loc 1 203 0
+ 2672 05ac 7C349FE5 		ldr	r3, .L45+16
+ 2673 05b0 0020A0E3 		mov	r2, #0
+ 2674 05b4 0020C3E5 		strb	r2, [r3, #0]
+ 204:../proyecto.c **** 				coinsMoverMsg.accept = TRUE;              /* Envia un mensaje para que las monedas se acepten *
+ 2675              		.loc 1 204 0
+ 2676 05b8 7C349FE5 		ldr	r3, .L45+28
+ 2677 05bc 0120A0E3 		mov	r2, #1
+ 2678 05c0 0120C3E5 		strb	r2, [r3, #1]
+ 205:../proyecto.c **** 				coinsMoverMsg.flag   = TRUE;
+ 2679              		.loc 1 205 0
+ 2680 05c4 70349FE5 		ldr	r3, .L45+28
+ 2681 05c8 0120A0E3 		mov	r2, #1
+ 2682 05cc 0020C3E5 		strb	r2, [r3, #0]
+ 206:../proyecto.c **** 				if(credit < 20){
+ 2683              		.loc 1 206 0
+ 2684 05d0 4C349FE5 		ldr	r3, .L45+4
+ 2685 05d4 B030D3E1 		ldrh	r3, [r3, #0]
+ 2686 05d8 130053E3 		cmp	r3, #19
+ 2687 05dc 0700008A 		bhi	.L27
+ 207:../proyecto.c **** 					credit = 0;
+ 2688              		.loc 1 207 0
+ 2689 05e0 3C349FE5 		ldr	r3, .L45+4
+ 2690 05e4 0020A0E3 		mov	r2, #0
+ 2691 05e8 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 208:../proyecto.c **** 					plotPayInsufFailure();
+ 2692              		.loc 1 208 0
+ 2693 05ec FEFFFFEB 		bl	plotPayInsufFailure
+ 209:../proyecto.c **** 					state = error;
+ 2694              		.loc 1 209 0
+ 2695 05f0 34349FE5 		ldr	r3, .L45+12
+ 2696 05f4 0220A0E3 		mov	r2, #2
+ 2697 05f8 0020C3E5 		strb	r2, [r3, #0]
+ 210:../proyecto.c **** 				} else {
+ 211:../proyecto.c **** 					state = licPlateInput;
+ 212:../proyecto.c **** 					plotLicPlateScreen(parking[placeSelected]);
+ 213:../proyecto.c **** 					kpPressedMsg.licPlateInput = TRUE;
+ 214:../proyecto.c **** 					credit = 0;
+ 215:../proyecto.c **** 				}
+ 216:../proyecto.c **** 			}
+ 217:../proyecto.c ****         	break;
+ 2698              		.loc 1 217 0
+ 2699 05fc 040100EA 		b	.L5
+ 2700              	.L27:
+ 211:../proyecto.c **** 					state = licPlateInput;
+ 2701              		.loc 1 211 0
+ 2702 0600 24349FE5 		ldr	r3, .L45+12
+ 2703 0604 0420A0E3 		mov	r2, #4
+ 2704 0608 0020C3E5 		strb	r2, [r3, #0]
+ 212:../proyecto.c **** 					plotLicPlateScreen(parking[placeSelected]);
+ 2705              		.loc 1 212 0
+ 2706 060c 2C349FE5 		ldr	r3, .L45+32
+ 2707 0610 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2708 0614 0320A0E1 		mov	r2, r3
+ 2709 0618 08149FE5 		ldr	r1, .L45+8
+ 2710 061c 0230A0E1 		mov	r3, r2
+ 2711 0620 8330A0E1 		mov	r3, r3, asl #1
+ 2712 0624 023083E0 		add	r3, r3, r2
+ 2713 0628 0331A0E1 		mov	r3, r3, asl #2
+ 2714 062c 033081E0 		add	r3, r1, r3
+ 2715 0630 070093E8 		ldmia	r3, {r0, r1, r2}
+ 2716 0634 FEFFFFEB 		bl	plotLicPlateScreen
+ 213:../proyecto.c **** 					kpPressedMsg.licPlateInput = TRUE;
+ 2717              		.loc 1 213 0
+ 2718 0638 F8339FE5 		ldr	r3, .L45+24
+ 2719 063c 0120A0E3 		mov	r2, #1
+ 2720 0640 0120C3E5 		strb	r2, [r3, #1]
+ 214:../proyecto.c **** 					credit = 0;
+ 2721              		.loc 1 214 0
+ 2722 0644 D8339FE5 		ldr	r3, .L45+4
+ 2723 0648 0020A0E3 		mov	r2, #0
+ 2724 064c B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2725              		.loc 1 217 0
+ 2726 0650 EF0000EA 		b	.L5
+ 2727              	.L14:
+ 218:../proyecto.c ****         case licPlateInput:
+ 219:../proyecto.c **** 			if( !(--ticks) )                           /* Decrementa ticks y chequea si ha permanecido en es
+ 2728              		.loc 1 219 0
+ 2729 0654 D8339FE5 		ldr	r3, .L45+20
+ 2730 0658 B030D3E1 		ldrh	r3, [r3, #0]
+ 2731 065c 013043E2 		sub	r3, r3, #1
+ 2732 0660 0338A0E1 		mov	r3, r3, asl #16
+ 2733 0664 2328A0E1 		mov	r2, r3, lsr #16
+ 2734 0668 C4339FE5 		ldr	r3, .L45+20
+ 2735 066c B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2736 0670 BC339FE5 		ldr	r3, .L45+20
+ 2737 0674 B030D3E1 		ldrh	r3, [r3, #0]
+ 2738 0678 000053E3 		cmp	r3, #0
+ 2739 067c 0600001A 		bne	.L28
+ 220:../proyecto.c **** 			{
+ 221:../proyecto.c **** 				plotWelcomeScreen();                       /* Visualiza pantalla inicial */
+ 2740              		.loc 1 221 0
+ 2741 0680 FEFFFFEB 		bl	plotWelcomeScreen
+ 222:../proyecto.c **** 				kpPressedMsg.licPlateInput = FALSE;			//limpio el flag del keypress porque voy a cambiar de est
+ 2742              		.loc 1 222 0
+ 2743 0684 AC339FE5 		ldr	r3, .L45+24
+ 2744 0688 0020A0E3 		mov	r2, #0
+ 2745 068c 0120C3E5 		strb	r2, [r3, #1]
+ 223:../proyecto.c **** 				state = waiting;                      /* Salta al estado demo_waiting */
+ 2746              		.loc 1 223 0
+ 2747 0690 94339FE5 		ldr	r3, .L45+12
+ 2748 0694 0020A0E3 		mov	r2, #0
+ 2749 0698 0020C3E5 		strb	r2, [r3, #0]
+ 2750              	.L28:
+ 224:../proyecto.c **** 			}
+ 225:../proyecto.c **** 			if( kpPressedMsg.flag )                /* Chequea si se ha introducido una moneda (mensaje recib
+ 2751              		.loc 1 225 0
+ 2752 069c 94339FE5 		ldr	r3, .L45+24
+ 2753 06a0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2754 06a4 000053E3 		cmp	r3, #0
+ 2755 06a8 2A00000A 		beq	.L29
+ 226:../proyecto.c **** 			{
+ 227:../proyecto.c **** 				kpPressedMsg.flag = FALSE;             						 /* Marca el mensaje como leido */
+ 2756              		.loc 1 227 0
+ 2757 06ac 84339FE5 		ldr	r3, .L45+24
+ 2758 06b0 0020A0E3 		mov	r2, #0
+ 2759 06b4 0020C3E5 		strb	r2, [r3, #0]
+ 228:../proyecto.c **** 				kpPressedMsg.licPlateInput = TRUE;							//activa el modo matricula
+ 2760              		.loc 1 228 0
+ 2761 06b8 78339FE5 		ldr	r3, .L45+24
+ 2762 06bc 0120A0E3 		mov	r2, #1
+ 2763 06c0 0120C3E5 		strb	r2, [r3, #1]
+ 229:../proyecto.c **** 				if(getLicPlate(&parking[placeSelected].licPlate))
+ 2764              		.loc 1 229 0
+ 2765 06c4 74339FE5 		ldr	r3, .L45+32
+ 2766 06c8 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2767 06cc 0320A0E1 		mov	r2, r3
+ 2768 06d0 0230A0E1 		mov	r3, r2
+ 2769 06d4 8330A0E1 		mov	r3, r3, asl #1
+ 2770 06d8 023083E0 		add	r3, r3, r2
+ 2771 06dc 0331A0E1 		mov	r3, r3, asl #2
+ 2772 06e0 082083E2 		add	r2, r3, #8
+ 2773 06e4 3C339FE5 		ldr	r3, .L45+8
+ 2774 06e8 033082E0 		add	r3, r2, r3
+ 2775 06ec 023083E2 		add	r3, r3, #2
+ 2776 06f0 0300A0E1 		mov	r0, r3
+ 2777 06f4 FEFFFFEB 		bl	getLicPlate
+ 2778 06f8 0030A0E1 		mov	r3, r0
+ 2779 06fc 000053E3 		cmp	r3, #0
+ 2780 0700 1100000A 		beq	.L30
+ 230:../proyecto.c **** 				{
+ 231:../proyecto.c **** 					plotLicPlateUpdate(parking[placeSelected].licPlate);
+ 2781              		.loc 1 231 0
+ 2782 0704 34339FE5 		ldr	r3, .L45+32
+ 2783 0708 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2784 070c 0320A0E1 		mov	r2, r3
+ 2785 0710 10039FE5 		ldr	r0, .L45+8
+ 2786 0714 0810A0E3 		mov	r1, #8
+ 2787 0718 0230A0E1 		mov	r3, r2
+ 2788 071c 8330A0E1 		mov	r3, r3, asl #1
+ 2789 0720 023083E0 		add	r3, r3, r2
+ 2790 0724 0331A0E1 		mov	r3, r3, asl #2
+ 2791 0728 033080E0 		add	r3, r0, r3
+ 2792 072c 013083E0 		add	r3, r3, r1
+ 2793 0730 B230D3E1 		ldrh	r3, [r3, #2]
+ 2794 0734 0338A0E1 		mov	r3, r3, asl #16
+ 2795 0738 2338A0E1 		mov	r3, r3, lsr #16
+ 2796 073c 0338A0E1 		mov	r3, r3, asl #16
+ 2797 0740 4338A0E1 		mov	r3, r3, asr #16
+ 2798 0744 0300A0E1 		mov	r0, r3
+ 2799 0748 FEFFFFEB 		bl	plotLicPlateUpdate
+ 2800              	.L30:
+ 232:../proyecto.c **** 				}
+ 233:../proyecto.c **** 				ticks = 500;
+ 2801              		.loc 1 233 0
+ 2802 074c E0329FE5 		ldr	r3, .L45+20
+ 2803 0750 7D2FA0E3 		mov	r2, #500
+ 2804 0754 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2805              	.L29:
+ 234:../proyecto.c **** 			}
+ 235:../proyecto.c **** 			if( tsPressedMsg.flag )                    /* Chequea si se ha pulsado la pantalla (mensaje reci
+ 2806              		.loc 1 235 0
+ 2807 0758 D0329FE5 		ldr	r3, .L45+16
+ 2808 075c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2809 0760 000053E3 		cmp	r3, #0
+ 2810 0764 A500000A 		beq	.L42
+ 236:../proyecto.c **** 			{
+ 237:../proyecto.c **** 				tsPressedMsg.flag = FALSE;                 /* Marca el mensaje como leido */
+ 2811              		.loc 1 237 0
+ 2812 0768 C0329FE5 		ldr	r3, .L45+16
+ 2813 076c 0020A0E3 		mov	r2, #0
+ 2814 0770 0020C3E5 		strb	r2, [r3, #0]
+ 238:../proyecto.c **** 				parking[placeSelected].free = FALSE;
+ 2815              		.loc 1 238 0
+ 2816 0774 C4329FE5 		ldr	r3, .L45+32
+ 2817 0778 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2818 077c 0320A0E1 		mov	r2, r3
+ 2819 0780 A0129FE5 		ldr	r1, .L45+8
+ 2820 0784 0230A0E1 		mov	r3, r2
+ 2821 0788 8330A0E1 		mov	r3, r3, asl #1
+ 2822 078c 023083E0 		add	r3, r3, r2
+ 2823 0790 0331A0E1 		mov	r3, r3, asl #2
+ 2824 0794 033081E0 		add	r3, r1, r3
+ 2825 0798 0020A0E3 		mov	r2, #0
+ 2826 079c 0120C3E5 		strb	r2, [r3, #1]
+ 239:../proyecto.c **** 				ticketMsg.place = parking[placeSelected]; //imprime el ticket
+ 2827              		.loc 1 239 0
+ 2828 07a0 98329FE5 		ldr	r3, .L45+32
+ 2829 07a4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2830 07a8 0320A0E1 		mov	r2, r3
+ 2831 07ac 94129FE5 		ldr	r1, .L45+40
+ 2832 07b0 70029FE5 		ldr	r0, .L45+8
+ 2833 07b4 0230A0E1 		mov	r3, r2
+ 2834 07b8 8330A0E1 		mov	r3, r3, asl #1
+ 2835 07bc 023083E0 		add	r3, r3, r2
+ 2836 07c0 0331A0E1 		mov	r3, r3, asl #2
+ 2837 07c4 033080E0 		add	r3, r0, r3
+ 2838 07c8 021081E2 		add	r1, r1, #2
+ 2839 07cc 0320A0E1 		mov	r2, r3
+ 2840 07d0 0C30A0E3 		mov	r3, #12
+ 2841 07d4 0100A0E1 		mov	r0, r1
+ 2842 07d8 0210A0E1 		mov	r1, r2
+ 2843 07dc 0320A0E1 		mov	r2, r3
+ 2844 07e0 FEFFFFEB 		bl	memcpy
+ 240:../proyecto.c **** 				ticketMsg.flag = TRUE;
+ 2845              		.loc 1 240 0
+ 2846 07e4 5C329FE5 		ldr	r3, .L45+40
+ 2847 07e8 0120A0E3 		mov	r2, #1
+ 2848 07ec 0020C3E5 		strb	r2, [r3, #0]
+ 241:../proyecto.c **** 				kpPressedMsg.licPlateInput = FALSE;			//limpio el flag del keypress porque voy a cambiar de est
+ 2849              		.loc 1 241 0
+ 2850 07f0 40329FE5 		ldr	r3, .L45+24
+ 2851 07f4 0020A0E3 		mov	r2, #0
+ 2852 07f8 0120C3E5 		strb	r2, [r3, #1]
+ 242:../proyecto.c **** 				state = success;      		 /* Salta al estado success */
+ 2853              		.loc 1 242 0
+ 2854 07fc 28329FE5 		ldr	r3, .L45+12
+ 2855 0800 0520A0E3 		mov	r2, #5
+ 2856 0804 0020C3E5 		strb	r2, [r3, #0]
+ 243:../proyecto.c **** 				ticks = 500;
+ 2857              		.loc 1 243 0
+ 2858 0808 24329FE5 		ldr	r3, .L45+20
+ 2859 080c 7D2FA0E3 		mov	r2, #500
+ 2860 0810 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 244:../proyecto.c **** 
+ 245:../proyecto.c **** 				if(!parking[placeSelected].licPlate){  //si hay un error en la matricula repite la operacion.
+ 2861              		.loc 1 245 0
+ 2862 0814 24329FE5 		ldr	r3, .L45+32
+ 2863 0818 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2864 081c 0320A0E1 		mov	r2, r3
+ 2865 0820 00029FE5 		ldr	r0, .L45+8
+ 2866 0824 0810A0E3 		mov	r1, #8
+ 2867 0828 0230A0E1 		mov	r3, r2
+ 2868 082c 8330A0E1 		mov	r3, r3, asl #1
+ 2869 0830 023083E0 		add	r3, r3, r2
+ 2870 0834 0331A0E1 		mov	r3, r3, asl #2
+ 2871 0838 033080E0 		add	r3, r0, r3
+ 2872 083c 013083E0 		add	r3, r3, r1
+ 2873 0840 B230D3E1 		ldrh	r3, [r3, #2]
+ 2874 0844 000053E3 		cmp	r3, #0
+ 2875 0848 0400001A 		bne	.L32
+ 246:../proyecto.c **** 					state = licPlateInput;
+ 2876              		.loc 1 246 0
+ 2877 084c D8319FE5 		ldr	r3, .L45+12
+ 2878 0850 0420A0E3 		mov	r2, #4
+ 2879 0854 0020C3E5 		strb	r2, [r3, #0]
+ 247:../proyecto.c **** 					plotLicPlateEnc();
+ 2880              		.loc 1 247 0
+ 2881 0858 FEFFFFEB 		bl	plotLicPlateEnc
+ 248:../proyecto.c **** 				} else
+ 249:../proyecto.c **** 					plotSucScreen(parking[placeSelected]); /* Visualiza pantalla de exito */;
+ 250:../proyecto.c **** 			}
+ 251:../proyecto.c **** 
+ 252:../proyecto.c **** 			break;
+ 2882              		.loc 1 252 0
+ 2883 085c 6C0000EA 		b	.L5
+ 2884              	.L32:
+ 249:../proyecto.c **** 					plotSucScreen(parking[placeSelected]); /* Visualiza pantalla de exito */;
+ 2885              		.loc 1 249 0
+ 2886 0860 D8319FE5 		ldr	r3, .L45+32
+ 2887 0864 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2888 0868 0320A0E1 		mov	r2, r3
+ 2889 086c B4119FE5 		ldr	r1, .L45+8
+ 2890 0870 0230A0E1 		mov	r3, r2
+ 2891 0874 8330A0E1 		mov	r3, r3, asl #1
+ 2892 0878 023083E0 		add	r3, r3, r2
+ 2893 087c 0331A0E1 		mov	r3, r3, asl #2
+ 2894 0880 033081E0 		add	r3, r1, r3
+ 2895 0884 070093E8 		ldmia	r3, {r0, r1, r2}
+ 2896 0888 FEFFFFEB 		bl	plotSucScreen
+ 2897              		.loc 1 252 0
+ 2898 088c 600000EA 		b	.L5
+ 2899              	.L15:
+ 253:../proyecto.c ****         case success:
+ 254:../proyecto.c **** 			if( !(--ticks) )                           /* Decrementa ticks y chequea si ha permanecido en es
+ 2900              		.loc 1 254 0
+ 2901 0890 9C319FE5 		ldr	r3, .L45+20
+ 2902 0894 B030D3E1 		ldrh	r3, [r3, #0]
+ 2903 0898 013043E2 		sub	r3, r3, #1
+ 2904 089c 0338A0E1 		mov	r3, r3, asl #16
+ 2905 08a0 2328A0E1 		mov	r2, r3, lsr #16
+ 2906 08a4 88319FE5 		ldr	r3, .L45+20
+ 2907 08a8 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2908 08ac 80319FE5 		ldr	r3, .L45+20
+ 2909 08b0 B030D3E1 		ldrh	r3, [r3, #0]
+ 2910 08b4 000053E3 		cmp	r3, #0
+ 2911 08b8 0300001A 		bne	.L33
+ 255:../proyecto.c **** 			{
+ 256:../proyecto.c **** 				plotWelcomeScreen();                       /* Visualiza pantalla inicial */
+ 2912              		.loc 1 256 0
+ 2913 08bc FEFFFFEB 		bl	plotWelcomeScreen
+ 257:../proyecto.c **** 				state = waiting;                      /* Salta al estado demo_waiting */
+ 2914              		.loc 1 257 0
+ 2915 08c0 64319FE5 		ldr	r3, .L45+12
+ 2916 08c4 0020A0E3 		mov	r2, #0
+ 2917 08c8 0020C3E5 		strb	r2, [r3, #0]
+ 2918              	.L33:
+ 258:../proyecto.c **** 			}
+ 259:../proyecto.c **** 			if( kpPressedMsg.flag )                /* Chequea si se ha introducido una moneda (mensaje recib
+ 2919              		.loc 1 259 0
+ 2920 08cc 64319FE5 		ldr	r3, .L45+24
+ 2921 08d0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2922 08d4 000053E3 		cmp	r3, #0
+ 2923 08d8 0800000A 		beq	.L34
+ 260:../proyecto.c **** 			{
+ 261:../proyecto.c **** 				kpPressedMsg.flag = FALSE;              /* Marca el mensaje como leido */
+ 2924              		.loc 1 261 0
+ 2925 08dc 54319FE5 		ldr	r3, .L45+24
+ 2926 08e0 0020A0E3 		mov	r2, #0
+ 2927 08e4 0020C3E5 		strb	r2, [r3, #0]
+ 262:../proyecto.c **** 				coinsMoverMsg.accept = FALSE;              /* Envia un mensaje para que la moneda se devuelva *
+ 2928              		.loc 1 262 0
+ 2929 08e8 4C319FE5 		ldr	r3, .L45+28
+ 2930 08ec 0020A0E3 		mov	r2, #0
+ 2931 08f0 0120C3E5 		strb	r2, [r3, #1]
+ 263:../proyecto.c **** 				coinsMoverMsg.flag   = TRUE;
+ 2932              		.loc 1 263 0
+ 2933 08f4 40319FE5 		ldr	r3, .L45+28
+ 2934 08f8 0120A0E3 		mov	r2, #1
+ 2935 08fc 0020C3E5 		strb	r2, [r3, #0]
+ 2936              	.L34:
+ 264:../proyecto.c **** 			}
+ 265:../proyecto.c **** 			if( tsPressedMsg.flag )                    /* Chequea si se ha pulsado la pantalla (mensaje reci
+ 2937              		.loc 1 265 0
+ 2938 0900 28319FE5 		ldr	r3, .L45+16
+ 2939 0904 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2940 0908 000053E3 		cmp	r3, #0
+ 2941 090c 3D00000A 		beq	.L43
+ 266:../proyecto.c **** 			{
+ 267:../proyecto.c **** 				tsPressedMsg.flag = FALSE;                 /* Marca el mensaje como leido */
+ 2942              		.loc 1 267 0
+ 2943 0910 18319FE5 		ldr	r3, .L45+16
+ 2944 0914 0020A0E3 		mov	r2, #0
+ 2945 0918 0020C3E5 		strb	r2, [r3, #0]
+ 268:../proyecto.c **** 				plotWelcomeScreen();                               /* Borra pantalla */
+ 2946              		.loc 1 268 0
+ 2947 091c FEFFFFEB 		bl	plotWelcomeScreen
+ 269:../proyecto.c **** 				state = waiting;                  /* Salta al estado selection ... */
+ 2948              		.loc 1 269 0
+ 2949 0920 04319FE5 		ldr	r3, .L45+12
+ 2950 0924 0020A0E3 		mov	r2, #0
+ 2951 0928 0020C3E5 		strb	r2, [r3, #0]
+ 270:../proyecto.c **** 				ticks = 500;                               /* ... en el que debera permanecer un maximo de 500 
+ 2952              		.loc 1 270 0
+ 2953 092c 00319FE5 		ldr	r3, .L45+20
+ 2954 0930 7D2FA0E3 		mov	r2, #500
+ 2955 0934 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 271:../proyecto.c **** 			}
+ 272:../proyecto.c **** 			break;
+ 2956              		.loc 1 272 0
+ 2957 0938 350000EA 		b	.L5
+ 2958              	.L12:
+ 273:../proyecto.c **** 
+ 274:../proyecto.c ****         case error:
+ 275:../proyecto.c **** 			if( !(--ticks) )                           /* Decrementa ticks y chequea si ha permanecido en es
+ 2959              		.loc 1 275 0
+ 2960 093c F0309FE5 		ldr	r3, .L45+20
+ 2961 0940 B030D3E1 		ldrh	r3, [r3, #0]
+ 2962 0944 013043E2 		sub	r3, r3, #1
+ 2963 0948 0338A0E1 		mov	r3, r3, asl #16
+ 2964 094c 2328A0E1 		mov	r2, r3, lsr #16
+ 2965 0950 DC309FE5 		ldr	r3, .L45+20
+ 2966 0954 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 2967 0958 D4309FE5 		ldr	r3, .L45+20
+ 2968 095c B030D3E1 		ldrh	r3, [r3, #0]
+ 2969 0960 000053E3 		cmp	r3, #0
+ 2970 0964 0300001A 		bne	.L36
+ 276:../proyecto.c **** 			{
+ 277:../proyecto.c **** 				plotWelcomeScreen();                       /* Visualiza pantalla inicial */
+ 2971              		.loc 1 277 0
+ 2972 0968 FEFFFFEB 		bl	plotWelcomeScreen
+ 278:../proyecto.c **** 				state = waiting;                      /* Salta al estado demo_waiting */
+ 2973              		.loc 1 278 0
+ 2974 096c B8309FE5 		ldr	r3, .L45+12
+ 2975 0970 0020A0E3 		mov	r2, #0
+ 2976 0974 0020C3E5 		strb	r2, [r3, #0]
+ 2977              	.L36:
+ 279:../proyecto.c **** 			}
+ 280:../proyecto.c **** 			if( kpPressedMsg.flag )                /* Chequea si se ha introducido una moneda (mensaje recib
+ 2978              		.loc 1 280 0
+ 2979 0978 B8309FE5 		ldr	r3, .L45+24
+ 2980 097c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2981 0980 000053E3 		cmp	r3, #0
+ 2982 0984 0800000A 		beq	.L37
+ 281:../proyecto.c **** 			{
+ 282:../proyecto.c **** 				kpPressedMsg.flag = FALSE;              /* Marca el mensaje como leido */
+ 2983              		.loc 1 282 0
+ 2984 0988 A8309FE5 		ldr	r3, .L45+24
+ 2985 098c 0020A0E3 		mov	r2, #0
+ 2986 0990 0020C3E5 		strb	r2, [r3, #0]
+ 283:../proyecto.c **** 				coinsMoverMsg.accept = FALSE;              /* Envia un mensaje para que la moneda se devuelva *
+ 2987              		.loc 1 283 0
+ 2988 0994 A0309FE5 		ldr	r3, .L45+28
+ 2989 0998 0020A0E3 		mov	r2, #0
+ 2990 099c 0120C3E5 		strb	r2, [r3, #1]
+ 284:../proyecto.c **** 				coinsMoverMsg.flag   = TRUE;
+ 2991              		.loc 1 284 0
+ 2992 09a0 94309FE5 		ldr	r3, .L45+28
+ 2993 09a4 0120A0E3 		mov	r2, #1
+ 2994 09a8 0020C3E5 		strb	r2, [r3, #0]
+ 2995              	.L37:
+ 285:../proyecto.c **** 			}
+ 286:../proyecto.c **** 			if( tsPressedMsg.flag )                    /* Chequea si se ha pulsado la pantalla (mensaje reci
+ 2996              		.loc 1 286 0
+ 2997 09ac 7C309FE5 		ldr	r3, .L45+16
+ 2998 09b0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 2999 09b4 000053E3 		cmp	r3, #0
+ 3000 09b8 1400000A 		beq	.L44
+ 287:../proyecto.c **** 			{
+ 288:../proyecto.c **** 				tsPressedMsg.flag = FALSE;                 /* Marca el mensaje como leido */
+ 3001              		.loc 1 288 0
+ 3002 09bc 6C309FE5 		ldr	r3, .L45+16
+ 3003 09c0 0020A0E3 		mov	r2, #0
+ 3004 09c4 0020C3E5 		strb	r2, [r3, #0]
+ 289:../proyecto.c **** 				plotWelcomeScreen();                              /* vuelve al welcome screen*/
+ 3005              		.loc 1 289 0
+ 3006 09c8 FEFFFFEB 		bl	plotWelcomeScreen
+ 290:../proyecto.c **** 				state = waiting;                  /* Salta al estado selection ... */
+ 3007              		.loc 1 290 0
+ 3008 09cc 58309FE5 		ldr	r3, .L45+12
+ 3009 09d0 0020A0E3 		mov	r2, #0
+ 3010 09d4 0020C3E5 		strb	r2, [r3, #0]
+ 291:../proyecto.c **** 				ticks = 500;                               /* ... en el que debera permanecer un maximo de 500 
+ 3011              		.loc 1 291 0
+ 3012 09d8 54309FE5 		ldr	r3, .L45+20
+ 3013 09dc 7D2FA0E3 		mov	r2, #500
+ 3014 09e0 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 292:../proyecto.c **** 			}
+ 293:../proyecto.c **** 			break;
+ 3015              		.loc 1 293 0
+ 3016 09e4 0A0000EA 		b	.L5
+ 3017              	.L39:
+ 147:../proyecto.c ****             break;
+ 3018              		.loc 1 147 0
+ 3019 09e8 0000A0E1 		mov	r0, r0	@ nop
+ 3020 09ec 080000EA 		b	.L5
+ 3021              	.L40:
+ 180:../proyecto.c ****         	break;
+ 3022              		.loc 1 180 0
+ 3023 09f0 0000A0E1 		mov	r0, r0	@ nop
+ 3024 09f4 060000EA 		b	.L5
+ 3025              	.L41:
+ 217:../proyecto.c ****         	break;
+ 3026              		.loc 1 217 0
+ 3027 09f8 0000A0E1 		mov	r0, r0	@ nop
+ 3028 09fc 040000EA 		b	.L5
+ 3029              	.L42:
+ 252:../proyecto.c **** 			break;
+ 3030              		.loc 1 252 0
+ 3031 0a00 0000A0E1 		mov	r0, r0	@ nop
+ 3032 0a04 020000EA 		b	.L5
+ 3033              	.L43:
+ 272:../proyecto.c **** 			break;
+ 3034              		.loc 1 272 0
+ 3035 0a08 0000A0E1 		mov	r0, r0	@ nop
+ 3036 0a0c 000000EA 		b	.L5
+ 3037              	.L44:
+ 3038              		.loc 1 293 0
+ 3039 0a10 0000A0E1 		mov	r0, r0	@ nop
+ 3040              	.L5:
+ 294:../proyecto.c ****     }
+ 295:../proyecto.c **** }
+ 3041              		.loc 1 295 0
+ 3042 0a14 0CD04BE2 		sub	sp, fp, #12
+ 3043 0a18 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3044 0a1c 1EFF2FE1 		bx	lr
+ 3045              	.L46:
+ 3046              		.align	2
+ 3047              	.L45:
+ 3048 0a20 03000000 		.word	init.4279
+ 3049 0a24 0C000000 		.word	credit.4288
+ 3050 0a28 00000000 		.word	parking
+ 3051 0a2c 0E000000 		.word	state.4287
+ 3052 0a30 00000000 		.word	tsPressedMsg
+ 3053 0a34 10000000 		.word	ticks.4289
+ 3054 0a38 00000000 		.word	kpPressedMsg
+ 3055 0a3c 00000000 		.word	coinsMoverMsg
+ 3056 0a40 12000000 		.word	placeSelected.4290
+ 3057 0a44 14000000 		.word	og_deadline.4291
+ 3058 0a48 00000000 		.word	ticketMsg
+ 3059              		.cfi_endproc
+ 3060              	.LFE1:
+ 3062              		.section	.rodata
+ 3063              		.align	2
+ 3064              	.LC0:
+ 3065 0000 506C617A 		.ascii	"Plaza \000"
+ 3065      612000
+ 3066 0007 00       		.align	2
+ 3067              	.LC1:
+ 3068 0008 46696E20 		.ascii	"Fin de estacionamiento:\012\000"
+ 3068      64652065 
+ 3068      73746163 
+ 3068      696F6E61 
+ 3068      6D69656E 
+ 3069 0021 000000   		.text
+ 3070              		.align	2
+ 3071              		.global	ticketPrinterTask
+ 3073              	ticketPrinterTask:
+ 3074              	.LFB2:
+ 296:../proyecto.c **** 
+ 297:../proyecto.c **** /* 
+ 298:../proyecto.c **** ** Emula el comportamiento de la impresora de tickets:
+ 299:../proyecto.c **** **   Cada segundo muestrea si ha recibido un mensaje de la tarea principal enviar a traves de la UA
+ 300:../proyecto.c **** */
+ 301:../proyecto.c **** void ticketPrinterTask( void )
+ 302:../proyecto.c **** {
+ 3075              		.loc 1 302 0
+ 3076              		.cfi_startproc
+ 3077              		@ Function supports interworking.
+ 3078              		@ args = 0, pretend = 0, frame = 0
+ 3079              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3080 0a4c 0DC0A0E1 		mov	ip, sp
+ 3081              	.LCFI4:
+ 3082              		.cfi_def_cfa_register 12
+ 3083 0a50 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3084 0a54 04B04CE2 		sub	fp, ip, #4
+ 3085              		.cfi_offset 14, -8
+ 3086              		.cfi_offset 13, -12
+ 3087              		.cfi_offset 11, -16
+ 3088              	.LCFI5:
+ 3089              		.cfi_def_cfa 11, 4
+ 303:../proyecto.c ****    if(!ticketMsg.flag){
+ 3090              		.loc 1 303 0
+ 3091 0a58 6C309FE5 		ldr	r3, .L51
+ 3092 0a5c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3093 0a60 000053E3 		cmp	r3, #0
+ 3094 0a64 1400000A 		beq	.L50
+ 3095              	.L48:
+ 304:../proyecto.c **** 	   return;
+ 305:../proyecto.c ****    }
+ 306:../proyecto.c ****    ticketMsg.flag = FALSE;
+ 3096              		.loc 1 306 0
+ 3097 0a68 5C309FE5 		ldr	r3, .L51
+ 3098 0a6c 0020A0E3 		mov	r2, #0
+ 3099 0a70 0020C3E5 		strb	r2, [r3, #0]
+ 307:../proyecto.c ****    uart0_puts("Plaza ");
+ 3100              		.loc 1 307 0
+ 3101 0a74 54009FE5 		ldr	r0, .L51+4
+ 3102 0a78 FEFFFFEB 		bl	uart0_puts
+ 308:../proyecto.c ****    uart0_putint(ticketMsg.place.id);
+ 3103              		.loc 1 308 0
+ 3104 0a7c 48309FE5 		ldr	r3, .L51
+ 3105 0a80 0230D3E5 		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 3106 0a84 0300A0E1 		mov	r0, r3
+ 3107 0a88 FEFFFFEB 		bl	uart0_putint
+ 309:../proyecto.c ****    uart0_putchar('\n');
+ 3108              		.loc 1 309 0
+ 3109 0a8c 0A00A0E3 		mov	r0, #10
+ 3110 0a90 FEFFFFEB 		bl	uart0_putchar
+ 310:../proyecto.c ****    uart0_puts("Fin de estacionamiento:\n");
+ 3111              		.loc 1 310 0
+ 3112 0a94 38009FE5 		ldr	r0, .L51+8
+ 3113 0a98 FEFFFFEB 		bl	uart0_puts
+ 311:../proyecto.c ****    uart0_puts(rtc_stringDate(ticketMsg.place.deadline));
+ 3114              		.loc 1 311 0
+ 3115 0a9c 28309FE5 		ldr	r3, .L51
+ 3116 0aa0 043083E2 		add	r3, r3, #4
+ 3117 0aa4 030093E8 		ldmia	r3, {r0, r1}
+ 3118 0aa8 FEFFFFEB 		bl	rtc_stringDate
+ 3119 0aac 0030A0E1 		mov	r3, r0
+ 3120 0ab0 0300A0E1 		mov	r0, r3
+ 3121 0ab4 FEFFFFEB 		bl	uart0_puts
+ 3122 0ab8 000000EA 		b	.L47
+ 3123              	.L50:
+ 304:../proyecto.c **** 	   return;
+ 3124              		.loc 1 304 0
+ 3125 0abc 0000A0E1 		mov	r0, r0	@ nop
+ 3126              	.L47:
+ 312:../proyecto.c **** }
+ 3127              		.loc 1 312 0
+ 3128 0ac0 0CD04BE2 		sub	sp, fp, #12
+ 3129 0ac4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3130 0ac8 1EFF2FE1 		bx	lr
+ 3131              	.L52:
+ 3132              		.align	2
+ 3133              	.L51:
+ 3134 0acc 00000000 		.word	ticketMsg
+ 3135 0ad0 00000000 		.word	.LC0
+ 3136 0ad4 08000000 		.word	.LC1
+ 3137              		.cfi_endproc
+ 3138              	.LFE2:
+ 3140              		.align	2
+ 3141              		.global	clockTask
+ 3143              	clockTask:
+ 3144              	.LFB3:
+ 313:../proyecto.c **** 
+ 314:../proyecto.c **** /* 
+ 315:../proyecto.c **** ** Cada segundo visualiza la fecha/hora en la pantalla y libera aquellas plazas cuya hora de finali
+ 316:../proyecto.c **** */
+ 317:../proyecto.c **** void clockTask( void )  
+ 318:../proyecto.c **** {
+ 3145              		.loc 1 318 0
+ 3146              		.cfi_startproc
+ 3147              		@ Function supports interworking.
+ 3148              		@ args = 0, pretend = 0, frame = 0
+ 3149              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3150 0ad8 0DC0A0E1 		mov	ip, sp
+ 3151              	.LCFI6:
+ 3152              		.cfi_def_cfa_register 12
+ 3153 0adc 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3154 0ae0 04B04CE2 		sub	fp, ip, #4
+ 3155              		.cfi_offset 14, -8
+ 3156              		.cfi_offset 13, -12
+ 3157              		.cfi_offset 11, -16
+ 3158              	.LCFI7:
+ 3159              		.cfi_def_cfa 11, 4
+ 319:../proyecto.c **** 	plotTime();
+ 3160              		.loc 1 319 0
+ 3161 0ae4 FEFFFFEB 		bl	plotTime
+ 320:../proyecto.c **** }
+ 3162              		.loc 1 320 0
+ 3163 0ae8 0CD04BE2 		sub	sp, fp, #12
+ 3164 0aec 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3165 0af0 1EFF2FE1 		bx	lr
+ 3166              		.cfi_endproc
+ 3167              	.LFE3:
+ 3169              		.align	2
+ 3170              		.global	tsScanTask
+ 3172              	tsScanTask:
+ 3173              	.LFB4:
+ 321:../proyecto.c **** 
+ 322:../proyecto.c **** /* 
+ 323:../proyecto.c **** ** Cada 50 ms muestrea la touchscreen y envia un mensaje a la tarea principal con la posicion del l
+ 324:../proyecto.c **** */
+ 325:../proyecto.c **** void tsScanTask( void )  
+ 326:../proyecto.c **** {
+ 3174              		.loc 1 326 0
+ 3175              		.cfi_startproc
+ 3176              		@ Function supports interworking.
+ 3177              		@ args = 0, pretend = 0, frame = 0
+ 3178              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3179 0af4 0DC0A0E1 		mov	ip, sp
+ 3180              	.LCFI8:
+ 3181              		.cfi_def_cfa_register 12
+ 3182 0af8 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3183 0afc 04B04CE2 		sub	fp, ip, #4
+ 3184              		.cfi_offset 14, -8
+ 3185              		.cfi_offset 13, -12
+ 3186              		.cfi_offset 11, -16
+ 3187              	.LCFI9:
+ 3188              		.cfi_def_cfa 11, 4
+ 327:../proyecto.c ****     static boolean init = TRUE;
+ 328:../proyecto.c ****     static enum { wait_keydown, scan, wait_keyup } state;
+ 329:../proyecto.c ****     
+ 330:../proyecto.c ****     if( init )
+ 3189              		.loc 1 330 0
+ 3190 0b00 C4309FE5 		ldr	r3, .L64
+ 3191 0b04 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3192 0b08 000053E3 		cmp	r3, #0
+ 3193 0b0c 0600000A 		beq	.L55
+ 331:../proyecto.c ****     {
+ 332:../proyecto.c ****         init  = FALSE;
+ 3194              		.loc 1 332 0
+ 3195 0b10 B4309FE5 		ldr	r3, .L64
+ 3196 0b14 0020A0E3 		mov	r2, #0
+ 3197 0b18 0020C3E5 		strb	r2, [r3, #0]
+ 333:../proyecto.c ****         state = wait_keydown;
+ 3198              		.loc 1 333 0
+ 3199 0b1c AC309FE5 		ldr	r3, .L64+4
+ 3200 0b20 0020A0E3 		mov	r2, #0
+ 3201 0b24 0020C3E5 		strb	r2, [r3, #0]
+ 3202 0b28 240000EA 		b	.L54
+ 3203              	.L55:
+ 334:../proyecto.c ****     }
+ 335:../proyecto.c ****     else switch( state )
+ 3204              		.loc 1 335 0
+ 3205 0b2c 9C309FE5 		ldr	r3, .L64+4
+ 3206 0b30 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3207 0b34 010053E3 		cmp	r3, #1
+ 3208 0b38 0B00000A 		beq	.L58
+ 3209 0b3c 020053E3 		cmp	r3, #2
+ 3210 0b40 1300000A 		beq	.L59
+ 3211 0b44 000053E3 		cmp	r3, #0
+ 3212 0b48 1C00001A 		bne	.L54
+ 3213              	.L57:
+ 336:../proyecto.c ****     {
+ 337:../proyecto.c ****         case wait_keydown:                        /* Estado esperando la presion de la pantalla */
+ 338:../proyecto.c ****             if( ts_pressed() )                        /* Chequea la pantalla esta presionada */
+ 3214              		.loc 1 338 0
+ 3215 0b4c FEFFFFEB 		bl	ts_pressed
+ 3216 0b50 0030A0E1 		mov	r3, r0
+ 3217 0b54 000053E3 		cmp	r3, #0
+ 3218 0b58 1500000A 		beq	.L62
+ 339:../proyecto.c ****                 state = scan;                         /* Salta al estado scan */
+ 3219              		.loc 1 339 0
+ 3220 0b5c 6C309FE5 		ldr	r3, .L64+4
+ 3221 0b60 0120A0E3 		mov	r2, #1
+ 3222 0b64 0020C3E5 		strb	r2, [r3, #0]
+ 340:../proyecto.c ****             break;
+ 3223              		.loc 1 340 0
+ 3224 0b68 140000EA 		b	.L54
+ 3225              	.L58:
+ 341:../proyecto.c ****         case scan:                                /* Estado en que escanea la pantalla */
+ 342:../proyecto.c ****             ts_getpos( &tsPressedMsg.x, &tsPressedMsg.y );    /* Lee la pantalla */
+ 3226              		.loc 1 342 0
+ 3227 0b6c 60009FE5 		ldr	r0, .L64+8
+ 3228 0b70 60109FE5 		ldr	r1, .L64+12
+ 3229 0b74 FEFFFFEB 		bl	ts_getpos
+ 343:../proyecto.c ****             tsPressedMsg.flag = TRUE;                 /* Envia un mensaje con el valor de la posici
+ 3230              		.loc 1 343 0
+ 3231 0b78 5C309FE5 		ldr	r3, .L64+16
+ 3232 0b7c 0120A0E3 		mov	r2, #1
+ 3233 0b80 0020C3E5 		strb	r2, [r3, #0]
+ 344:../proyecto.c ****             state = wait_keyup;                       /* Salta al estado wait_keyup */
+ 3234              		.loc 1 344 0
+ 3235 0b84 44309FE5 		ldr	r3, .L64+4
+ 3236 0b88 0220A0E3 		mov	r2, #2
+ 3237 0b8c 0020C3E5 		strb	r2, [r3, #0]
+ 345:../proyecto.c ****             break;
+ 3238              		.loc 1 345 0
+ 3239 0b90 0A0000EA 		b	.L54
+ 3240              	.L59:
+ 346:../proyecto.c ****         case wait_keyup:                          /* Estado esperando la depresion de la pantalla  
+ 347:../proyecto.c ****             if( !ts_pressed() )                       /* Chequea si la pantalla ya no esta presiona
+ 3241              		.loc 1 347 0
+ 3242 0b94 FEFFFFEB 		bl	ts_pressed
+ 3243 0b98 0030A0E1 		mov	r3, r0
+ 3244 0b9c 000053E3 		cmp	r3, #0
+ 3245 0ba0 0500001A 		bne	.L63
+ 348:../proyecto.c ****                 state = wait_keydown;                 /* Salta al estado wait_keydown */
+ 3246              		.loc 1 348 0
+ 3247 0ba4 24309FE5 		ldr	r3, .L64+4
+ 3248 0ba8 0020A0E3 		mov	r2, #0
+ 3249 0bac 0020C3E5 		strb	r2, [r3, #0]
+ 349:../proyecto.c ****             break;
+ 3250              		.loc 1 349 0
+ 3251 0bb0 020000EA 		b	.L54
+ 3252              	.L62:
+ 340:../proyecto.c ****             break;
+ 3253              		.loc 1 340 0
+ 3254 0bb4 0000A0E1 		mov	r0, r0	@ nop
+ 3255 0bb8 000000EA 		b	.L54
+ 3256              	.L63:
+ 3257              		.loc 1 349 0
+ 3258 0bbc 0000A0E1 		mov	r0, r0	@ nop
+ 3259              	.L54:
+ 350:../proyecto.c ****     }
+ 351:../proyecto.c **** }
+ 3260              		.loc 1 351 0
+ 3261 0bc0 0CD04BE2 		sub	sp, fp, #12
+ 3262 0bc4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3263 0bc8 1EFF2FE1 		bx	lr
+ 3264              	.L65:
+ 3265              		.align	2
+ 3266              	.L64:
+ 3267 0bcc 02000000 		.word	init.4312
+ 3268 0bd0 0B000000 		.word	state.4317
+ 3269 0bd4 02000000 		.word	tsPressedMsg+2
+ 3270 0bd8 04000000 		.word	tsPressedMsg+4
+ 3271 0bdc 00000000 		.word	tsPressedMsg
+ 3272              		.cfi_endproc
+ 3273              	.LFE4:
+ 3275              		.align	2
+ 3276              		.global	kpScanTask
+ 3278              	kpScanTask:
+ 3279              	.LFB5:
+ 352:../proyecto.c **** 
+ 353:../proyecto.c **** /* 
+ 354:../proyecto.c **** ** Emula el comportamiento de un reconocedor de monedas:
+ 355:../proyecto.c **** **   Cada 50 ms muestrea el keypad y envia un mensaje a la tarea principal con el valor de la moned
+ 356:../proyecto.c **** */
+ 357:../proyecto.c **** void kpScanTask( void )
+ 358:../proyecto.c **** {
+ 3280              		.loc 1 358 0
+ 3281              		.cfi_startproc
+ 3282              		@ Function supports interworking.
+ 3283              		@ args = 0, pretend = 0, frame = 0
+ 3284              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3285 0be0 0DC0A0E1 		mov	ip, sp
+ 3286              	.LCFI10:
+ 3287              		.cfi_def_cfa_register 12
+ 3288 0be4 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3289 0be8 04B04CE2 		sub	fp, ip, #4
+ 3290              		.cfi_offset 14, -8
+ 3291              		.cfi_offset 13, -12
+ 3292              		.cfi_offset 11, -16
+ 3293              	.LCFI11:
+ 3294              		.cfi_def_cfa 11, 4
+ 359:../proyecto.c ****     static boolean init = TRUE;
+ 360:../proyecto.c ****     static enum { wait_keydown, coinInput, licenseInput, wait_keyup } state;
+ 361:../proyecto.c ****     static uint8 licPlatePoint=0, licPlateNum;
+ 362:../proyecto.c **** 
+ 363:../proyecto.c ****     
+ 364:../proyecto.c ****     if( init )
+ 3295              		.loc 1 364 0
+ 3296 0bec A4319FE5 		ldr	r3, .L85
+ 3297 0bf0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3298 0bf4 000053E3 		cmp	r3, #0
+ 3299 0bf8 0600000A 		beq	.L67
+ 365:../proyecto.c ****     {
+ 366:../proyecto.c ****         init  = FALSE;
+ 3300              		.loc 1 366 0
+ 3301 0bfc 94319FE5 		ldr	r3, .L85
+ 3302 0c00 0020A0E3 		mov	r2, #0
+ 3303 0c04 0020C3E5 		strb	r2, [r3, #0]
+ 367:../proyecto.c ****         state = wait_keydown;
+ 3304              		.loc 1 367 0
+ 3305 0c08 8C319FE5 		ldr	r3, .L85+4
+ 3306 0c0c 0020A0E3 		mov	r2, #0
+ 3307 0c10 0020C3E5 		strb	r2, [r3, #0]
+ 3308 0c14 5C0000EA 		b	.L66
+ 3309              	.L67:
+ 368:../proyecto.c ****     }
+ 369:../proyecto.c ****     else switch( state )
+ 3310              		.loc 1 369 0
+ 3311 0c18 7C319FE5 		ldr	r3, .L85+4
+ 3312 0c1c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3313 0c20 030053E3 		cmp	r3, #3
+ 3314 0c24 03F19F97 		ldrls	pc, [pc, r3, asl #2]
+ 3315 0c28 570000EA 		b	.L66
+ 3316              	.L73:
+ 3317 0c2c 3C0C0000 		.word	.L69
+ 3318 0c30 8C0C0000 		.word	.L70
+ 3319 0c34 300D0000 		.word	.L71
+ 3320 0c38 600D0000 		.word	.L72
+ 3321              	.L69:
+ 370:../proyecto.c ****     {
+ 371:../proyecto.c ****         case wait_keydown:                        /* Estado esperando la presion teclas */
+ 372:../proyecto.c ****             if( keypad_pressed() && !kpPressedMsg.licPlateInput)                    /* Chequea si h
+ 3322              		.loc 1 372 0
+ 3323 0c3c FEFFFFEB 		bl	keypad_pressed
+ 3324 0c40 0030A0E1 		mov	r3, r0
+ 3325 0c44 000053E3 		cmp	r3, #0
+ 3326 0c48 0700000A 		beq	.L74
+ 3327              		.loc 1 372 0 is_stmt 0 discriminator 1
+ 3328 0c4c 4C319FE5 		ldr	r3, .L85+8
+ 3329 0c50 0130D3E5 		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 3330 0c54 000053E3 		cmp	r3, #0
+ 3331 0c58 0300001A 		bne	.L74
+ 373:../proyecto.c ****                 state = coinInput;                         /* Salta al estado scan */
+ 3332              		.loc 1 373 0 is_stmt 1
+ 3333 0c5c 38319FE5 		ldr	r3, .L85+4
+ 3334 0c60 0120A0E3 		mov	r2, #1
+ 3335 0c64 0020C3E5 		strb	r2, [r3, #0]
+ 374:../proyecto.c ****             else if(keypad_pressed())
+ 375:../proyecto.c ****             	state = licenseInput;
+ 376:../proyecto.c ****             break;
+ 3336              		.loc 1 376 0
+ 3337 0c68 470000EA 		b	.L66
+ 3338              	.L74:
+ 374:../proyecto.c ****             else if(keypad_pressed())
+ 3339              		.loc 1 374 0
+ 3340 0c6c FEFFFFEB 		bl	keypad_pressed
+ 3341 0c70 0030A0E1 		mov	r3, r0
+ 3342 0c74 000053E3 		cmp	r3, #0
+ 3343 0c78 4000000A 		beq	.L83
+ 375:../proyecto.c ****             	state = licenseInput;
+ 3344              		.loc 1 375 0
+ 3345 0c7c 18319FE5 		ldr	r3, .L85+4
+ 3346 0c80 0220A0E3 		mov	r2, #2
+ 3347 0c84 0020C3E5 		strb	r2, [r3, #0]
+ 3348              		.loc 1 376 0
+ 3349 0c88 3F0000EA 		b	.L66
+ 3350              	.L70:
+ 377:../proyecto.c ****         case coinInput:                                /* Estado en que escanea el teclado */
+ 378:../proyecto.c ****             switch( keypad_scan() )                   /* Lee el teclado */
+ 3351              		.loc 1 378 0
+ 3352 0c8c FEFFFFEB 		bl	keypad_scan
+ 3353 0c90 0030A0E1 		mov	r3, r0
+ 3354 0c94 030053E3 		cmp	r3, #3
+ 3355 0c98 03F19F97 		ldrls	pc, [pc, r3, asl #2]
+ 3356 0c9c 1F0000EA 		b	.L76
+ 3357              	.L81:
+ 3358 0ca0 B00C0000 		.word	.L77
+ 3359 0ca4 CC0C0000 		.word	.L78
+ 3360 0ca8 E80C0000 		.word	.L79
+ 3361 0cac 040D0000 		.word	.L80
+ 3362              	.L77:
+ 379:../proyecto.c ****             {
+ 380:../proyecto.c ****                 case KEYPAD_KEY0:                         /* La tecla 0 esta asociada a la moneda d
+ 381:../proyecto.c ****                     kpPressedMsg.cents = 10;           /* Envia un mensaje con el valor de la moned
+ 3363              		.loc 1 381 0
+ 3364 0cb0 E8309FE5 		ldr	r3, .L85+8
+ 3365 0cb4 0A20A0E3 		mov	r2, #10
+ 3366 0cb8 0220C3E5 		strb	r2, [r3, #2]
+ 382:../proyecto.c ****                     kpPressedMsg.flag  = TRUE;
+ 3367              		.loc 1 382 0
+ 3368 0cbc DC309FE5 		ldr	r3, .L85+8
+ 3369 0cc0 0120A0E3 		mov	r2, #1
+ 3370 0cc4 0020C3E5 		strb	r2, [r3, #0]
+ 383:../proyecto.c ****                     break;
+ 3371              		.loc 1 383 0
+ 3372 0cc8 140000EA 		b	.L76
+ 3373              	.L78:
+ 384:../proyecto.c ****                 case KEYPAD_KEY1:                         /* La tecla 1 esta asociada a la moneda d
+ 385:../proyecto.c **** 				    kpPressedMsg.cents = 20;           /* Envia un mensaje con el valor de la moneda */
+ 3374              		.loc 1 385 0
+ 3375 0ccc CC309FE5 		ldr	r3, .L85+8
+ 3376 0cd0 1420A0E3 		mov	r2, #20
+ 3377 0cd4 0220C3E5 		strb	r2, [r3, #2]
+ 386:../proyecto.c **** 				    kpPressedMsg.flag  = TRUE;
+ 3378              		.loc 1 386 0
+ 3379 0cd8 C0309FE5 		ldr	r3, .L85+8
+ 3380 0cdc 0120A0E3 		mov	r2, #1
+ 3381 0ce0 0020C3E5 		strb	r2, [r3, #0]
+ 387:../proyecto.c **** 				    break;
+ 3382              		.loc 1 387 0
+ 3383 0ce4 0D0000EA 		b	.L76
+ 3384              	.L79:
+ 388:../proyecto.c ****                 case KEYPAD_KEY2:                         /* La tecla 2 esta asociada a la moneda d
+ 389:../proyecto.c **** 					kpPressedMsg.cents = 50;           /* Envia un mensaje con el valor de la moneda */
+ 3385              		.loc 1 389 0
+ 3386 0ce8 B0309FE5 		ldr	r3, .L85+8
+ 3387 0cec 3220A0E3 		mov	r2, #50
+ 3388 0cf0 0220C3E5 		strb	r2, [r3, #2]
+ 390:../proyecto.c **** 					kpPressedMsg.flag  = TRUE;
+ 3389              		.loc 1 390 0
+ 3390 0cf4 A4309FE5 		ldr	r3, .L85+8
+ 3391 0cf8 0120A0E3 		mov	r2, #1
+ 3392 0cfc 0020C3E5 		strb	r2, [r3, #0]
+ 391:../proyecto.c **** 					break;
+ 3393              		.loc 1 391 0
+ 3394 0d00 060000EA 		b	.L76
+ 3395              	.L80:
+ 392:../proyecto.c ****                 case KEYPAD_KEY3:                         /* La tecla 3 esta asociada a la moneda d
+ 393:../proyecto.c **** 					kpPressedMsg.cents = 100;           /* Envia un mensaje con el valor de la moneda */
+ 3396              		.loc 1 393 0
+ 3397 0d04 94309FE5 		ldr	r3, .L85+8
+ 3398 0d08 6420A0E3 		mov	r2, #100
+ 3399 0d0c 0220C3E5 		strb	r2, [r3, #2]
+ 394:../proyecto.c **** 					kpPressedMsg.flag  = TRUE;
+ 3400              		.loc 1 394 0
+ 3401 0d10 88309FE5 		ldr	r3, .L85+8
+ 3402 0d14 0120A0E3 		mov	r2, #1
+ 3403 0d18 0020C3E5 		strb	r2, [r3, #0]
+ 395:../proyecto.c **** 					break;
+ 3404              		.loc 1 395 0
+ 3405 0d1c 0000A0E1 		mov	r0, r0	@ nop
+ 3406              	.L76:
+ 396:../proyecto.c ****             }
+ 397:../proyecto.c ****             state = wait_keyup;                       /* Salta al estado wait_keyup */
+ 3407              		.loc 1 397 0
+ 3408 0d20 74309FE5 		ldr	r3, .L85+4
+ 3409 0d24 0320A0E3 		mov	r2, #3
+ 3410 0d28 0020C3E5 		strb	r2, [r3, #0]
+ 398:../proyecto.c ****             break;
+ 3411              		.loc 1 398 0
+ 3412 0d2c 160000EA 		b	.L66
+ 3413              	.L71:
+ 399:../proyecto.c **** 		case licenseInput:
+ 400:../proyecto.c **** 			kpPressedMsg.keyPress = keypad_scan();
+ 3414              		.loc 1 400 0
+ 3415 0d30 FEFFFFEB 		bl	keypad_scan
+ 3416 0d34 0030A0E1 		mov	r3, r0
+ 3417 0d38 0320A0E1 		mov	r2, r3
+ 3418 0d3c 5C309FE5 		ldr	r3, .L85+8
+ 3419 0d40 0320C3E5 		strb	r2, [r3, #3]
+ 401:../proyecto.c **** 		    state = wait_keyup;
+ 3420              		.loc 1 401 0
+ 3421 0d44 50309FE5 		ldr	r3, .L85+4
+ 3422 0d48 0320A0E3 		mov	r2, #3
+ 3423 0d4c 0020C3E5 		strb	r2, [r3, #0]
+ 402:../proyecto.c **** 		    kpPressedMsg.flag  = TRUE;
+ 3424              		.loc 1 402 0
+ 3425 0d50 48309FE5 		ldr	r3, .L85+8
+ 3426 0d54 0120A0E3 		mov	r2, #1
+ 3427 0d58 0020C3E5 		strb	r2, [r3, #0]
+ 403:../proyecto.c **** 			break;
+ 3428              		.loc 1 403 0
+ 3429 0d5c 0A0000EA 		b	.L66
+ 3430              	.L72:
+ 404:../proyecto.c ****         case wait_keyup:                          /* Estado esperando la depresion de teclas  */
+ 405:../proyecto.c ****             if( !keypad_pressed() )                   /* Chequea si la tecla ya no esta presionada 
+ 3431              		.loc 1 405 0
+ 3432 0d60 FEFFFFEB 		bl	keypad_pressed
+ 3433 0d64 0030A0E1 		mov	r3, r0
+ 3434 0d68 000053E3 		cmp	r3, #0
+ 3435 0d6c 0500001A 		bne	.L84
+ 406:../proyecto.c ****                 state = wait_keydown;                     /* Salta al estado wait_keydown */
+ 3436              		.loc 1 406 0
+ 3437 0d70 24309FE5 		ldr	r3, .L85+4
+ 3438 0d74 0020A0E3 		mov	r2, #0
+ 3439 0d78 0020C3E5 		strb	r2, [r3, #0]
+ 407:../proyecto.c ****             break;
+ 3440              		.loc 1 407 0
+ 3441 0d7c 020000EA 		b	.L66
+ 3442              	.L83:
+ 376:../proyecto.c ****             break;
+ 3443              		.loc 1 376 0
+ 3444 0d80 0000A0E1 		mov	r0, r0	@ nop
+ 3445 0d84 000000EA 		b	.L66
+ 3446              	.L84:
+ 3447              		.loc 1 407 0
+ 3448 0d88 0000A0E1 		mov	r0, r0	@ nop
+ 3449              	.L66:
+ 408:../proyecto.c ****     }    
+ 409:../proyecto.c **** }
+ 3450              		.loc 1 409 0
+ 3451 0d8c 0CD04BE2 		sub	sp, fp, #12
+ 3452 0d90 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3453 0d94 1EFF2FE1 		bx	lr
+ 3454              	.L86:
+ 3455              		.align	2
+ 3456              	.L85:
+ 3457 0d98 01000000 		.word	init.4325
+ 3458 0d9c 08000000 		.word	state.4331
+ 3459 0da0 00000000 		.word	kpPressedMsg
+ 3460              		.cfi_endproc
+ 3461              	.LFE5:
+ 3463              		.align	2
+ 3464              		.global	coinsMoverTask
+ 3466              	coinsMoverTask:
+ 3467              	.LFB6:
+ 410:../proyecto.c **** 
+ 411:../proyecto.c **** 
+ 412:../proyecto.c **** 
+ 413:../proyecto.c **** /* 
+ 414:../proyecto.c **** ** Emula el comportamiento del dispositivo que envia las monedas a la alcancia o al cajetin de devo
+ 415:../proyecto.c **** **   Cada 100 ms muestrea si ha recibido un mensaje de la tarea principal para mover monedas
+ 416:../proyecto.c **** **   Si van a la alcancia activa durante 1 s los leds y muestra una A en los segs
+ 417:../proyecto.c **** **   Si van al cajetin de devolucion activa durante 1 segundo los leds y muestra una D en los segs
+ 418:../proyecto.c **** */
+ 419:../proyecto.c **** void coinsMoverTask( void )
+ 420:../proyecto.c **** {
+ 3468              		.loc 1 420 0
+ 3469              		.cfi_startproc
+ 3470              		@ Function supports interworking.
+ 3471              		@ args = 0, pretend = 0, frame = 0
+ 3472              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3473 0da4 0DC0A0E1 		mov	ip, sp
+ 3474              	.LCFI12:
+ 3475              		.cfi_def_cfa_register 12
+ 3476 0da8 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3477 0dac 04B04CE2 		sub	fp, ip, #4
+ 3478              		.cfi_offset 14, -8
+ 3479              		.cfi_offset 13, -12
+ 3480              		.cfi_offset 11, -16
+ 3481              	.LCFI13:
+ 3482              		.cfi_def_cfa 11, 4
+ 421:../proyecto.c ****     static boolean init = TRUE;
+ 422:../proyecto.c ****     static enum { off, on } state;    
+ 423:../proyecto.c ****     static uint32 ticks;
+ 424:../proyecto.c ****     
+ 425:../proyecto.c ****     if( init )
+ 3483              		.loc 1 425 0
+ 3484 0db0 0C319FE5 		ldr	r3, .L98
+ 3485 0db4 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3486 0db8 000053E3 		cmp	r3, #0
+ 3487 0dbc 0600000A 		beq	.L88
+ 426:../proyecto.c ****     {
+ 427:../proyecto.c ****         init  = FALSE;
+ 3488              		.loc 1 427 0
+ 3489 0dc0 FC309FE5 		ldr	r3, .L98
+ 3490 0dc4 0020A0E3 		mov	r2, #0
+ 3491 0dc8 0020C3E5 		strb	r2, [r3, #0]
+ 428:../proyecto.c ****         state = off;
+ 3492              		.loc 1 428 0
+ 3493 0dcc F4309FE5 		ldr	r3, .L98+4
+ 3494 0dd0 0020A0E3 		mov	r2, #0
+ 3495 0dd4 0020C3E5 		strb	r2, [r3, #0]
+ 3496 0dd8 360000EA 		b	.L87
+ 3497              	.L88:
+ 429:../proyecto.c ****     }
+ 430:../proyecto.c ****     else switch( state )
+ 3498              		.loc 1 430 0
+ 3499 0ddc E4309FE5 		ldr	r3, .L98+4
+ 3500 0de0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3501 0de4 000053E3 		cmp	r3, #0
+ 3502 0de8 0200000A 		beq	.L90
+ 3503 0dec 010053E3 		cmp	r3, #1
+ 3504 0df0 1B00000A 		beq	.L91
+ 3505 0df4 2F0000EA 		b	.L87
+ 3506              	.L90:
+ 431:../proyecto.c ****     {
+ 432:../proyecto.c ****         case off:                                /* Estado con leds y 7-segs apagados */
+ 433:../proyecto.c ****             if( coinsMoverMsg.flag )                /* Chequea si ha recibido mensaje */
+ 3507              		.loc 1 433 0
+ 3508 0df8 CC309FE5 		ldr	r3, .L98+8
+ 3509 0dfc 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 3510 0e00 000053E3 		cmp	r3, #0
+ 3511 0e04 2800000A 		beq	.L96
+ 434:../proyecto.c ****             {
+ 435:../proyecto.c ****                 coinsMoverMsg.flag = FALSE;            /* Marca el mensaje como leido */
+ 3512              		.loc 1 435 0
+ 3513 0e08 BC309FE5 		ldr	r3, .L98+8
+ 3514 0e0c 0020A0E3 		mov	r2, #0
+ 3515 0e10 0020C3E5 		strb	r2, [r3, #0]
+ 436:../proyecto.c ****                 if( coinsMoverMsg.accept )             /* Muestra el mensaje que corresponda en seg
+ 3516              		.loc 1 436 0
+ 3517 0e14 B0309FE5 		ldr	r3, .L98+8
+ 3518 0e18 0130D3E5 		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 3519 0e1c 000053E3 		cmp	r3, #0
+ 3520 0e20 0200000A 		beq	.L93
+ 437:../proyecto.c ****                     segs_putchar( 10 );
+ 3521              		.loc 1 437 0
+ 3522 0e24 0A00A0E3 		mov	r0, #10
+ 3523 0e28 FEFFFFEB 		bl	segs_putchar
+ 3524 0e2c 010000EA 		b	.L94
+ 3525              	.L93:
+ 438:../proyecto.c ****                 else
+ 439:../proyecto.c ****                     segs_putchar( 13 );
+ 3526              		.loc 1 439 0
+ 3527 0e30 0D00A0E3 		mov	r0, #13
+ 3528 0e34 FEFFFFEB 		bl	segs_putchar
+ 3529              	.L94:
+ 440:../proyecto.c ****                 led_on( LEFT_LED );                    /* Enciende leds */
+ 3530              		.loc 1 440 0
+ 3531 0e38 0100A0E3 		mov	r0, #1
+ 3532 0e3c FEFFFFEB 		bl	led_on
+ 441:../proyecto.c ****                 led_on( RIGHT_LED );
+ 3533              		.loc 1 441 0
+ 3534 0e40 0200A0E3 		mov	r0, #2
+ 3535 0e44 FEFFFFEB 		bl	led_on
+ 442:../proyecto.c ****                 state = on;                            /* Salta al estado on ... */
+ 3536              		.loc 1 442 0
+ 3537 0e48 78309FE5 		ldr	r3, .L98+4
+ 3538 0e4c 0120A0E3 		mov	r2, #1
+ 3539 0e50 0020C3E5 		strb	r2, [r3, #0]
+ 443:../proyecto.c ****                 ticks = 10;                            /* ... en el que debera permanecer 10 ticks 
+ 3540              		.loc 1 443 0
+ 3541 0e54 74309FE5 		ldr	r3, .L98+12
+ 3542 0e58 0A20A0E3 		mov	r2, #10
+ 3543 0e5c 002083E5 		str	r2, [r3, #0]
+ 444:../proyecto.c ****             }
+ 445:../proyecto.c ****             break;
+ 3544              		.loc 1 445 0
+ 3545 0e60 140000EA 		b	.L87
+ 3546              	.L91:
+ 446:../proyecto.c ****         case on:                                /* Estado con leds y 7-segs encendidos */
+ 447:../proyecto.c ****             if( !(--ticks) )                        /* Decrementa ticks y chequea si ha permanecido
+ 3547              		.loc 1 447 0
+ 3548 0e64 64309FE5 		ldr	r3, .L98+12
+ 3549 0e68 003093E5 		ldr	r3, [r3, #0]
+ 3550 0e6c 012043E2 		sub	r2, r3, #1
+ 3551 0e70 58309FE5 		ldr	r3, .L98+12
+ 3552 0e74 002083E5 		str	r2, [r3, #0]
+ 3553 0e78 50309FE5 		ldr	r3, .L98+12
+ 3554 0e7c 003093E5 		ldr	r3, [r3, #0]
+ 3555 0e80 000053E3 		cmp	r3, #0
+ 3556 0e84 0A00001A 		bne	.L97
+ 448:../proyecto.c ****             {  
+ 449:../proyecto.c ****                 segs_off();                            /* Apaga segs */
+ 3557              		.loc 1 449 0
+ 3558 0e88 FEFFFFEB 		bl	segs_off
+ 450:../proyecto.c ****                 led_off( LEFT_LED );                   /* Apaga leds */
+ 3559              		.loc 1 450 0
+ 3560 0e8c 0100A0E3 		mov	r0, #1
+ 3561 0e90 FEFFFFEB 		bl	led_off
+ 451:../proyecto.c ****                 led_off( RIGHT_LED );                                
+ 3562              		.loc 1 451 0
+ 3563 0e94 0200A0E3 		mov	r0, #2
+ 3564 0e98 FEFFFFEB 		bl	led_off
+ 452:../proyecto.c ****                 state = off;                           /* Salta al estado off */
+ 3565              		.loc 1 452 0
+ 3566 0e9c 24309FE5 		ldr	r3, .L98+4
+ 3567 0ea0 0020A0E3 		mov	r2, #0
+ 3568 0ea4 0020C3E5 		strb	r2, [r3, #0]
+ 453:../proyecto.c ****             }
+ 454:../proyecto.c ****             break;
+ 3569              		.loc 1 454 0
+ 3570 0ea8 020000EA 		b	.L87
+ 3571              	.L96:
+ 445:../proyecto.c ****             break;
+ 3572              		.loc 1 445 0
+ 3573 0eac 0000A0E1 		mov	r0, r0	@ nop
+ 3574 0eb0 000000EA 		b	.L87
+ 3575              	.L97:
+ 3576              		.loc 1 454 0
+ 3577 0eb4 0000A0E1 		mov	r0, r0	@ nop
+ 3578              	.L87:
+ 455:../proyecto.c ****     }
+ 456:../proyecto.c **** }    
+ 3579              		.loc 1 456 0
+ 3580 0eb8 0CD04BE2 		sub	sp, fp, #12
+ 3581 0ebc 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3582 0ec0 1EFF2FE1 		bx	lr
+ 3583              	.L99:
+ 3584              		.align	2
+ 3585              	.L98:
+ 3586 0ec4 00000000 		.word	init.4347
+ 3587 0ec8 01000000 		.word	state.4351
+ 3588 0ecc 00000000 		.word	coinsMoverMsg
+ 3589 0ed0 04000000 		.word	ticks.4352
+ 3590              		.cfi_endproc
+ 3591              	.LFE6:
+ 3593              		.align	2
+ 3594              		.global	selectorTask
+ 3596              	selectorTask:
+ 3597              	.LFB7:
+ 457:../proyecto.c **** 
+ 458:../proyecto.c **** 
+ 459:../proyecto.c **** int8 selectorTask(void)
+ 460:../proyecto.c **** {
+ 3598              		.loc 1 460 0
+ 3599              		.cfi_startproc
+ 3600              		@ Function supports interworking.
+ 3601              		@ args = 0, pretend = 0, frame = 0
+ 3602              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3603 0ed4 0DC0A0E1 		mov	ip, sp
+ 3604              	.LCFI14:
+ 3605              		.cfi_def_cfa_register 12
+ 3606 0ed8 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3607 0edc 04B04CE2 		sub	fp, ip, #4
+ 3608              		.cfi_offset 14, -8
+ 3609              		.cfi_offset 13, -12
+ 3610              		.cfi_offset 11, -16
+ 3611              	.LCFI15:
+ 3612              		.cfi_def_cfa 11, 4
+ 461:../proyecto.c **** 
+ 462:../proyecto.c **** 	//PUESTO 1
+ 463:../proyecto.c **** 	if(tsPressedMsg.x < LCD_WIDTH/4 && 64 < tsPressedMsg.y && tsPressedMsg.y < 128)
+ 3613              		.loc 1 463 0
+ 3614 0ee0 14329FE5 		ldr	r3, .L110
+ 3615 0ee4 B230D3E1 		ldrh	r3, [r3, #2]
+ 3616 0ee8 4F0053E3 		cmp	r3, #79
+ 3617 0eec 0900008A 		bhi	.L101
+ 3618              		.loc 1 463 0 is_stmt 0 discriminator 1
+ 3619 0ef0 04329FE5 		ldr	r3, .L110
+ 3620 0ef4 B430D3E1 		ldrh	r3, [r3, #4]
+ 3621 0ef8 400053E3 		cmp	r3, #64
+ 3622 0efc 0500009A 		bls	.L101
+ 3623 0f00 F4319FE5 		ldr	r3, .L110
+ 3624 0f04 B430D3E1 		ldrh	r3, [r3, #4]
+ 3625 0f08 7F0053E3 		cmp	r3, #127
+ 3626 0f0c 0100008A 		bhi	.L101
+ 464:../proyecto.c **** 	{
+ 465:../proyecto.c **** 		return 0;
+ 3627              		.loc 1 465 0 is_stmt 1
+ 3628 0f10 0030A0E3 		mov	r3, #0
+ 3629 0f14 720000EA 		b	.L102
+ 3630              	.L101:
+ 466:../proyecto.c **** 	}
+ 467:../proyecto.c **** 	//PUESTO 2
+ 468:../proyecto.c **** 	else if(tsPressedMsg.x > LCD_WIDTH/4 && tsPressedMsg.x < LCD_WIDTH*2/4 &&  64 < tsPressedMsg.y && 
+ 3631              		.loc 1 468 0
+ 3632 0f18 DC319FE5 		ldr	r3, .L110
+ 3633 0f1c B230D3E1 		ldrh	r3, [r3, #2]
+ 3634 0f20 500053E3 		cmp	r3, #80
+ 3635 0f24 0D00009A 		bls	.L103
+ 3636              		.loc 1 468 0 is_stmt 0 discriminator 1
+ 3637 0f28 CC319FE5 		ldr	r3, .L110
+ 3638 0f2c B230D3E1 		ldrh	r3, [r3, #2]
+ 3639 0f30 9F0053E3 		cmp	r3, #159
+ 3640 0f34 0900008A 		bhi	.L103
+ 3641 0f38 BC319FE5 		ldr	r3, .L110
+ 3642 0f3c B430D3E1 		ldrh	r3, [r3, #4]
+ 3643 0f40 400053E3 		cmp	r3, #64
+ 3644 0f44 0500009A 		bls	.L103
+ 3645 0f48 AC319FE5 		ldr	r3, .L110
+ 3646 0f4c B430D3E1 		ldrh	r3, [r3, #4]
+ 3647 0f50 7F0053E3 		cmp	r3, #127
+ 3648 0f54 0100008A 		bhi	.L103
+ 469:../proyecto.c **** 	{
+ 470:../proyecto.c **** 		return 1;
+ 3649              		.loc 1 470 0 is_stmt 1
+ 3650 0f58 0130A0E3 		mov	r3, #1
+ 3651 0f5c 600000EA 		b	.L102
+ 3652              	.L103:
+ 471:../proyecto.c **** 
+ 472:../proyecto.c **** 	}
+ 473:../proyecto.c **** 	//PUESTO 3
+ 474:../proyecto.c **** 	else if(tsPressedMsg.x > LCD_WIDTH*2/4 && tsPressedMsg.x < LCD_WIDTH*3/4 && 64 < tsPressedMsg.y &&
+ 3653              		.loc 1 474 0
+ 3654 0f60 94319FE5 		ldr	r3, .L110
+ 3655 0f64 B230D3E1 		ldrh	r3, [r3, #2]
+ 3656 0f68 A00053E3 		cmp	r3, #160
+ 3657 0f6c 0D00009A 		bls	.L104
+ 3658              		.loc 1 474 0 is_stmt 0 discriminator 1
+ 3659 0f70 84319FE5 		ldr	r3, .L110
+ 3660 0f74 B230D3E1 		ldrh	r3, [r3, #2]
+ 3661 0f78 EF0053E3 		cmp	r3, #239
+ 3662 0f7c 0900008A 		bhi	.L104
+ 3663 0f80 74319FE5 		ldr	r3, .L110
+ 3664 0f84 B430D3E1 		ldrh	r3, [r3, #4]
+ 3665 0f88 400053E3 		cmp	r3, #64
+ 3666 0f8c 0500009A 		bls	.L104
+ 3667 0f90 64319FE5 		ldr	r3, .L110
+ 3668 0f94 B430D3E1 		ldrh	r3, [r3, #4]
+ 3669 0f98 7F0053E3 		cmp	r3, #127
+ 3670 0f9c 0100008A 		bhi	.L104
+ 475:../proyecto.c **** 	{
+ 476:../proyecto.c **** 		return 2;
+ 3671              		.loc 1 476 0 is_stmt 1
+ 3672 0fa0 0230A0E3 		mov	r3, #2
+ 3673 0fa4 4E0000EA 		b	.L102
+ 3674              	.L104:
+ 477:../proyecto.c **** 
+ 478:../proyecto.c **** 	}
+ 479:../proyecto.c **** 	//PUESTO 4
+ 480:../proyecto.c **** 	else if(tsPressedMsg.x > LCD_WIDTH*3/4 && 64 < tsPressedMsg.y && tsPressedMsg.y < 128)
+ 3675              		.loc 1 480 0
+ 3676 0fa8 4C319FE5 		ldr	r3, .L110
+ 3677 0fac B230D3E1 		ldrh	r3, [r3, #2]
+ 3678 0fb0 F00053E3 		cmp	r3, #240
+ 3679 0fb4 0900009A 		bls	.L105
+ 3680              		.loc 1 480 0 is_stmt 0 discriminator 1
+ 3681 0fb8 3C319FE5 		ldr	r3, .L110
+ 3682 0fbc B430D3E1 		ldrh	r3, [r3, #4]
+ 3683 0fc0 400053E3 		cmp	r3, #64
+ 3684 0fc4 0500009A 		bls	.L105
+ 3685 0fc8 2C319FE5 		ldr	r3, .L110
+ 3686 0fcc B430D3E1 		ldrh	r3, [r3, #4]
+ 3687 0fd0 7F0053E3 		cmp	r3, #127
+ 3688 0fd4 0100008A 		bhi	.L105
+ 481:../proyecto.c **** 	{
+ 482:../proyecto.c **** 		return 3;
+ 3689              		.loc 1 482 0 is_stmt 1
+ 3690 0fd8 0330A0E3 		mov	r3, #3
+ 3691 0fdc 400000EA 		b	.L102
+ 3692              	.L105:
+ 483:../proyecto.c **** 
+ 484:../proyecto.c **** 	}
+ 485:../proyecto.c **** 	//PUESTO 5
+ 486:../proyecto.c **** 	else if(tsPressedMsg.x > LCD_WIDTH/4 && tsPressedMsg.x < LCD_WIDTH*2/4 && 128 < tsPressedMsg.y && 
+ 3693              		.loc 1 486 0
+ 3694 0fe0 14319FE5 		ldr	r3, .L110
+ 3695 0fe4 B230D3E1 		ldrh	r3, [r3, #2]
+ 3696 0fe8 500053E3 		cmp	r3, #80
+ 3697 0fec 0D00009A 		bls	.L106
+ 3698              		.loc 1 486 0 is_stmt 0 discriminator 1
+ 3699 0ff0 04319FE5 		ldr	r3, .L110
+ 3700 0ff4 B230D3E1 		ldrh	r3, [r3, #2]
+ 3701 0ff8 9F0053E3 		cmp	r3, #159
+ 3702 0ffc 0900008A 		bhi	.L106
+ 3703 1000 F4309FE5 		ldr	r3, .L110
+ 3704 1004 B430D3E1 		ldrh	r3, [r3, #4]
+ 3705 1008 800053E3 		cmp	r3, #128
+ 3706 100c 0500009A 		bls	.L106
+ 3707 1010 E4309FE5 		ldr	r3, .L110
+ 3708 1014 B430D3E1 		ldrh	r3, [r3, #4]
+ 3709 1018 BF0053E3 		cmp	r3, #191
+ 3710 101c 0100008A 		bhi	.L106
+ 487:../proyecto.c **** 	{
+ 488:../proyecto.c **** 		return 4;
+ 3711              		.loc 1 488 0 is_stmt 1
+ 3712 1020 0430A0E3 		mov	r3, #4
+ 3713 1024 2E0000EA 		b	.L102
+ 3714              	.L106:
+ 489:../proyecto.c **** 
+ 490:../proyecto.c **** 	}
+ 491:../proyecto.c **** 	//PUESTO 6
+ 492:../proyecto.c **** 	else if(tsPressedMsg.x > LCD_WIDTH*2/4 && tsPressedMsg.x < LCD_WIDTH*3/4 && 128 < tsPressedMsg.y &
+ 3715              		.loc 1 492 0
+ 3716 1028 CC309FE5 		ldr	r3, .L110
+ 3717 102c B230D3E1 		ldrh	r3, [r3, #2]
+ 3718 1030 A00053E3 		cmp	r3, #160
+ 3719 1034 0D00009A 		bls	.L107
+ 3720              		.loc 1 492 0 is_stmt 0 discriminator 1
+ 3721 1038 BC309FE5 		ldr	r3, .L110
+ 3722 103c B230D3E1 		ldrh	r3, [r3, #2]
+ 3723 1040 EF0053E3 		cmp	r3, #239
+ 3724 1044 0900008A 		bhi	.L107
+ 3725 1048 AC309FE5 		ldr	r3, .L110
+ 3726 104c B430D3E1 		ldrh	r3, [r3, #4]
+ 3727 1050 800053E3 		cmp	r3, #128
+ 3728 1054 0500009A 		bls	.L107
+ 3729 1058 9C309FE5 		ldr	r3, .L110
+ 3730 105c B430D3E1 		ldrh	r3, [r3, #4]
+ 3731 1060 BF0053E3 		cmp	r3, #191
+ 3732 1064 0100008A 		bhi	.L107
+ 493:../proyecto.c **** 	{
+ 494:../proyecto.c **** 		return 5;
+ 3733              		.loc 1 494 0 is_stmt 1
+ 3734 1068 0530A0E3 		mov	r3, #5
+ 3735 106c 1C0000EA 		b	.L102
+ 3736              	.L107:
+ 495:../proyecto.c **** 
+ 496:../proyecto.c **** 	}
+ 497:../proyecto.c **** 	//PUESTO 7
+ 498:../proyecto.c **** 	else if(tsPressedMsg.x < LCD_WIDTH*3/4 && 128 < tsPressedMsg.y && tsPressedMsg.y < 192)
+ 3737              		.loc 1 498 0
+ 3738 1070 84309FE5 		ldr	r3, .L110
+ 3739 1074 B230D3E1 		ldrh	r3, [r3, #2]
+ 3740 1078 EF0053E3 		cmp	r3, #239
+ 3741 107c 0900008A 		bhi	.L108
+ 3742              		.loc 1 498 0 is_stmt 0 discriminator 1
+ 3743 1080 74309FE5 		ldr	r3, .L110
+ 3744 1084 B430D3E1 		ldrh	r3, [r3, #4]
+ 3745 1088 800053E3 		cmp	r3, #128
+ 3746 108c 0500009A 		bls	.L108
+ 3747 1090 64309FE5 		ldr	r3, .L110
+ 3748 1094 B430D3E1 		ldrh	r3, [r3, #4]
+ 3749 1098 BF0053E3 		cmp	r3, #191
+ 3750 109c 0100008A 		bhi	.L108
+ 499:../proyecto.c **** 	{
+ 500:../proyecto.c **** 		return 6;
+ 3751              		.loc 1 500 0 is_stmt 1
+ 3752 10a0 0630A0E3 		mov	r3, #6
+ 3753 10a4 0E0000EA 		b	.L102
+ 3754              	.L108:
+ 501:../proyecto.c **** 
+ 502:../proyecto.c **** 	}
+ 503:../proyecto.c **** 	//PUESTO 8
+ 504:../proyecto.c **** 	else if( tsPressedMsg.x > LCD_WIDTH*3/4 && 128 < tsPressedMsg.y && tsPressedMsg.y < 192 )
+ 3755              		.loc 1 504 0
+ 3756 10a8 4C309FE5 		ldr	r3, .L110
+ 3757 10ac B230D3E1 		ldrh	r3, [r3, #2]
+ 3758 10b0 F00053E3 		cmp	r3, #240
+ 3759 10b4 0900009A 		bls	.L109
+ 3760              		.loc 1 504 0 is_stmt 0 discriminator 1
+ 3761 10b8 3C309FE5 		ldr	r3, .L110
+ 3762 10bc B430D3E1 		ldrh	r3, [r3, #4]
+ 3763 10c0 800053E3 		cmp	r3, #128
+ 3764 10c4 0500009A 		bls	.L109
+ 3765 10c8 2C309FE5 		ldr	r3, .L110
+ 3766 10cc B430D3E1 		ldrh	r3, [r3, #4]
+ 3767 10d0 BF0053E3 		cmp	r3, #191
+ 3768 10d4 0100008A 		bhi	.L109
+ 505:../proyecto.c **** 	{
+ 506:../proyecto.c **** 		return 7;
+ 3769              		.loc 1 506 0 is_stmt 1
+ 3770 10d8 0730A0E3 		mov	r3, #7
+ 3771 10dc 000000EA 		b	.L102
+ 3772              	.L109:
+ 507:../proyecto.c **** 	}
+ 508:../proyecto.c **** 	return -1;
+ 3773              		.loc 1 508 0
+ 3774 10e0 FF30A0E3 		mov	r3, #255
+ 3775              	.L102:
+ 3776 10e4 033CA0E1 		mov	r3, r3, asl #24
+ 3777 10e8 433CA0E1 		mov	r3, r3, asr #24
+ 509:../proyecto.c **** 
+ 510:../proyecto.c **** }
+ 3778              		.loc 1 510 0
+ 3779 10ec 0300A0E1 		mov	r0, r3
+ 3780 10f0 0CD04BE2 		sub	sp, fp, #12
+ 3781 10f4 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3782 10f8 1EFF2FE1 		bx	lr
+ 3783              	.L111:
+ 3784              		.align	2
+ 3785              	.L110:
+ 3786 10fc 00000000 		.word	tsPressedMsg
+ 3787              		.cfi_endproc
+ 3788              	.LFE7:
+ 3790              		.align	2
+ 3791              		.global	setup
+ 3793              	setup:
+ 3794              	.LFB8:
+ 511:../proyecto.c **** 
+ 512:../proyecto.c **** 
+ 513:../proyecto.c **** /*******************************************************************/
+ 514:../proyecto.c **** 
+ 515:../proyecto.c **** /*
+ 516:../proyecto.c **** ** Inicializa flags, mailboxes y variables globales
+ 517:../proyecto.c **** */
+ 518:../proyecto.c **** void setup( void )
+ 519:../proyecto.c **** {
+ 3795              		.loc 1 519 0
+ 3796              		.cfi_startproc
+ 3797              		@ Function supports interworking.
+ 3798              		@ args = 0, pretend = 0, frame = 0
+ 3799              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3800 1100 0DC0A0E1 		mov	ip, sp
+ 3801              	.LCFI16:
+ 3802              		.cfi_def_cfa_register 12
+ 3803 1104 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3804 1108 04B04CE2 		sub	fp, ip, #4
+ 3805              		.cfi_offset 14, -8
+ 3806              		.cfi_offset 13, -12
+ 3807              		.cfi_offset 11, -16
+ 3808              	.LCFI17:
+ 3809              		.cfi_def_cfa 11, 4
+ 520:../proyecto.c ****     kpPressedMsg.flag  = FALSE;
+ 3810              		.loc 1 520 0
+ 3811 110c 70309FE5 		ldr	r3, .L113
+ 3812 1110 0020A0E3 		mov	r2, #0
+ 3813 1114 0020C3E5 		strb	r2, [r3, #0]
+ 521:../proyecto.c ****     kpPressedMsg.licPlateInput = FALSE;
+ 3814              		.loc 1 521 0
+ 3815 1118 64309FE5 		ldr	r3, .L113
+ 3816 111c 0020A0E3 		mov	r2, #0
+ 3817 1120 0120C3E5 		strb	r2, [r3, #1]
+ 522:../proyecto.c ****     kpPressedMsg.cents = 0;
+ 3818              		.loc 1 522 0
+ 3819 1124 58309FE5 		ldr	r3, .L113
+ 3820 1128 0020A0E3 		mov	r2, #0
+ 3821 112c 0220C3E5 		strb	r2, [r3, #2]
+ 523:../proyecto.c **** 
+ 524:../proyecto.c ****     tsPressedMsg.flag     = FALSE;
+ 3822              		.loc 1 524 0
+ 3823 1130 50309FE5 		ldr	r3, .L113+4
+ 3824 1134 0020A0E3 		mov	r2, #0
+ 3825 1138 0020C3E5 		strb	r2, [r3, #0]
+ 525:../proyecto.c ****     tsPressedMsg.x        = 0;
+ 3826              		.loc 1 525 0
+ 3827 113c 44309FE5 		ldr	r3, .L113+4
+ 3828 1140 0020A0E3 		mov	r2, #0
+ 3829 1144 B220C3E1 		strh	r2, [r3, #2]	@ movhi
+ 526:../proyecto.c ****     tsPressedMsg.y        = 0;
+ 3830              		.loc 1 526 0
+ 3831 1148 38309FE5 		ldr	r3, .L113+4
+ 3832 114c 0020A0E3 		mov	r2, #0
+ 3833 1150 B420C3E1 		strh	r2, [r3, #4]	@ movhi
+ 527:../proyecto.c **** 
+ 528:../proyecto.c ****     coinsMoverMsg.flag    = FALSE;
+ 3834              		.loc 1 528 0
+ 3835 1154 30309FE5 		ldr	r3, .L113+8
+ 3836 1158 0020A0E3 		mov	r2, #0
+ 3837 115c 0020C3E5 		strb	r2, [r3, #0]
+ 529:../proyecto.c ****     coinsMoverMsg.accept  = FALSE;
+ 3838              		.loc 1 529 0
+ 3839 1160 24309FE5 		ldr	r3, .L113+8
+ 3840 1164 0020A0E3 		mov	r2, #0
+ 3841 1168 0120C3E5 		strb	r2, [r3, #1]
+ 530:../proyecto.c **** 
+ 531:../proyecto.c ****     ticketMsg.flag       = FALSE;
+ 3842              		.loc 1 531 0
+ 3843 116c 1C309FE5 		ldr	r3, .L113+12
+ 3844 1170 0020A0E3 		mov	r2, #0
+ 3845 1174 0020C3E5 		strb	r2, [r3, #0]
+ 532:../proyecto.c **** }
+ 3846              		.loc 1 532 0
+ 3847 1178 0CD04BE2 		sub	sp, fp, #12
+ 3848 117c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3849 1180 1EFF2FE1 		bx	lr
+ 3850              	.L114:
+ 3851              		.align	2
+ 3852              	.L113:
+ 3853 1184 00000000 		.word	kpPressedMsg
+ 3854 1188 00000000 		.word	tsPressedMsg
+ 3855 118c 00000000 		.word	coinsMoverMsg
+ 3856 1190 00000000 		.word	ticketMsg
+ 3857              		.cfi_endproc
+ 3858              	.LFE8:
+ 3860              		.align	2
+ 3861              		.global	getMonthdays
+ 3863              	getMonthdays:
+ 3864              	.LFB9:
+ 533:../proyecto.c **** 
+ 534:../proyecto.c **** uint8 getMonthdays(uint8 month){
+ 3865              		.loc 1 534 0
+ 3866              		.cfi_startproc
+ 3867              		@ Function supports interworking.
+ 3868              		@ args = 0, pretend = 0, frame = 16
+ 3869              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3870 1194 0DC0A0E1 		mov	ip, sp
+ 3871              	.LCFI18:
+ 3872              		.cfi_def_cfa_register 12
+ 3873 1198 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 3874 119c 04B04CE2 		sub	fp, ip, #4
+ 3875              		.cfi_offset 14, -8
+ 3876              		.cfi_offset 13, -12
+ 3877              		.cfi_offset 11, -16
+ 3878              	.LCFI19:
+ 3879              		.cfi_def_cfa 11, 4
+ 3880 11a0 10D04DE2 		sub	sp, sp, #16
+ 3881 11a4 0030A0E1 		mov	r3, r0
+ 3882 11a8 15304BE5 		strb	r3, [fp, #-21]
+ 535:../proyecto.c **** 	uint8 totdays;
+ 536:../proyecto.c **** 	if(month == 2)
+ 3883              		.loc 1 536 0
+ 3884 11ac 15305BE5 		ldrb	r3, [fp, #-21]	@ zero_extendqisi2
+ 3885 11b0 020053E3 		cmp	r3, #2
+ 3886 11b4 0200001A 		bne	.L116
+ 537:../proyecto.c **** 		totdays = 28;
+ 3887              		.loc 1 537 0
+ 3888 11b8 1C30A0E3 		mov	r3, #28
+ 3889 11bc 0D304BE5 		strb	r3, [fp, #-13]
+ 3890 11c0 120000EA 		b	.L117
+ 3891              	.L116:
+ 538:../proyecto.c **** 	else if((month < 8 && month%2) || (month <= 8 && !month%2))
+ 3892              		.loc 1 538 0
+ 3893 11c4 15305BE5 		ldrb	r3, [fp, #-21]	@ zero_extendqisi2
+ 3894 11c8 070053E3 		cmp	r3, #7
+ 3895 11cc 0400008A 		bhi	.L118
+ 3896              		.loc 1 538 0 is_stmt 0 discriminator 1
+ 3897 11d0 15305BE5 		ldrb	r3, [fp, #-21]	@ zero_extendqisi2
+ 3898 11d4 013003E2 		and	r3, r3, #1
+ 3899 11d8 FF3003E2 		and	r3, r3, #255
+ 3900 11dc 000053E3 		cmp	r3, #0
+ 3901 11e0 0500001A 		bne	.L119
+ 3902              	.L118:
+ 3903              		.loc 1 538 0 discriminator 2
+ 3904 11e4 15305BE5 		ldrb	r3, [fp, #-21]	@ zero_extendqisi2
+ 3905 11e8 080053E3 		cmp	r3, #8
+ 3906 11ec 0500008A 		bhi	.L120
+ 3907              		.loc 1 538 0 discriminator 1
+ 3908 11f0 15305BE5 		ldrb	r3, [fp, #-21]	@ zero_extendqisi2
+ 3909 11f4 000053E3 		cmp	r3, #0
+ 3910 11f8 0200001A 		bne	.L120
+ 3911              	.L119:
+ 539:../proyecto.c **** 		totdays = 31;
+ 3912              		.loc 1 539 0 is_stmt 1
+ 3913 11fc 1F30A0E3 		mov	r3, #31
+ 3914 1200 0D304BE5 		strb	r3, [fp, #-13]
+ 3915 1204 010000EA 		b	.L117
+ 3916              	.L120:
+ 540:../proyecto.c **** 	else
+ 541:../proyecto.c **** 		totdays = 30;
+ 3917              		.loc 1 541 0
+ 3918 1208 1E30A0E3 		mov	r3, #30
+ 3919 120c 0D304BE5 		strb	r3, [fp, #-13]
+ 3920              	.L117:
+ 542:../proyecto.c **** 
+ 543:../proyecto.c **** 	return totdays;
+ 3921              		.loc 1 543 0
+ 3922 1210 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
+ 544:../proyecto.c **** }
+ 3923              		.loc 1 544 0
+ 3924 1214 0300A0E1 		mov	r0, r3
+ 3925 1218 0CD04BE2 		sub	sp, fp, #12
+ 3926 121c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 3927 1220 1EFF2FE1 		bx	lr
+ 3928              		.cfi_endproc
+ 3929              	.LFE9:
+ 3931              		.align	2
+ 3932              		.global	updateDeadline
+ 3934              	updateDeadline:
+ 3935              	.LFB10:
+ 545:../proyecto.c **** 
+ 546:../proyecto.c **** 
+ 547:../proyecto.c **** void updateDeadline(uint8 credit, rtc_time_t * deadline)
+ 548:../proyecto.c **** {
+ 3936              		.loc 1 548 0
+ 3937              		.cfi_startproc
+ 3938              		@ Function supports interworking.
+ 3939              		@ args = 0, pretend = 0, frame = 16
+ 3940              		@ frame_needed = 1, uses_anonymous_args = 0
+ 3941 1224 0DC0A0E1 		mov	ip, sp
+ 3942              	.LCFI20:
+ 3943              		.cfi_def_cfa_register 12
+ 3944 1228 10D82DE9 		stmfd	sp!, {r4, fp, ip, lr, pc}
+ 3945 122c 04B04CE2 		sub	fp, ip, #4
+ 3946              		.cfi_offset 14, -8
+ 3947              		.cfi_offset 13, -12
+ 3948              		.cfi_offset 11, -16
+ 3949              		.cfi_offset 4, -20
+ 3950              	.LCFI21:
+ 3951              		.cfi_def_cfa 11, 4
+ 3952 1230 14D04DE2 		sub	sp, sp, #20
+ 3953 1234 0030A0E1 		mov	r3, r0
+ 3954 1238 24100BE5 		str	r1, [fp, #-36]
+ 3955 123c 1D304BE5 		strb	r3, [fp, #-29]
+ 549:../proyecto.c **** 	uint8 hours = credit/60;
+ 3956              		.loc 1 549 0
+ 3957 1240 1D205BE5 		ldrb	r2, [fp, #-29]	@ zero_extendqisi2
+ 3958 1244 B4319FE5 		ldr	r3, .L126
+ 3959 1248 921383E0 		umull	r1, r3, r2, r3
+ 3960 124c A332A0E1 		mov	r3, r3, lsr #5
+ 3961 1250 15304BE5 		strb	r3, [fp, #-21]
+ 550:../proyecto.c **** 	uint8 mins = credit%60;
+ 3962              		.loc 1 550 0
+ 3963 1254 1D205BE5 		ldrb	r2, [fp, #-29]	@ zero_extendqisi2
+ 3964 1258 A0319FE5 		ldr	r3, .L126
+ 3965 125c 921383E0 		umull	r1, r3, r2, r3
+ 3966 1260 A312A0E1 		mov	r1, r3, lsr #5
+ 3967 1264 0130A0E1 		mov	r3, r1
+ 3968 1268 0332A0E1 		mov	r3, r3, asl #4
+ 3969 126c 033061E0 		rsb	r3, r1, r3
+ 3970 1270 0331A0E1 		mov	r3, r3, asl #2
+ 3971 1274 023063E0 		rsb	r3, r3, r2
+ 3972 1278 16304BE5 		strb	r3, [fp, #-22]
+ 551:../proyecto.c **** 
+ 552:../proyecto.c **** 	if((deadline->min += mins) >= 60){
+ 3973              		.loc 1 552 0
+ 3974 127c 24301BE5 		ldr	r3, [fp, #-36]
+ 3975 1280 0120D3E5 		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 3976 1284 16305BE5 		ldrb	r3, [fp, #-22]
+ 3977 1288 033082E0 		add	r3, r2, r3
+ 3978 128c FF2003E2 		and	r2, r3, #255
+ 3979 1290 24301BE5 		ldr	r3, [fp, #-36]
+ 3980 1294 0120C3E5 		strb	r2, [r3, #1]
+ 3981 1298 24301BE5 		ldr	r3, [fp, #-36]
+ 3982 129c 0130D3E5 		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 3983 12a0 3B0053E3 		cmp	r3, #59
+ 3984 12a4 1200009A 		bls	.L122
+ 553:../proyecto.c **** 		deadline->hour++;
+ 3985              		.loc 1 553 0
+ 3986 12a8 24301BE5 		ldr	r3, [fp, #-36]
+ 3987 12ac 0230D3E5 		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 3988 12b0 013083E2 		add	r3, r3, #1
+ 3989 12b4 FF2003E2 		and	r2, r3, #255
+ 3990 12b8 24301BE5 		ldr	r3, [fp, #-36]
+ 3991 12bc 0220C3E5 		strb	r2, [r3, #2]
+ 554:../proyecto.c **** 		deadline->min %= 60;
+ 3992              		.loc 1 554 0
+ 3993 12c0 24301BE5 		ldr	r3, [fp, #-36]
+ 3994 12c4 0120D3E5 		ldrb	r2, [r3, #1]	@ zero_extendqisi2
+ 3995 12c8 30319FE5 		ldr	r3, .L126
+ 3996 12cc 921383E0 		umull	r1, r3, r2, r3
+ 3997 12d0 A312A0E1 		mov	r1, r3, lsr #5
+ 3998 12d4 0130A0E1 		mov	r3, r1
+ 3999 12d8 0332A0E1 		mov	r3, r3, asl #4
+ 4000 12dc 033061E0 		rsb	r3, r1, r3
+ 4001 12e0 0331A0E1 		mov	r3, r3, asl #2
+ 4002 12e4 023063E0 		rsb	r3, r3, r2
+ 4003 12e8 FF2003E2 		and	r2, r3, #255
+ 4004 12ec 24301BE5 		ldr	r3, [fp, #-36]
+ 4005 12f0 0120C3E5 		strb	r2, [r3, #1]
+ 4006              	.L122:
+ 555:../proyecto.c **** 	}
+ 556:../proyecto.c **** 	if((deadline->hour += hours) >= 24){
+ 4007              		.loc 1 556 0
+ 4008 12f4 24301BE5 		ldr	r3, [fp, #-36]
+ 4009 12f8 0220D3E5 		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 4010 12fc 15305BE5 		ldrb	r3, [fp, #-21]
+ 4011 1300 033082E0 		add	r3, r2, r3
+ 4012 1304 FF2003E2 		and	r2, r3, #255
+ 4013 1308 24301BE5 		ldr	r3, [fp, #-36]
+ 4014 130c 0220C3E5 		strb	r2, [r3, #2]
+ 4015 1310 24301BE5 		ldr	r3, [fp, #-36]
+ 4016 1314 0230D3E5 		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 4017 1318 170053E3 		cmp	r3, #23
+ 4018 131c 1800009A 		bls	.L123
+ 557:../proyecto.c **** 		deadline->hour %= 24;
+ 4019              		.loc 1 557 0
+ 4020 1320 24301BE5 		ldr	r3, [fp, #-36]
+ 4021 1324 0220D3E5 		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 4022 1328 D4309FE5 		ldr	r3, .L126+4
+ 4023 132c 921383E0 		umull	r1, r3, r2, r3
+ 4024 1330 2312A0E1 		mov	r1, r3, lsr #4
+ 4025 1334 0130A0E1 		mov	r3, r1
+ 4026 1338 8330A0E1 		mov	r3, r3, asl #1
+ 4027 133c 013083E0 		add	r3, r3, r1
+ 4028 1340 8331A0E1 		mov	r3, r3, asl #3
+ 4029 1344 023063E0 		rsb	r3, r3, r2
+ 4030 1348 FF2003E2 		and	r2, r3, #255
+ 4031 134c 24301BE5 		ldr	r3, [fp, #-36]
+ 4032 1350 0220C3E5 		strb	r2, [r3, #2]
+ 558:../proyecto.c **** 		deadline->mday++;
+ 4033              		.loc 1 558 0
+ 4034 1354 24301BE5 		ldr	r3, [fp, #-36]
+ 4035 1358 0330D3E5 		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 4036 135c 013083E2 		add	r3, r3, #1
+ 4037 1360 FF2003E2 		and	r2, r3, #255
+ 4038 1364 24301BE5 		ldr	r3, [fp, #-36]
+ 4039 1368 0320C3E5 		strb	r2, [r3, #3]
+ 559:../proyecto.c **** 		deadline->wday++;
+ 4040              		.loc 1 559 0
+ 4041 136c 24301BE5 		ldr	r3, [fp, #-36]
+ 4042 1370 0430D3E5 		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 4043 1374 013083E2 		add	r3, r3, #1
+ 4044 1378 FF2003E2 		and	r2, r3, #255
+ 4045 137c 24301BE5 		ldr	r3, [fp, #-36]
+ 4046 1380 0420C3E5 		strb	r2, [r3, #4]
+ 4047              	.L123:
+ 560:../proyecto.c **** 	}
+ 561:../proyecto.c **** 	if(deadline->mday > getMonthdays(deadline->mon)){
+ 4048              		.loc 1 561 0
+ 4049 1384 24301BE5 		ldr	r3, [fp, #-36]
+ 4050 1388 0340D3E5 		ldrb	r4, [r3, #3]	@ zero_extendqisi2
+ 4051 138c 24301BE5 		ldr	r3, [fp, #-36]
+ 4052 1390 0530D3E5 		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 4053 1394 0300A0E1 		mov	r0, r3
+ 4054 1398 FEFFFFEB 		bl	getMonthdays
+ 4055 139c 0030A0E1 		mov	r3, r0
+ 4056 13a0 030054E1 		cmp	r4, r3
+ 4057 13a4 0800009A 		bls	.L124
+ 562:../proyecto.c **** 		deadline->mon++;
+ 4058              		.loc 1 562 0
+ 4059 13a8 24301BE5 		ldr	r3, [fp, #-36]
+ 4060 13ac 0530D3E5 		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 4061 13b0 013083E2 		add	r3, r3, #1
+ 4062 13b4 FF2003E2 		and	r2, r3, #255
+ 4063 13b8 24301BE5 		ldr	r3, [fp, #-36]
+ 4064 13bc 0520C3E5 		strb	r2, [r3, #5]
+ 563:../proyecto.c **** 		deadline->mday = 1;
+ 4065              		.loc 1 563 0
+ 4066 13c0 24301BE5 		ldr	r3, [fp, #-36]
+ 4067 13c4 0120A0E3 		mov	r2, #1
+ 4068 13c8 0320C3E5 		strb	r2, [r3, #3]
+ 4069              	.L124:
+ 564:../proyecto.c **** 	}
+ 565:../proyecto.c **** 	if(deadline->mon > 12)
+ 4070              		.loc 1 565 0
+ 4071 13cc 24301BE5 		ldr	r3, [fp, #-36]
+ 4072 13d0 0530D3E5 		ldrb	r3, [r3, #5]	@ zero_extendqisi2
+ 4073 13d4 0C0053E3 		cmp	r3, #12
+ 4074 13d8 0500009A 		bls	.L121
+ 566:../proyecto.c **** 		deadline->year++;
+ 4075              		.loc 1 566 0
+ 4076 13dc 24301BE5 		ldr	r3, [fp, #-36]
+ 4077 13e0 0630D3E5 		ldrb	r3, [r3, #6]	@ zero_extendqisi2
+ 4078 13e4 013083E2 		add	r3, r3, #1
+ 4079 13e8 FF2003E2 		and	r2, r3, #255
+ 4080 13ec 24301BE5 		ldr	r3, [fp, #-36]
+ 4081 13f0 0620C3E5 		strb	r2, [r3, #6]
+ 4082              	.L121:
+ 567:../proyecto.c **** 
+ 568:../proyecto.c **** 
+ 569:../proyecto.c **** }
+ 4083              		.loc 1 569 0
+ 4084 13f4 10D04BE2 		sub	sp, fp, #16
+ 4085 13f8 10689DE8 		ldmfd	sp, {r4, fp, sp, lr}
+ 4086 13fc 1EFF2FE1 		bx	lr
+ 4087              	.L127:
+ 4088              		.align	2
+ 4089              	.L126:
+ 4090 1400 89888888 		.word	-2004318071
+ 4091 1404 ABAAAAAA 		.word	-1431655765
+ 4092              		.cfi_endproc
+ 4093              	.LFE10:
+ 4095              		.align	2
+ 4096              		.global	getLicPlate
+ 4098              	getLicPlate:
+ 4099              	.LFB11:
+ 570:../proyecto.c **** 
+ 571:../proyecto.c **** uint8 getLicPlate(uint16 * licPlate)
+ 572:../proyecto.c **** {
+ 4100              		.loc 1 572 0
+ 4101              		.cfi_startproc
+ 4102              		@ Function supports interworking.
+ 4103              		@ args = 0, pretend = 0, frame = 8
+ 4104              		@ frame_needed = 1, uses_anonymous_args = 0
+ 4105 1408 0DC0A0E1 		mov	ip, sp
+ 4106              	.LCFI22:
+ 4107              		.cfi_def_cfa_register 12
+ 4108 140c 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 4109 1410 04B04CE2 		sub	fp, ip, #4
+ 4110              		.cfi_offset 14, -8
+ 4111              		.cfi_offset 13, -12
+ 4112              		.cfi_offset 11, -16
+ 4113              	.LCFI23:
+ 4114              		.cfi_def_cfa 11, 4
+ 4115 1414 08D04DE2 		sub	sp, sp, #8
+ 4116 1418 10000BE5 		str	r0, [fp, #-16]
+ 573:../proyecto.c **** 	static uint8 licPlatePoint =0;
+ 574:../proyecto.c **** 
+ 575:../proyecto.c **** 	if(kpPressedMsg.keyPress == KEYPAD_FAILURE)
+ 4117              		.loc 1 575 0
+ 4118 141c A4309FE5 		ldr	r3, .L132
+ 4119 1420 0330D3E5 		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 4120 1424 FF0053E3 		cmp	r3, #255
+ 4121 1428 0100001A 		bne	.L129
+ 576:../proyecto.c **** 		return 0;
+ 4122              		.loc 1 576 0
+ 4123 142c 0030A0E3 		mov	r3, #0
+ 4124 1430 200000EA 		b	.L130
+ 4125              	.L129:
+ 577:../proyecto.c **** 	if(licPlatePoint == 5)
+ 4126              		.loc 1 577 0
+ 4127 1434 90309FE5 		ldr	r3, .L132+4
+ 4128 1438 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 4129 143c 050053E3 		cmp	r3, #5
+ 4130 1440 0100001A 		bne	.L131
+ 578:../proyecto.c **** 			return 0;
+ 4131              		.loc 1 578 0
+ 4132 1444 0030A0E3 		mov	r3, #0
+ 4133 1448 1A0000EA 		b	.L130
+ 4134              	.L131:
+ 579:../proyecto.c **** 
+ 580:../proyecto.c **** 	*licPlate |= ( kpPressedMsg.keyPress << (licPlatePoint*4)); //hacemos un OR entre licPlate y la te
+ 4135              		.loc 1 580 0
+ 4136 144c 10301BE5 		ldr	r3, [fp, #-16]
+ 4137 1450 B030D3E1 		ldrh	r3, [r3, #0]
+ 4138 1454 0338A0E1 		mov	r3, r3, asl #16
+ 4139 1458 2328A0E1 		mov	r2, r3, lsr #16
+ 4140 145c 64309FE5 		ldr	r3, .L132
+ 4141 1460 0330D3E5 		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 4142 1464 0310A0E1 		mov	r1, r3
+ 4143 1468 5C309FE5 		ldr	r3, .L132+4
+ 4144 146c 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 4145 1470 0331A0E1 		mov	r3, r3, asl #2
+ 4146 1474 1133A0E1 		mov	r3, r1, asl r3
+ 4147 1478 0338A0E1 		mov	r3, r3, asl #16
+ 4148 147c 2338A0E1 		mov	r3, r3, lsr #16
+ 4149 1480 033082E1 		orr	r3, r2, r3
+ 4150 1484 0338A0E1 		mov	r3, r3, asl #16
+ 4151 1488 2338A0E1 		mov	r3, r3, lsr #16
+ 4152 148c 0338A0E1 		mov	r3, r3, asl #16
+ 4153 1490 2328A0E1 		mov	r2, r3, lsr #16
+ 4154 1494 10301BE5 		ldr	r3, [fp, #-16]
+ 4155 1498 B020C3E1 		strh	r2, [r3, #0]	@ movhi
+ 581:../proyecto.c **** 	licPlatePoint++;
+ 4156              		.loc 1 581 0
+ 4157 149c 28309FE5 		ldr	r3, .L132+4
+ 4158 14a0 0030D3E5 		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 4159 14a4 013083E2 		add	r3, r3, #1
+ 4160 14a8 FF2003E2 		and	r2, r3, #255
+ 4161 14ac 18309FE5 		ldr	r3, .L132+4
+ 4162 14b0 0020C3E5 		strb	r2, [r3, #0]
+ 582:../proyecto.c **** 	return 1;
+ 4163              		.loc 1 582 0
+ 4164 14b4 0130A0E3 		mov	r3, #1
+ 4165              	.L130:
+ 583:../proyecto.c **** }
+ 4166              		.loc 1 583 0
+ 4167 14b8 0300A0E1 		mov	r0, r3
+ 4168 14bc 0CD04BE2 		sub	sp, fp, #12
+ 4169 14c0 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 4170 14c4 1EFF2FE1 		bx	lr
+ 4171              	.L133:
+ 4172              		.align	2
+ 4173              	.L132:
+ 4174 14c8 00000000 		.word	kpPressedMsg
+ 4175 14cc 00000000 		.word	licPlatePoint.4375
+ 4176              		.cfi_endproc
+ 4177              	.LFE11:
+ 4179              		.bss
+ 4180              	licPlatePoint.4375:
+ 4181 0000 00       		.space	1
+ 4182              		.data
+ 4185              	init.4347:
+ 4186 0000 01       		.byte	1
+ 4187              		.bss
+ 4188              	state.4351:
+ 4189 0001 00       		.space	1
+ 4190 0002 0000     		.align	2
+ 4191              	ticks.4352:
+ 4192 0004 00000000 		.space	4
+ 4193              		.data
+ 4196              	init.4325:
+ 4197 0001 01       		.byte	1
+ 4198              		.bss
+ 4199              	state.4331:
+ 4200 0008 00       		.space	1
+ 4201              	licPlateNum.4333:
+ 4202 0009 00       		.space	1
+ 4203              	licPlatePoint.4332:
+ 4204 000a 00       		.space	1
+ 4205              		.data
+ 4208              	init.4312:
+ 4209 0002 01       		.byte	1
+ 4210              		.bss
+ 4211              	state.4317:
+ 4212 000b 00       		.space	1
+ 4213              		.data
+ 4216              	init.4279:
+ 4217 0003 01       		.byte	1
+ 4218              		.bss
+ 4219              		.align	1
+ 4220              	credit.4288:
+ 4221 000c 0000     		.space	2
+ 4222              	state.4287:
+ 4223 000e 00       		.space	1
+ 4224 000f 00       		.align	1
+ 4225              	ticks.4289:
+ 4226 0010 0000     		.space	2
+ 4227              	placeSelected.4290:
+ 4228 0012 00       		.space	1
+ 4229 0013 00       		.align	2
+ 4230              	og_deadline.4291:
+ 4231 0014 00000000 		.space	7
+ 4231      000000
+ 4232 001b 00       		.text
+ 4233              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 proyecto.c
+                            *COM*:00000060 parking
+                            *COM*:00000004 kpPressedMsg
+                            *COM*:00000006 tsPressedMsg
+                            *COM*:00000002 coinsMoverMsg
+                            *COM*:0000000e ticketMsg
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2167   .text:00000000 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2170   .text:00000000 main
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3793   .text:00001100 setup
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2251   .text:000000a0 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3172   .text:00000af4 tsScanTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3278   .text:00000be0 kpScanTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2264   .text:000000bc mainTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3466   .text:00000da4 coinsMoverTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3143   .text:00000ad8 clockTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3073   .text:00000a4c ticketPrinterTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2261   .text:000000bc $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2362   .text:000001c4 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:2370   .text:000001dc $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3596   .text:00000ed4 selectorTask
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3934   .text:00001224 updateDeadline
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4098   .text:00001408 getLicPlate
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3048   .text:00000a20 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4216   .data:00000003 init.4279
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4220   .bss:0000000c credit.4288
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4222   .bss:0000000e state.4287
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4225   .bss:00000010 ticks.4289
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4227   .bss:00000012 placeSelected.4290
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4230   .bss:00000014 og_deadline.4291
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3063   .rodata:00000000 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3070   .text:00000a4c $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3134   .text:00000acc $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3140   .text:00000ad8 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3267   .text:00000bcc $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4208   .data:00000002 init.4312
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4211   .bss:0000000b state.4317
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3275   .text:00000be0 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3317   .text:00000c2c $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3323   .text:00000c3c $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3358   .text:00000ca0 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3364   .text:00000cb0 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3457   .text:00000d98 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4196   .data:00000001 init.4325
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4199   .bss:00000008 state.4331
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3463   .text:00000da4 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3586   .text:00000ec4 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4185   .data:00000000 init.4347
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4188   .bss:00000001 state.4351
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4191   .bss:00000004 ticks.4352
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3593   .text:00000ed4 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3786   .text:000010fc $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3790   .text:00001100 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3853   .text:00001184 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3860   .text:00001194 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:3863   .text:00001194 getMonthdays
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4090   .text:00001400 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4095   .text:00001408 $a
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4174   .text:000014c8 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4180   .bss:00000000 licPlatePoint.4375
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4181   .bss:00000000 $d
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4201   .bss:00000009 licPlateNum.4333
+C:\Users\guill\AppData\Local\Temp\cchq0n5c.s:4203   .bss:0000000a licPlatePoint.4332
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+sys_init
+leds_init
+segs_init
+uart0_init
+rtc_init
+timers_init
+keypad_init
+lcd_init
+ts_init
+lcd_on
+ts_on
+scheduler_init
+create_task
+timer0_open_tick
+sleep
+dispacher
+scheduler
+plotWelcomeScreen
+lcd_clear
+plotSelectionScreen
+rtc_gettime
+memcpy
+plotPaymentScreen
+plotSelecFailure
+plotSelEnc
+plotPayCredit
+plotPayDeadline
+plotPayExcessFailure
+plotPayInsufFailure
+plotLicPlateScreen
+plotLicPlateUpdate
+plotLicPlateEnc
+plotSucScreen
+uart0_puts
+uart0_putint
+uart0_putchar
+rtc_stringDate
+plotTime
+ts_pressed
+ts_getpos
+keypad_pressed
+keypad_scan
+segs_putchar
+led_on
+segs_off
+led_off
