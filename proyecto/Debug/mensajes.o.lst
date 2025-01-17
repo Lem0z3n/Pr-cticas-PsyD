@@ -1,0 +1,1519 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"mensajes.c"
+  21              	.Ltext0:
+  22              		.file 1 "../mensajes.c"
+ 2062              		.align	2
+ 2063              		.global	init_mens
+ 2065              	init_mens:
+ 2066              	.LFB0:
+   1:../mensajes.c **** #include <stdio.h> // Para poder hacer = NULL
+   2:../mensajes.c **** #include "mensajes.h"
+   3:../mensajes.c **** 
+   4:../mensajes.c **** 
+   5:../mensajes.c **** void init_mens(tMensajes *men)
+   6:../mensajes.c **** {
+ 2067              		.loc 1 6 0
+ 2068              		.cfi_startproc
+ 2069              		@ Function supports interworking.
+ 2070              		@ args = 0, pretend = 0, frame = 8
+ 2071              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2072 0000 0DC0A0E1 		mov	ip, sp
+ 2073              	.LCFI0:
+ 2074              		.cfi_def_cfa_register 12
+ 2075 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2076 0008 04B04CE2 		sub	fp, ip, #4
+ 2077              		.cfi_offset 14, -8
+ 2078              		.cfi_offset 13, -12
+ 2079              		.cfi_offset 11, -16
+ 2080              	.LCFI1:
+ 2081              		.cfi_def_cfa 11, 4
+ 2082 000c 08D04DE2 		sub	sp, sp, #8
+ 2083 0010 10000BE5 		str	r0, [fp, #-16]
+   7:../mensajes.c **** 	set_lang(men,ESP);
+ 2084              		.loc 1 7 0
+ 2085 0014 10001BE5 		ldr	r0, [fp, #-16]
+ 2086 0018 0010A0E3 		mov	r1, #0
+ 2087 001c FEFFFFEB 		bl	set_lang
+   8:../mensajes.c **** }
+ 2088              		.loc 1 8 0
+ 2089 0020 0CD04BE2 		sub	sp, fp, #12
+ 2090 0024 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2091 0028 1EFF2FE1 		bx	lr
+ 2092              		.cfi_endproc
+ 2093              	.LFE0:
+ 2095              		.section	.rodata
+ 2096              		.align	2
+ 2097              	.LC0:
+ 2098 0000 45535000 		.ascii	"ESP\000"
+ 2099              		.align	2
+ 2100              	.LC1:
+ 2101 0004 50756C73 		.ascii	"Pulse la pantalla\000"
+ 2101      65206C61 
+ 2101      2070616E 
+ 2101      74616C6C 
+ 2101      6100
+ 2102 0016 0000     		.align	2
+ 2103              	.LC2:
+ 2104 0018 20706172 		.ascii	" para comenzar \000"
+ 2104      6120636F 
+ 2104      6D656E7A 
+ 2104      61722000 
+ 2105              		.align	2
+ 2106              	.LC3:
+ 2107 0028 20484F52 		.ascii	" HORARIO DE FUNCIONAMIENTO \000"
+ 2107      4152494F 
+ 2107      20444520 
+ 2107      46554E43 
+ 2107      494F4E41 
+ 2108              		.align	2
+ 2109              	.LC4:
+ 2110 0044 646F6D3A 		.ascii	"dom: gratis\000"
+ 2110      20677261 
+ 2110      74697300 
+ 2111              		.align	2
+ 2112              	.LC5:
+ 2113 0050 6C756E3A 		.ascii	"lun: 09:00-21:00\000"
+ 2113      2030393A 
+ 2113      30302D32 
+ 2113      313A3030 
+ 2113      00
+ 2114 0061 000000   		.align	2
+ 2115              	.LC6:
+ 2116 0064 6D61723A 		.ascii	"mar: 09:00-21:00\000"
+ 2116      2030393A 
+ 2116      30302D32 
+ 2116      313A3030 
+ 2116      00
+ 2117 0075 000000   		.align	2
+ 2118              	.LC7:
+ 2119 0078 6D69653A 		.ascii	"mie: 09:00-21:00\000"
+ 2119      2030393A 
+ 2119      30302D32 
+ 2119      313A3030 
+ 2119      00
+ 2120 0089 000000   		.align	2
+ 2121              	.LC8:
+ 2122 008c 6A75653A 		.ascii	"jue: 09:00-21:00\000"
+ 2122      2030393A 
+ 2122      30302D32 
+ 2122      313A3030 
+ 2122      00
+ 2123 009d 000000   		.align	2
+ 2124              	.LC9:
+ 2125 00a0 7669653A 		.ascii	"vie: 09:00-21:00\000"
+ 2125      2030393A 
+ 2125      30302D32 
+ 2125      313A3030 
+ 2125      00
+ 2126 00b1 000000   		.align	2
+ 2127              	.LC10:
+ 2128 00b4 7361623A 		.ascii	"sab: 09:00-15:00\000"
+ 2128      2030393A 
+ 2128      30302D31 
+ 2128      353A3030 
+ 2128      00
+ 2129 00c5 000000   		.align	2
+ 2130              	.LC11:
+ 2131 00c8 53656C65 		.ascii	"Seleccione plaza\000"
+ 2131      6363696F 
+ 2131      6E652070 
+ 2131      6C617A61 
+ 2131      00
+ 2132 00d9 000000   		.align	2
+ 2133              	.LC12:
+ 2134 00dc 50756C73 		.ascii	"Pulse una plaza por favor\000"
+ 2134      6520756E 
+ 2134      6120706C 
+ 2134      617A6120 
+ 2134      706F7220 
+ 2135 00f6 0000     		.align	2
+ 2136              	.LC13:
+ 2137 00f8 54415249 		.ascii	"TARIFAS\000"
+ 2137      46415300 
+ 2138              		.align	2
+ 2139              	.LC14:
+ 2140 0100 50726563 		.ascii	"Precio por minuto: 0,01 euros\000"
+ 2140      696F2070 
+ 2140      6F72206D 
+ 2140      696E7574 
+ 2140      6F3A2030 
+ 2141 011e 0000     		.align	2
+ 2142              	.LC15:
+ 2143 0120 20457374 		.ascii	" Estancia minima: 20 minutos\000"
+ 2143      616E6369 
+ 2143      61206D69 
+ 2143      6E696D61 
+ 2143      3A203230 
+ 2144 013d 000000   		.align	2
+ 2145              	.LC16:
+ 2146 0140 20457374 		.ascii	" Estancia maxima: 240 minutos\000"
+ 2146      616E6369 
+ 2146      61206D61 
+ 2146      78696D61 
+ 2146      3A203234 
+ 2147 015e 0000     		.align	2
+ 2148              	.LC17:
+ 2149 0160 504C415A 		.ascii	"PLAZA: \000"
+ 2149      413A2000 
+ 2150              		.align	2
+ 2151              	.LC18:
+ 2152 0168 43726564 		.ascii	"Credito:    ,   euros\000"
+ 2152      69746F3A 
+ 2152      20202020 
+ 2152      2C202020 
+ 2152      6575726F 
+ 2153 017e 0000     		.align	2
+ 2154              	.LC19:
+ 2155 0180 496E7365 		.ascii	"Inserte monedas\000"
+ 2155      72746520 
+ 2155      6D6F6E65 
+ 2155      64617300 
+ 2156              		.align	2
+ 2157              	.LC20:
+ 2158 0190 50756C73 		.ascii	"Pulse la pantalla para aceptar\000"
+ 2158      65206C61 
+ 2158      2070616E 
+ 2158      74616C6C 
+ 2158      61207061 
+ 2159 01af 00       		.align	2
+ 2160              	.LC21:
+ 2161 01b0 45737461 		.ascii	"Estancia maxima superada\000"
+ 2161      6E636961 
+ 2161      206D6178 
+ 2161      696D6120 
+ 2161      73757065 
+ 2162 01c9 000000   		.align	2
+ 2163              	.LC22:
+ 2164 01cc 4465766F 		.ascii	"Devolviendo monedas\000"
+ 2164      6C766965 
+ 2164      6E646F20 
+ 2164      6D6F6E65 
+ 2164      64617300 
+ 2165              		.align	2
+ 2166              	.LC23:
+ 2167 01e0 20204669 		.ascii	"  Fin: \000"
+ 2167      6E3A2000 
+ 2168              		.align	2
+ 2169              	.LC24:
+ 2170 01e8 504C415A 		.ascii	"PLAZA\000"
+ 2170      4100
+ 2171 01ee 0000     		.align	2
+ 2172              	.LC25:
+ 2173 01f0 4D617472 		.ascii	"Matricula:\000"
+ 2173      6963756C 
+ 2173      613A00
+ 2174 01fb 00       		.align	2
+ 2175              	.LC26:
+ 2176 01fc 496E7472 		.ascii	"Introduzca una matricula valida.\000"
+ 2176      6F64757A 
+ 2176      63612075 
+ 2176      6E61206D 
+ 2176      61747269 
+ 2177 021d 000000   		.align	2
+ 2178              	.LC27:
+ 2179 0220 506C617A 		.ascii	"Plaza i pagada\000"
+ 2179      61206920 
+ 2179      70616761 
+ 2179      646100
+ 2180 022f 00       		.align	2
+ 2181              	.LC28:
+ 2182 0230 20202020 		.ascii	"    Fin: \000"
+ 2182      46696E3A 
+ 2182      2000
+ 2183 023a 0000     		.align	2
+ 2184              	.LC29:
+ 2185 023c 51756520 		.ascii	"Que tenga un gran dia \000"
+ 2185      74656E67 
+ 2185      6120756E 
+ 2185      20677261 
+ 2185      6E206469 
+ 2186 0253 00       		.align	2
+ 2187              	.LC30:
+ 2188 0254 506C617A 		.ascii	"Plaza i ocupada\000"
+ 2188      61206920 
+ 2188      6F637570 
+ 2188      61646100 
+ 2189              		.align	2
+ 2190              	.LC31:
+ 2191 0264 656C206D 		.ascii	"el maximo saldo es 2,40 euros\000"
+ 2191      6178696D 
+ 2191      6F207361 
+ 2191      6C646F20 
+ 2191      65732032 
+ 2192 0282 0000     		.align	2
+ 2193              	.LC32:
+ 2194 0284 53616C64 		.ascii	"Saldo insuficiente\000"
+ 2194      6F20696E 
+ 2194      73756669 
+ 2194      6369656E 
+ 2194      746500
+ 2195 0297 00       		.align	2
+ 2196              	.LC33:
+ 2197 0298 656C2073 		.ascii	"el saldo minimo es 0,20 euros\000"
+ 2197      616C646F 
+ 2197      206D696E 
+ 2197      696D6F20 
+ 2197      65732030 
+ 2198 02b6 0000     		.align	2
+ 2199              	.LC34:
+ 2200 02b8 20202020 		.ascii	"    IRSE\000"
+ 2200      49525345 
+ 2200      00
+ 2201 02c1 000000   		.align	2
+ 2202              	.LC35:
+ 2203 02c4 4C494245 		.ascii	"LIBERADA\000"
+ 2203      52414441 
+ 2203      00
+ 2204 02cd 000000   		.align	2
+ 2205              	.LC36:
+ 2206 02d0 496E7472 		.ascii	"Introduzca la matricula de su coche.\000"
+ 2206      6F64757A 
+ 2206      6361206C 
+ 2206      61206D61 
+ 2206      74726963 
+ 2207 02f5 000000   		.align	2
+ 2208              	.LC37:
+ 2209 02f8 454E4700 		.ascii	"ENG\000"
+ 2210              		.align	2
+ 2211              	.LC38:
+ 2212 02fc 0909546F 		.ascii	"\011\011Touch screen\000"
+ 2212      75636820 
+ 2212      73637265 
+ 2212      656E00
+ 2213 030b 00       		.align	2
+ 2214              	.LC39:
+ 2215 030c 20090920 		.ascii	" \011\011  to start \000"
+ 2215      20746F20 
+ 2215      73746172 
+ 2215      742000
+ 2216 031b 00       		.align	2
+ 2217              	.LC40:
+ 2218 031c 204F5045 		.ascii	" OPERATING HOURS \000"
+ 2218      52415449 
+ 2218      4E472048 
+ 2218      4F555253 
+ 2218      2000
+ 2219 032e 0000     		.align	2
+ 2220              	.LC41:
+ 2221 0330 53756E3A 		.ascii	"Sun: free\000"
+ 2221      20667265 
+ 2221      6500
+ 2222 033a 0000     		.align	2
+ 2223              	.LC42:
+ 2224 033c 4D6F6E3A 		.ascii	"Mon: 09:00-21:00\000"
+ 2224      2030393A 
+ 2224      30302D32 
+ 2224      313A3030 
+ 2224      00
+ 2225 034d 000000   		.align	2
+ 2226              	.LC43:
+ 2227 0350 5475653A 		.ascii	"Tue: 09:00-21:00\000"
+ 2227      2030393A 
+ 2227      30302D32 
+ 2227      313A3030 
+ 2227      00
+ 2228 0361 000000   		.align	2
+ 2229              	.LC44:
+ 2230 0364 5765643A 		.ascii	"Wed: 09:00-21:00\000"
+ 2230      2030393A 
+ 2230      30302D32 
+ 2230      313A3030 
+ 2230      00
+ 2231 0375 000000   		.align	2
+ 2232              	.LC45:
+ 2233 0378 5468753A 		.ascii	"Thu: 09:00-21:00\000"
+ 2233      2030393A 
+ 2233      30302D32 
+ 2233      313A3030 
+ 2233      00
+ 2234 0389 000000   		.align	2
+ 2235              	.LC46:
+ 2236 038c 4672693A 		.ascii	"Fri: 09:00-21:00\000"
+ 2236      2030393A 
+ 2236      30302D32 
+ 2236      313A3030 
+ 2236      00
+ 2237 039d 000000   		.align	2
+ 2238              	.LC47:
+ 2239 03a0 5361743A 		.ascii	"Sat: 09:00-15:00\000"
+ 2239      2030393A 
+ 2239      30302D31 
+ 2239      353A3030 
+ 2239      00
+ 2240 03b1 000000   		.align	2
+ 2241              	.LC48:
+ 2242 03b4 0953656C 		.ascii	"\011Select spot\000"
+ 2242      65637420 
+ 2242      73706F74 
+ 2242      00
+ 2243 03c1 000000   		.align	2
+ 2244              	.LC49:
+ 2245 03c4 506C6561 		.ascii	"Please select a spot\000"
+ 2245      73652073 
+ 2245      656C6563 
+ 2245      74206120 
+ 2245      73706F74 
+ 2246 03d9 000000   		.align	2
+ 2247              	.LC50:
+ 2248 03dc 52415445 		.ascii	"RATES\000"
+ 2248      5300
+ 2249 03e2 0000     		.align	2
+ 2250              	.LC51:
+ 2251 03e4 50726963 		.ascii	"Price per minute: 0.01 euros\000"
+ 2251      65207065 
+ 2251      72206D69 
+ 2251      6E757465 
+ 2251      3A20302E 
+ 2252 0401 000000   		.align	2
+ 2253              	.LC52:
+ 2254 0404 204D696E 		.ascii	" Minimum stay: 20 minutes\000"
+ 2254      696D756D 
+ 2254      20737461 
+ 2254      793A2032 
+ 2254      30206D69 
+ 2255 041e 0000     		.align	2
+ 2256              	.LC53:
+ 2257 0420 204D6178 		.ascii	" Maximum stay: 240 minutes\000"
+ 2257      696D756D 
+ 2257      20737461 
+ 2257      793A2032 
+ 2257      3430206D 
+ 2258 043b 00       		.align	2
+ 2259              	.LC54:
+ 2260 043c 53504F54 		.ascii	"SPOT:  \000"
+ 2260      3A202000 
+ 2261              		.align	2
+ 2262              	.LC55:
+ 2263 0444 43726564 		.ascii	"Credit:     ,   euros\000"
+ 2263      69743A20 
+ 2263      20202020 
+ 2263      2C202020 
+ 2263      6575726F 
+ 2264 045a 0000     		.align	2
+ 2265              	.LC56:
+ 2266 045c 496E7365 		.ascii	"Insert coins\000"
+ 2266      72742063 
+ 2266      6F696E73 
+ 2266      00
+ 2267 0469 000000   		.align	2
+ 2268              	.LC57:
+ 2269 046c 546F7563 		.ascii	"Touch the screen to confirm\000"
+ 2269      68207468 
+ 2269      65207363 
+ 2269      7265656E 
+ 2269      20746F20 
+ 2270              		.align	2
+ 2271              	.LC58:
+ 2272 0488 4D617869 		.ascii	"Maximum stay reached\000"
+ 2272      6D756D20 
+ 2272      73746179 
+ 2272      20726561 
+ 2272      63686564 
+ 2273 049d 000000   		.align	2
+ 2274              	.LC59:
+ 2275 04a0 52657475 		.ascii	"Returning coins\000"
+ 2275      726E696E 
+ 2275      6720636F 
+ 2275      696E7300 
+ 2276              		.align	2
+ 2277              	.LC60:
+ 2278 04b0 2020456E 		.ascii	"  End: \000"
+ 2278      643A2000 
+ 2279              		.align	2
+ 2280              	.LC61:
+ 2281 04b8 4C696365 		.ascii	"License plate:\000"
+ 2281      6E736520 
+ 2281      706C6174 
+ 2281      653A00
+ 2282 04c7 00       		.align	2
+ 2283              	.LC62:
+ 2284 04c8 456E7465 		.ascii	"Enter a valid license plate.\000"
+ 2284      72206120 
+ 2284      76616C69 
+ 2284      64206C69 
+ 2284      63656E73 
+ 2285 04e5 000000   		.align	2
+ 2286              	.LC63:
+ 2287 04e8 53706F74 		.ascii	"Spot  i paid\000"
+ 2287      20206920 
+ 2287      70616964 
+ 2287      00
+ 2288 04f5 000000   		.align	2
+ 2289              	.LC64:
+ 2290 04f8 20202020 		.ascii	"    End: \000"
+ 2290      456E643A 
+ 2290      2000
+ 2291 0502 0000     		.align	2
+ 2292              	.LC65:
+ 2293 0504 48617665 		.ascii	"Have a great day \000"
+ 2293      20612067 
+ 2293      72656174 
+ 2293      20646179 
+ 2293      2000
+ 2294 0516 0000     		.align	2
+ 2295              	.LC66:
+ 2296 0518 53706F74 		.ascii	"Spot  i occupied\000"
+ 2296      20206920 
+ 2296      6F636375 
+ 2296      70696564 
+ 2296      00
+ 2297 0529 000000   		.align	2
+ 2298              	.LC67:
+ 2299 052c 4D617820 		.ascii	"Max balance exceeded\000"
+ 2299      62616C61 
+ 2299      6E636520 
+ 2299      65786365 
+ 2299      65646564 
+ 2300 0541 000000   		.align	2
+ 2301              	.LC68:
+ 2302 0544 74686520 		.ascii	"the maximum balance is 2.40 euros\000"
+ 2302      6D617869 
+ 2302      6D756D20 
+ 2302      62616C61 
+ 2302      6E636520 
+ 2303 0566 0000     		.align	2
+ 2304              	.LC69:
+ 2305 0568 496E7375 		.ascii	"Insufficient balance\000"
+ 2305      66666963 
+ 2305      69656E74 
+ 2305      2062616C 
+ 2305      616E6365 
+ 2306 057d 000000   		.align	2
+ 2307              	.LC70:
+ 2308 0580 74686520 		.ascii	"the minimum balance is 0.20 euros\000"
+ 2308      6D696E69 
+ 2308      6D756D20 
+ 2308      62616C61 
+ 2308      6E636520 
+ 2309 05a2 0000     		.align	2
+ 2310              	.LC71:
+ 2311 05a4 2020204C 		.ascii	"   LEAVE\000"
+ 2311      45415645 
+ 2311      00
+ 2312 05ad 000000   		.align	2
+ 2313              	.LC72:
+ 2314 05b0 46524545 		.ascii	"FREED\000"
+ 2314      4400
+ 2315 05b6 0000     		.align	2
+ 2316              	.LC73:
+ 2317 05b8 496E7365 		.ascii	"Insert your cars license plate.\000"
+ 2317      72742079 
+ 2317      6F757220 
+ 2317      63617273 
+ 2317      206C6963 
+ 2318              		.align	2
+ 2319              	.LC74:
+ 2320 05d8 4C415400 		.ascii	"LAT\000"
+ 2321              		.align	2
+ 2322              	.LC75:
+ 2323 05dc 09205461 		.ascii	"\011 Tabulam carpere\000"
+ 2323      62756C61 
+ 2323      6D206361 
+ 2323      72706572 
+ 2323      6500
+ 2324 05ee 0000     		.align	2
+ 2325              	.LC76:
+ 2326 05f0 20202020 		.ascii	"    ad incipere \000"
+ 2326      61642069 
+ 2326      6E636970 
+ 2326      65726520 
+ 2326      00
+ 2327 0601 000000   		.align	2
+ 2328              	.LC77:
+ 2329 0604 20534348 		.ascii	" SCHEDULA OPERATIONIS \000"
+ 2329      4544554C 
+ 2329      41204F50 
+ 2329      45524154 
+ 2329      494F4E49 
+ 2330 061b 00       		.align	2
+ 2331              	.LC78:
+ 2332 061c 536F6C3A 		.ascii	"Sol: non solvere\000"
+ 2332      206E6F6E 
+ 2332      20736F6C 
+ 2332      76657265 
+ 2332      00
+ 2333 062d 000000   		.align	2
+ 2334              	.LC79:
+ 2335 0630 4C756E3A 		.ascii	"Lun: IX-XXI\000"
+ 2335      2049582D 
+ 2335      58584900 
+ 2336              		.align	2
+ 2337              	.LC80:
+ 2338 063c 4D61723A 		.ascii	"Mar: IX-XXI\000"
+ 2338      2049582D 
+ 2338      58584900 
+ 2339              		.align	2
+ 2340              	.LC81:
+ 2341 0648 4D65723A 		.ascii	"Mer: IX-XXI\000"
+ 2341      2049582D 
+ 2341      58584900 
+ 2342              		.align	2
+ 2343              	.LC82:
+ 2344 0654 4A6F763A 		.ascii	"Jov: IX-XXI\000"
+ 2344      2049582D 
+ 2344      58584900 
+ 2345              		.align	2
+ 2346              	.LC83:
+ 2347 0660 56656E3A 		.ascii	"Ven: IX-XXI\000"
+ 2347      2049582D 
+ 2347      58584900 
+ 2348              		.align	2
+ 2349              	.LC84:
+ 2350 066c 5361743A 		.ascii	"Sat: IX-XV\000"
+ 2350      2049582D 
+ 2350      585600
+ 2351 0677 00       		.align	2
+ 2352              	.LC85:
+ 2353 0678 20204C6F 		.ascii	"  Locum eligere\000"
+ 2353      63756D20 
+ 2353      656C6967 
+ 2353      65726500 
+ 2354              		.align	2
+ 2355              	.LC86:
+ 2356 0688 556E756E 		.ascii	"Unun locum carpere, amabo\000"
+ 2356      206C6F63 
+ 2356      756D2063 
+ 2356      61727065 
+ 2356      72652C20 
+ 2357 06a2 0000     		.align	2
+ 2358              	.LC87:
+ 2359 06a4 50524554 		.ascii	"PRETIUM\000"
+ 2359      49554D00 
+ 2360              		.align	2
+ 2361              	.LC88:
+ 2362 06ac 50726574 		.ascii	"Pretium per minutum: 0,0I denarios\000"
+ 2362      69756D20 
+ 2362      70657220 
+ 2362      6D696E75 
+ 2362      74756D3A 
+ 2363 06cf 00       		.align	2
+ 2364              	.LC89:
+ 2365 06d0 2054656D 		.ascii	" Tempus minimus: XX denarios\000"
+ 2365      70757320 
+ 2365      6D696E69 
+ 2365      6D75733A 
+ 2365      20585820 
+ 2366 06ed 000000   		.align	2
+ 2367              	.LC90:
+ 2368 06f0 2054656D 		.ascii	" Tempus maximus: CCXL denarios\000"
+ 2368      70757320 
+ 2368      6D617869 
+ 2368      6D75733A 
+ 2368      20434358 
+ 2369 070f 00       		.align	2
+ 2370              	.LC91:
+ 2371 0710 4C4F4355 		.ascii	"LOCUS: \000"
+ 2371      533A2000 
+ 2372              		.align	2
+ 2373              	.LC92:
+ 2374 0718 5175616E 		.ascii	"Quantitas:  ,   denarios\000"
+ 2374      74697461 
+ 2374      733A2020 
+ 2374      2C202020 
+ 2374      64656E61 
+ 2375 0731 000000   		.align	2
+ 2376              	.LC93:
+ 2377 0734 44656E61 		.ascii	"Denario insertus\000"
+ 2377      72696F20 
+ 2377      696E7365 
+ 2377      72747573 
+ 2377      00
+ 2378 0745 000000   		.align	2
+ 2379              	.LC94:
+ 2380 0748 54616275 		.ascii	"Tabulam carpere at accipere\000"
+ 2380      6C616D20 
+ 2380      63617270 
+ 2380      65726520 
+ 2380      61742061 
+ 2381              		.align	2
+ 2382              	.LC95:
+ 2383 0764 54656D70 		.ascii	"Tempus maximus pervenit\000"
+ 2383      7573206D 
+ 2383      6178696D 
+ 2383      75732070 
+ 2383      65727665 
+ 2384              		.align	2
+ 2385              	.LC96:
+ 2386 077c 72656464 		.ascii	"redde monetas\000"
+ 2386      65206D6F 
+ 2386      6E657461 
+ 2386      7300
+ 2387 078a 0000     		.align	2
+ 2388              	.LC97:
+ 2389 078c 46696E69 		.ascii	"Finis: \000"
+ 2389      733A2000 
+ 2390              		.align	2
+ 2391              	.LC98:
+ 2392 0794 4E756D65 		.ascii	"Numeri vectura:\000"
+ 2392      72692076 
+ 2392      65637475 
+ 2392      72613A00 
+ 2393              		.align	2
+ 2394              	.LC99:
+ 2395 07a4 496E7365 		.ascii	"Insertus bona numeri vectura.\000"
+ 2395      72747573 
+ 2395      20626F6E 
+ 2395      61206E75 
+ 2395      6D657269 
+ 2396 07c2 0000     		.align	2
+ 2397              	.LC100:
+ 2398 07c4 4C6F6375 		.ascii	"Locus i solvit\000"
+ 2398      73206920 
+ 2398      736F6C76 
+ 2398      697400
+ 2399 07d3 00       		.align	2
+ 2400              	.LC101:
+ 2401 07d4 20202020 		.ascii	"    Finis: \000"
+ 2401      46696E69 
+ 2401      733A2000 
+ 2402              		.align	2
+ 2403              	.LC102:
+ 2404 07e0 48616265 		.ascii	"Habere bonum diem \000"
+ 2404      72652062 
+ 2404      6F6E756D 
+ 2404      20646965 
+ 2404      6D2000
+ 2405 07f3 00       		.align	2
+ 2406              	.LC103:
+ 2407 07f4 4C6F6375 		.ascii	"Locus i occupatus\000"
+ 2407      73206920 
+ 2407      6F636375 
+ 2407      70617475 
+ 2407      7300
+ 2408 0806 0000     		.align	2
+ 2409              	.LC104:
+ 2410 0808 20204669 		.ascii	"  Finis: \000"
+ 2410      6E69733A 
+ 2410      2000
+ 2411 0812 0000     		.align	2
+ 2412              	.LC105:
+ 2413 0814 5175616E 		.ascii	"Quantitas maximus exceditur\000"
+ 2413      74697461 
+ 2413      73206D61 
+ 2413      78696D75 
+ 2413      73206578 
+ 2414              		.align	2
+ 2415              	.LC106:
+ 2416 0830 4D617869 		.ascii	"Maximus quantitas II,XL denarios est\000"
+ 2416      6D757320 
+ 2416      7175616E 
+ 2416      74697461 
+ 2416      73204949 
+ 2417 0855 000000   		.align	2
+ 2418              	.LC107:
+ 2419 0858 5175616E 		.ascii	"Quantitas deficiens\000"
+ 2419      74697461 
+ 2419      73206465 
+ 2419      66696369 
+ 2419      656E7300 
+ 2420              		.align	2
+ 2421              	.LC108:
+ 2422 086c 5175616E 		.ascii	"Quantitas minimus 0,XX denarios est\000"
+ 2422      74697461 
+ 2422      73206D69 
+ 2422      6E696D75 
+ 2422      7320302C 
+ 2423              		.align	2
+ 2424              	.LC109:
+ 2425 0890 52454C49 		.ascii	"RELINQUO\000"
+ 2425      4E51554F 
+ 2425      00
+ 2426 0899 000000   		.align	2
+ 2427              	.LC110:
+ 2428 089c 4C494245 		.ascii	"LIBERATUS\000"
+ 2428      52415455 
+ 2428      5300
+ 2429 08a6 0000     		.align	2
+ 2430              	.LC111:
+ 2431 08a8 496E7365 		.ascii	"Insertus numerum licentiae tuae carri\000"
+ 2431      72747573 
+ 2431      206E756D 
+ 2431      6572756D 
+ 2431      206C6963 
+ 2432 08ce 0000     		.text
+ 2433              		.align	2
+ 2434              		.global	set_lang
+ 2436              	set_lang:
+ 2437              	.LFB1:
+   9:../mensajes.c **** 
+  10:../mensajes.c **** int8 set_lang(tMensajes *men,uint8 lang){
+ 2438              		.loc 1 10 0
+ 2439              		.cfi_startproc
+ 2440              		@ Function supports interworking.
+ 2441              		@ args = 0, pretend = 0, frame = 8
+ 2442              		@ frame_needed = 1, uses_anonymous_args = 0
+ 2443 002c 0DC0A0E1 		mov	ip, sp
+ 2444              	.LCFI2:
+ 2445              		.cfi_def_cfa_register 12
+ 2446 0030 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 2447 0034 04B04CE2 		sub	fp, ip, #4
+ 2448              		.cfi_offset 14, -8
+ 2449              		.cfi_offset 13, -12
+ 2450              		.cfi_offset 11, -16
+ 2451              	.LCFI3:
+ 2452              		.cfi_def_cfa 11, 4
+ 2453 0038 08D04DE2 		sub	sp, sp, #8
+ 2454 003c 10000BE5 		str	r0, [fp, #-16]
+ 2455 0040 0130A0E1 		mov	r3, r1
+ 2456 0044 11304BE5 		strb	r3, [fp, #-17]
+  11:../mensajes.c **** 	if (lang == ESP) {
+ 2457              		.loc 1 11 0
+ 2458 0048 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2459 004c 000053E3 		cmp	r3, #0
+ 2460 0050 7500001A 		bne	.L3
+  12:../mensajes.c **** 			men->IDIOMA ="ESP";
+ 2461              		.loc 1 12 0
+ 2462 0054 10301BE5 		ldr	r3, [fp, #-16]
+ 2463 0058 B4259FE5 		ldr	r2, .L8
+ 2464 005c 002083E5 		str	r2, [r3, #0]
+  13:../mensajes.c **** 	        men->PULSE_PANTALLA = "Pulse la pantalla";
+ 2465              		.loc 1 13 0
+ 2466 0060 10301BE5 		ldr	r3, [fp, #-16]
+ 2467 0064 AC259FE5 		ldr	r2, .L8+4
+ 2468 0068 042083E5 		str	r2, [r3, #4]
+  14:../mensajes.c **** 	        men->PARA_COMENZAR = " para comenzar ";
+ 2469              		.loc 1 14 0
+ 2470 006c 10301BE5 		ldr	r3, [fp, #-16]
+ 2471 0070 A4259FE5 		ldr	r2, .L8+8
+ 2472 0074 082083E5 		str	r2, [r3, #8]
+  15:../mensajes.c **** 	        men->HORARIO = " HORARIO DE FUNCIONAMIENTO ";
+ 2473              		.loc 1 15 0
+ 2474 0078 10301BE5 		ldr	r3, [fp, #-16]
+ 2475 007c 9C259FE5 		ldr	r2, .L8+12
+ 2476 0080 0C2083E5 		str	r2, [r3, #12]
+  16:../mensajes.c **** 	        men->DOMINGO = "dom: gratis";
+ 2477              		.loc 1 16 0
+ 2478 0084 10301BE5 		ldr	r3, [fp, #-16]
+ 2479 0088 94259FE5 		ldr	r2, .L8+16
+ 2480 008c 102083E5 		str	r2, [r3, #16]
+  17:../mensajes.c **** 	        men->LUNES = "lun: 09:00-21:00";
+ 2481              		.loc 1 17 0
+ 2482 0090 10301BE5 		ldr	r3, [fp, #-16]
+ 2483 0094 8C259FE5 		ldr	r2, .L8+20
+ 2484 0098 142083E5 		str	r2, [r3, #20]
+  18:../mensajes.c **** 	        men->MARTES = "mar: 09:00-21:00";
+ 2485              		.loc 1 18 0
+ 2486 009c 10301BE5 		ldr	r3, [fp, #-16]
+ 2487 00a0 84259FE5 		ldr	r2, .L8+24
+ 2488 00a4 182083E5 		str	r2, [r3, #24]
+  19:../mensajes.c **** 	        men->MIERCOLES = "mie: 09:00-21:00";
+ 2489              		.loc 1 19 0
+ 2490 00a8 10301BE5 		ldr	r3, [fp, #-16]
+ 2491 00ac 7C259FE5 		ldr	r2, .L8+28
+ 2492 00b0 1C2083E5 		str	r2, [r3, #28]
+  20:../mensajes.c **** 	        men->JUEVES = "jue: 09:00-21:00";
+ 2493              		.loc 1 20 0
+ 2494 00b4 10301BE5 		ldr	r3, [fp, #-16]
+ 2495 00b8 74259FE5 		ldr	r2, .L8+32
+ 2496 00bc 202083E5 		str	r2, [r3, #32]
+  21:../mensajes.c **** 	        men->VIERNES = "vie: 09:00-21:00";
+ 2497              		.loc 1 21 0
+ 2498 00c0 10301BE5 		ldr	r3, [fp, #-16]
+ 2499 00c4 6C259FE5 		ldr	r2, .L8+36
+ 2500 00c8 242083E5 		str	r2, [r3, #36]
+  22:../mensajes.c **** 	        men->SABADO = "sab: 09:00-15:00";
+ 2501              		.loc 1 22 0
+ 2502 00cc 10301BE5 		ldr	r3, [fp, #-16]
+ 2503 00d0 64259FE5 		ldr	r2, .L8+40
+ 2504 00d4 282083E5 		str	r2, [r3, #40]
+  23:../mensajes.c **** 	        men->SELECCIONE_PLAZA = "Seleccione plaza";
+ 2505              		.loc 1 23 0
+ 2506 00d8 10301BE5 		ldr	r3, [fp, #-16]
+ 2507 00dc 5C259FE5 		ldr	r2, .L8+44
+ 2508 00e0 2C2083E5 		str	r2, [r3, #44]
+  24:../mensajes.c **** 	        men->PULSE_PLAZA = "Pulse una plaza por favor";
+ 2509              		.loc 1 24 0
+ 2510 00e4 10301BE5 		ldr	r3, [fp, #-16]
+ 2511 00e8 54259FE5 		ldr	r2, .L8+48
+ 2512 00ec 302083E5 		str	r2, [r3, #48]
+  25:../mensajes.c **** 	        men->TARIFAS = "TARIFAS";
+ 2513              		.loc 1 25 0
+ 2514 00f0 10301BE5 		ldr	r3, [fp, #-16]
+ 2515 00f4 4C259FE5 		ldr	r2, .L8+52
+ 2516 00f8 342083E5 		str	r2, [r3, #52]
+  26:../mensajes.c **** 	        men->PRECIO_MIN = "Precio por minuto: 0,01 euros";
+ 2517              		.loc 1 26 0
+ 2518 00fc 10301BE5 		ldr	r3, [fp, #-16]
+ 2519 0100 44259FE5 		ldr	r2, .L8+56
+ 2520 0104 382083E5 		str	r2, [r3, #56]
+  27:../mensajes.c **** 	        men->ESTANCIA_MIN = " Estancia minima: 20 minutos";
+ 2521              		.loc 1 27 0
+ 2522 0108 10301BE5 		ldr	r3, [fp, #-16]
+ 2523 010c 3C259FE5 		ldr	r2, .L8+60
+ 2524 0110 3C2083E5 		str	r2, [r3, #60]
+  28:../mensajes.c **** 	        men->ESTANCIA_MAX = " Estancia maxima: 240 minutos";
+ 2525              		.loc 1 28 0
+ 2526 0114 10301BE5 		ldr	r3, [fp, #-16]
+ 2527 0118 34259FE5 		ldr	r2, .L8+64
+ 2528 011c 402083E5 		str	r2, [r3, #64]
+  29:../mensajes.c **** 	        men->PLAZA = "PLAZA: ";
+ 2529              		.loc 1 29 0
+ 2530 0120 10301BE5 		ldr	r3, [fp, #-16]
+ 2531 0124 2C259FE5 		ldr	r2, .L8+68
+ 2532 0128 4C2083E5 		str	r2, [r3, #76]
+  30:../mensajes.c **** 	        men->CREDITO_EUROS ="Credito:    ,   euros";
+ 2533              		.loc 1 30 0
+ 2534 012c 10301BE5 		ldr	r3, [fp, #-16]
+ 2535 0130 24259FE5 		ldr	r2, .L8+72
+ 2536 0134 502083E5 		str	r2, [r3, #80]
+  31:../mensajes.c **** 	        men->INSERTE_MONEDA = "Inserte monedas";
+ 2537              		.loc 1 31 0
+ 2538 0138 10301BE5 		ldr	r3, [fp, #-16]
+ 2539 013c 1C259FE5 		ldr	r2, .L8+76
+ 2540 0140 542083E5 		str	r2, [r3, #84]
+  32:../mensajes.c **** 	        men->PULSE_ACEPTAR = "Pulse la pantalla para aceptar";
+ 2541              		.loc 1 32 0
+ 2542 0144 10301BE5 		ldr	r3, [fp, #-16]
+ 2543 0148 14259FE5 		ldr	r2, .L8+80
+ 2544 014c 582083E5 		str	r2, [r3, #88]
+  33:../mensajes.c **** 	        men->TARIFA_MAXIMA = "Estancia maxima superada";
+ 2545              		.loc 1 33 0
+ 2546 0150 10301BE5 		ldr	r3, [fp, #-16]
+ 2547 0154 0C259FE5 		ldr	r2, .L8+84
+ 2548 0158 442083E5 		str	r2, [r3, #68]
+  34:../mensajes.c **** 	        men->DEVOLUCION    = "Devolviendo monedas";
+ 2549              		.loc 1 34 0
+ 2550 015c 10301BE5 		ldr	r3, [fp, #-16]
+ 2551 0160 04259FE5 		ldr	r2, .L8+88
+ 2552 0164 482083E5 		str	r2, [r3, #72]
+  35:../mensajes.c **** 	        men->FIN = "  Fin: ";
+ 2553              		.loc 1 35 0
+ 2554 0168 10301BE5 		ldr	r3, [fp, #-16]
+ 2555 016c FC249FE5 		ldr	r2, .L8+92
+ 2556 0170 5C2083E5 		str	r2, [r3, #92]
+  36:../mensajes.c **** 	        men->PLAZA_LICPLATE = "PLAZA";
+ 2557              		.loc 1 36 0
+ 2558 0174 10301BE5 		ldr	r3, [fp, #-16]
+ 2559 0178 F4249FE5 		ldr	r2, .L8+96
+ 2560 017c 602083E5 		str	r2, [r3, #96]
+  37:../mensajes.c **** 	        men->MATRICULA = "Matricula:";
+ 2561              		.loc 1 37 0
+ 2562 0180 10301BE5 		ldr	r3, [fp, #-16]
+ 2563 0184 EC249FE5 		ldr	r2, .L8+100
+ 2564 0188 642083E5 		str	r2, [r3, #100]
+  38:../mensajes.c **** 	        men->MATRICULA_VALIDA = "Introduzca una matricula valida.";
+ 2565              		.loc 1 38 0
+ 2566 018c 10301BE5 		ldr	r3, [fp, #-16]
+ 2567 0190 E4249FE5 		ldr	r2, .L8+104
+ 2568 0194 682083E5 		str	r2, [r3, #104]
+  39:../mensajes.c **** 	        men->PLAZA_PAGADA = "Plaza i pagada";
+ 2569              		.loc 1 39 0
+ 2570 0198 10301BE5 		ldr	r3, [fp, #-16]
+ 2571 019c DC249FE5 		ldr	r2, .L8+108
+ 2572 01a0 6C2083E5 		str	r2, [r3, #108]
+  40:../mensajes.c **** 	        men->FIN_APARCAMIENTO = "    Fin: ";
+ 2573              		.loc 1 40 0
+ 2574 01a4 10301BE5 		ldr	r3, [fp, #-16]
+ 2575 01a8 D4249FE5 		ldr	r2, .L8+112
+ 2576 01ac 702083E5 		str	r2, [r3, #112]
+  41:../mensajes.c **** 	        men->GRAN_DIA = "Que tenga un gran dia ";
+ 2577              		.loc 1 41 0
+ 2578 01b0 10301BE5 		ldr	r3, [fp, #-16]
+ 2579 01b4 CC249FE5 		ldr	r2, .L8+116
+ 2580 01b8 742083E5 		str	r2, [r3, #116]
+  42:../mensajes.c **** 	        men->PLAZA_OCUPADA = "Plaza i ocupada";
+ 2581              		.loc 1 42 0
+ 2582 01bc 10301BE5 		ldr	r3, [fp, #-16]
+ 2583 01c0 C4249FE5 		ldr	r2, .L8+120
+ 2584 01c4 782083E5 		str	r2, [r3, #120]
+  43:../mensajes.c **** 	        men->FIN_FAILURE = "    Fin: ";
+ 2585              		.loc 1 43 0
+ 2586 01c8 10301BE5 		ldr	r3, [fp, #-16]
+ 2587 01cc B0249FE5 		ldr	r2, .L8+112
+ 2588 01d0 7C2083E5 		str	r2, [r3, #124]
+  44:../mensajes.c **** 	        men->SALDO_SUPERADO = "el maximo saldo es 2,40 euros";
+ 2589              		.loc 1 44 0
+ 2590 01d4 10301BE5 		ldr	r3, [fp, #-16]
+ 2591 01d8 B0249FE5 		ldr	r2, .L8+124
+ 2592 01dc 802083E5 		str	r2, [r3, #128]
+  45:../mensajes.c **** 	        men->SALDO_MAXIMO ="el maximo saldo es 2,40 euros";
+ 2593              		.loc 1 45 0
+ 2594 01e0 10301BE5 		ldr	r3, [fp, #-16]
+ 2595 01e4 A4249FE5 		ldr	r2, .L8+124
+ 2596 01e8 842083E5 		str	r2, [r3, #132]
+  46:../mensajes.c **** 	        men->SALDO_INSUFICIENTE = "Saldo insuficiente";;
+ 2597              		.loc 1 46 0
+ 2598 01ec 10301BE5 		ldr	r3, [fp, #-16]
+ 2599 01f0 9C249FE5 		ldr	r2, .L8+128
+ 2600 01f4 882083E5 		str	r2, [r3, #136]
+  47:../mensajes.c **** 	        men->SALDO_MIN = "el saldo minimo es 0,20 euros";
+ 2601              		.loc 1 47 0
+ 2602 01f8 10301BE5 		ldr	r3, [fp, #-16]
+ 2603 01fc 94249FE5 		ldr	r2, .L8+132
+ 2604 0200 8C2083E5 		str	r2, [r3, #140]
+  48:../mensajes.c **** 	        men->SALIR = "    IRSE";
+ 2605              		.loc 1 48 0
+ 2606 0204 10301BE5 		ldr	r3, [fp, #-16]
+ 2607 0208 8C249FE5 		ldr	r2, .L8+136
+ 2608 020c 902083E5 		str	r2, [r3, #144]
+  49:../mensajes.c **** 	        men->LIBERADA = "LIBERADA";
+ 2609              		.loc 1 49 0
+ 2610 0210 10301BE5 		ldr	r3, [fp, #-16]
+ 2611 0214 84249FE5 		ldr	r2, .L8+140
+ 2612 0218 942083E5 		str	r2, [r3, #148]
+  50:../mensajes.c **** 	        men->MATRICULA_VEHIC = "Introduzca la matricula de su coche.";
+ 2613              		.loc 1 50 0
+ 2614 021c 10301BE5 		ldr	r3, [fp, #-16]
+ 2615 0220 7C249FE5 		ldr	r2, .L8+144
+ 2616 0224 982083E5 		str	r2, [r3, #152]
+ 2617 0228 F50000EA 		b	.L7
+ 2618              	.L3:
+  51:../mensajes.c **** 	    }
+  52:../mensajes.c **** 	else if (lang == ENG){
+ 2619              		.loc 1 52 0
+ 2620 022c 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2621 0230 010053E3 		cmp	r3, #1
+ 2622 0234 7500001A 		bne	.L5
+  53:../mensajes.c **** 			men->IDIOMA ="ENG";
+ 2623              		.loc 1 53 0
+ 2624 0238 10301BE5 		ldr	r3, [fp, #-16]
+ 2625 023c 64249FE5 		ldr	r2, .L8+148
+ 2626 0240 002083E5 		str	r2, [r3, #0]
+  54:../mensajes.c **** 	        men->PULSE_PANTALLA = "		Touch screen";
+ 2627              		.loc 1 54 0
+ 2628 0244 10301BE5 		ldr	r3, [fp, #-16]
+ 2629 0248 5C249FE5 		ldr	r2, .L8+152
+ 2630 024c 042083E5 		str	r2, [r3, #4]
+  55:../mensajes.c **** 	        men->PARA_COMENZAR = " 		  to start ";
+ 2631              		.loc 1 55 0
+ 2632 0250 10301BE5 		ldr	r3, [fp, #-16]
+ 2633 0254 54249FE5 		ldr	r2, .L8+156
+ 2634 0258 082083E5 		str	r2, [r3, #8]
+  56:../mensajes.c **** 	        men->HORARIO = " OPERATING HOURS ";
+ 2635              		.loc 1 56 0
+ 2636 025c 10301BE5 		ldr	r3, [fp, #-16]
+ 2637 0260 4C249FE5 		ldr	r2, .L8+160
+ 2638 0264 0C2083E5 		str	r2, [r3, #12]
+  57:../mensajes.c **** 	        men->DOMINGO = "Sun: free";
+ 2639              		.loc 1 57 0
+ 2640 0268 10301BE5 		ldr	r3, [fp, #-16]
+ 2641 026c 44249FE5 		ldr	r2, .L8+164
+ 2642 0270 102083E5 		str	r2, [r3, #16]
+  58:../mensajes.c **** 	        men->LUNES = "Mon: 09:00-21:00";
+ 2643              		.loc 1 58 0
+ 2644 0274 10301BE5 		ldr	r3, [fp, #-16]
+ 2645 0278 3C249FE5 		ldr	r2, .L8+168
+ 2646 027c 142083E5 		str	r2, [r3, #20]
+  59:../mensajes.c **** 	        men->MARTES = "Tue: 09:00-21:00";
+ 2647              		.loc 1 59 0
+ 2648 0280 10301BE5 		ldr	r3, [fp, #-16]
+ 2649 0284 34249FE5 		ldr	r2, .L8+172
+ 2650 0288 182083E5 		str	r2, [r3, #24]
+  60:../mensajes.c **** 	        men->MIERCOLES = "Wed: 09:00-21:00";
+ 2651              		.loc 1 60 0
+ 2652 028c 10301BE5 		ldr	r3, [fp, #-16]
+ 2653 0290 2C249FE5 		ldr	r2, .L8+176
+ 2654 0294 1C2083E5 		str	r2, [r3, #28]
+  61:../mensajes.c **** 	        men->JUEVES = "Thu: 09:00-21:00";
+ 2655              		.loc 1 61 0
+ 2656 0298 10301BE5 		ldr	r3, [fp, #-16]
+ 2657 029c 24249FE5 		ldr	r2, .L8+180
+ 2658 02a0 202083E5 		str	r2, [r3, #32]
+  62:../mensajes.c **** 	        men->VIERNES = "Fri: 09:00-21:00";
+ 2659              		.loc 1 62 0
+ 2660 02a4 10301BE5 		ldr	r3, [fp, #-16]
+ 2661 02a8 1C249FE5 		ldr	r2, .L8+184
+ 2662 02ac 242083E5 		str	r2, [r3, #36]
+  63:../mensajes.c **** 	        men->SABADO = "Sat: 09:00-15:00";
+ 2663              		.loc 1 63 0
+ 2664 02b0 10301BE5 		ldr	r3, [fp, #-16]
+ 2665 02b4 14249FE5 		ldr	r2, .L8+188
+ 2666 02b8 282083E5 		str	r2, [r3, #40]
+  64:../mensajes.c **** 	        men->SELECCIONE_PLAZA = "	Select spot";
+ 2667              		.loc 1 64 0
+ 2668 02bc 10301BE5 		ldr	r3, [fp, #-16]
+ 2669 02c0 0C249FE5 		ldr	r2, .L8+192
+ 2670 02c4 2C2083E5 		str	r2, [r3, #44]
+  65:../mensajes.c **** 	        men->PULSE_PLAZA = "Please select a spot";
+ 2671              		.loc 1 65 0
+ 2672 02c8 10301BE5 		ldr	r3, [fp, #-16]
+ 2673 02cc 04249FE5 		ldr	r2, .L8+196
+ 2674 02d0 302083E5 		str	r2, [r3, #48]
+  66:../mensajes.c **** 	        men->TARIFAS = "RATES";
+ 2675              		.loc 1 66 0
+ 2676 02d4 10301BE5 		ldr	r3, [fp, #-16]
+ 2677 02d8 FC239FE5 		ldr	r2, .L8+200
+ 2678 02dc 342083E5 		str	r2, [r3, #52]
+  67:../mensajes.c **** 	        men->PRECIO_MIN = "Price per minute: 0.01 euros";
+ 2679              		.loc 1 67 0
+ 2680 02e0 10301BE5 		ldr	r3, [fp, #-16]
+ 2681 02e4 F4239FE5 		ldr	r2, .L8+204
+ 2682 02e8 382083E5 		str	r2, [r3, #56]
+  68:../mensajes.c **** 	        men->ESTANCIA_MIN = " Minimum stay: 20 minutes";
+ 2683              		.loc 1 68 0
+ 2684 02ec 10301BE5 		ldr	r3, [fp, #-16]
+ 2685 02f0 EC239FE5 		ldr	r2, .L8+208
+ 2686 02f4 3C2083E5 		str	r2, [r3, #60]
+  69:../mensajes.c **** 	        men->ESTANCIA_MAX = " Maximum stay: 240 minutes";
+ 2687              		.loc 1 69 0
+ 2688 02f8 10301BE5 		ldr	r3, [fp, #-16]
+ 2689 02fc E4239FE5 		ldr	r2, .L8+212
+ 2690 0300 402083E5 		str	r2, [r3, #64]
+  70:../mensajes.c **** 	        men->PLAZA = "SPOT:  ";
+ 2691              		.loc 1 70 0
+ 2692 0304 10301BE5 		ldr	r3, [fp, #-16]
+ 2693 0308 DC239FE5 		ldr	r2, .L8+216
+ 2694 030c 4C2083E5 		str	r2, [r3, #76]
+  71:../mensajes.c **** 	        men->CREDITO_EUROS ="Credit:     ,   euros";
+ 2695              		.loc 1 71 0
+ 2696 0310 10301BE5 		ldr	r3, [fp, #-16]
+ 2697 0314 D4239FE5 		ldr	r2, .L8+220
+ 2698 0318 502083E5 		str	r2, [r3, #80]
+  72:../mensajes.c **** 	        men->INSERTE_MONEDA =  "Insert coins";
+ 2699              		.loc 1 72 0
+ 2700 031c 10301BE5 		ldr	r3, [fp, #-16]
+ 2701 0320 CC239FE5 		ldr	r2, .L8+224
+ 2702 0324 542083E5 		str	r2, [r3, #84]
+  73:../mensajes.c **** 	        men->PULSE_ACEPTAR = "Touch the screen to confirm";
+ 2703              		.loc 1 73 0
+ 2704 0328 10301BE5 		ldr	r3, [fp, #-16]
+ 2705 032c C4239FE5 		ldr	r2, .L8+228
+ 2706 0330 582083E5 		str	r2, [r3, #88]
+  74:../mensajes.c **** 	        men->TARIFA_MAXIMA = "Maximum stay reached";
+ 2707              		.loc 1 74 0
+ 2708 0334 10301BE5 		ldr	r3, [fp, #-16]
+ 2709 0338 BC239FE5 		ldr	r2, .L8+232
+ 2710 033c 442083E5 		str	r2, [r3, #68]
+  75:../mensajes.c **** 	        men->DEVOLUCION    = "Returning coins";
+ 2711              		.loc 1 75 0
+ 2712 0340 10301BE5 		ldr	r3, [fp, #-16]
+ 2713 0344 B4239FE5 		ldr	r2, .L8+236
+ 2714 0348 482083E5 		str	r2, [r3, #72]
+  76:../mensajes.c **** 	        men->FIN = "  End: ";
+ 2715              		.loc 1 76 0
+ 2716 034c 10301BE5 		ldr	r3, [fp, #-16]
+ 2717 0350 AC239FE5 		ldr	r2, .L8+240
+ 2718 0354 5C2083E5 		str	r2, [r3, #92]
+  77:../mensajes.c **** 	        men->PLAZA_LICPLATE = "SPOT:  ";
+ 2719              		.loc 1 77 0
+ 2720 0358 10301BE5 		ldr	r3, [fp, #-16]
+ 2721 035c 88239FE5 		ldr	r2, .L8+216
+ 2722 0360 602083E5 		str	r2, [r3, #96]
+  78:../mensajes.c **** 	        men->MATRICULA = "License plate:";
+ 2723              		.loc 1 78 0
+ 2724 0364 10301BE5 		ldr	r3, [fp, #-16]
+ 2725 0368 98239FE5 		ldr	r2, .L8+244
+ 2726 036c 642083E5 		str	r2, [r3, #100]
+  79:../mensajes.c **** 	        men->MATRICULA_VALIDA = "Enter a valid license plate.";
+ 2727              		.loc 1 79 0
+ 2728 0370 10301BE5 		ldr	r3, [fp, #-16]
+ 2729 0374 90239FE5 		ldr	r2, .L8+248
+ 2730 0378 682083E5 		str	r2, [r3, #104]
+  80:../mensajes.c **** 	        men->PLAZA_PAGADA = "Spot  i paid";
+ 2731              		.loc 1 80 0
+ 2732 037c 10301BE5 		ldr	r3, [fp, #-16]
+ 2733 0380 88239FE5 		ldr	r2, .L8+252
+ 2734 0384 6C2083E5 		str	r2, [r3, #108]
+  81:../mensajes.c **** 	        men->FIN_APARCAMIENTO = "    End: ";
+ 2735              		.loc 1 81 0
+ 2736 0388 10301BE5 		ldr	r3, [fp, #-16]
+ 2737 038c 80239FE5 		ldr	r2, .L8+256
+ 2738 0390 702083E5 		str	r2, [r3, #112]
+  82:../mensajes.c **** 	        men->GRAN_DIA = "Have a great day ";
+ 2739              		.loc 1 82 0
+ 2740 0394 10301BE5 		ldr	r3, [fp, #-16]
+ 2741 0398 78239FE5 		ldr	r2, .L8+260
+ 2742 039c 742083E5 		str	r2, [r3, #116]
+  83:../mensajes.c **** 	        men->PLAZA_OCUPADA = "Spot  i occupied";
+ 2743              		.loc 1 83 0
+ 2744 03a0 10301BE5 		ldr	r3, [fp, #-16]
+ 2745 03a4 70239FE5 		ldr	r2, .L8+264
+ 2746 03a8 782083E5 		str	r2, [r3, #120]
+  84:../mensajes.c **** 	        men->FIN_FAILURE = "    End: ";
+ 2747              		.loc 1 84 0
+ 2748 03ac 10301BE5 		ldr	r3, [fp, #-16]
+ 2749 03b0 5C239FE5 		ldr	r2, .L8+256
+ 2750 03b4 7C2083E5 		str	r2, [r3, #124]
+  85:../mensajes.c **** 	        men->SALDO_SUPERADO = "Max balance exceeded";
+ 2751              		.loc 1 85 0
+ 2752 03b8 10301BE5 		ldr	r3, [fp, #-16]
+ 2753 03bc 5C239FE5 		ldr	r2, .L8+268
+ 2754 03c0 802083E5 		str	r2, [r3, #128]
+  86:../mensajes.c **** 	        men->SALDO_MAXIMO = "the maximum balance is 2.40 euros";
+ 2755              		.loc 1 86 0
+ 2756 03c4 10301BE5 		ldr	r3, [fp, #-16]
+ 2757 03c8 54239FE5 		ldr	r2, .L8+272
+ 2758 03cc 842083E5 		str	r2, [r3, #132]
+  87:../mensajes.c **** 	        men->SALDO_INSUFICIENTE = "Insufficient balance";
+ 2759              		.loc 1 87 0
+ 2760 03d0 10301BE5 		ldr	r3, [fp, #-16]
+ 2761 03d4 4C239FE5 		ldr	r2, .L8+276
+ 2762 03d8 882083E5 		str	r2, [r3, #136]
+  88:../mensajes.c **** 	        men->SALDO_MIN = "the minimum balance is 0.20 euros";
+ 2763              		.loc 1 88 0
+ 2764 03dc 10301BE5 		ldr	r3, [fp, #-16]
+ 2765 03e0 44239FE5 		ldr	r2, .L8+280
+ 2766 03e4 8C2083E5 		str	r2, [r3, #140]
+  89:../mensajes.c **** 	        men->SALIR = "   LEAVE";
+ 2767              		.loc 1 89 0
+ 2768 03e8 10301BE5 		ldr	r3, [fp, #-16]
+ 2769 03ec 3C239FE5 		ldr	r2, .L8+284
+ 2770 03f0 902083E5 		str	r2, [r3, #144]
+  90:../mensajes.c **** 	        men->LIBERADA = "FREED";
+ 2771              		.loc 1 90 0
+ 2772 03f4 10301BE5 		ldr	r3, [fp, #-16]
+ 2773 03f8 34239FE5 		ldr	r2, .L8+288
+ 2774 03fc 942083E5 		str	r2, [r3, #148]
+  91:../mensajes.c **** 	        men->MATRICULA_VEHIC = "Insert your cars license plate.";
+ 2775              		.loc 1 91 0
+ 2776 0400 10301BE5 		ldr	r3, [fp, #-16]
+ 2777 0404 2C239FE5 		ldr	r2, .L8+292
+ 2778 0408 982083E5 		str	r2, [r3, #152]
+ 2779 040c 7C0000EA 		b	.L7
+ 2780              	.L5:
+  92:../mensajes.c **** 	    }
+  93:../mensajes.c **** 	    else if (lang == LAT) {
+ 2781              		.loc 1 93 0
+ 2782 0410 11305BE5 		ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+ 2783 0414 020053E3 		cmp	r3, #2
+ 2784 0418 7500001A 		bne	.L6
+  94:../mensajes.c **** 	    	men->IDIOMA ="LAT";
+ 2785              		.loc 1 94 0
+ 2786 041c 10301BE5 		ldr	r3, [fp, #-16]
+ 2787 0420 14239FE5 		ldr	r2, .L8+296
+ 2788 0424 002083E5 		str	r2, [r3, #0]
+  95:../mensajes.c **** 	        men->PULSE_PANTALLA = "	 Tabulam carpere";
+ 2789              		.loc 1 95 0
+ 2790 0428 10301BE5 		ldr	r3, [fp, #-16]
+ 2791 042c 0C239FE5 		ldr	r2, .L8+300
+ 2792 0430 042083E5 		str	r2, [r3, #4]
+  96:../mensajes.c **** 	        men->PARA_COMENZAR  = "    ad incipere ";
+ 2793              		.loc 1 96 0
+ 2794 0434 10301BE5 		ldr	r3, [fp, #-16]
+ 2795 0438 04239FE5 		ldr	r2, .L8+304
+ 2796 043c 082083E5 		str	r2, [r3, #8]
+  97:../mensajes.c **** 	        men->HORARIO = " SCHEDULA OPERATIONIS ";
+ 2797              		.loc 1 97 0
+ 2798 0440 10301BE5 		ldr	r3, [fp, #-16]
+ 2799 0444 FC229FE5 		ldr	r2, .L8+308
+ 2800 0448 0C2083E5 		str	r2, [r3, #12]
+  98:../mensajes.c **** 	        men->DOMINGO = "Sol: non solvere";
+ 2801              		.loc 1 98 0
+ 2802 044c 10301BE5 		ldr	r3, [fp, #-16]
+ 2803 0450 F4229FE5 		ldr	r2, .L8+312
+ 2804 0454 102083E5 		str	r2, [r3, #16]
+  99:../mensajes.c **** 	        men->LUNES = "Lun: IX-XXI";
+ 2805              		.loc 1 99 0
+ 2806 0458 10301BE5 		ldr	r3, [fp, #-16]
+ 2807 045c EC229FE5 		ldr	r2, .L8+316
+ 2808 0460 142083E5 		str	r2, [r3, #20]
+ 100:../mensajes.c **** 	        men->MARTES = "Mar: IX-XXI";
+ 2809              		.loc 1 100 0
+ 2810 0464 10301BE5 		ldr	r3, [fp, #-16]
+ 2811 0468 E4229FE5 		ldr	r2, .L8+320
+ 2812 046c 182083E5 		str	r2, [r3, #24]
+ 101:../mensajes.c **** 	        men->MIERCOLES = "Mer: IX-XXI";
+ 2813              		.loc 1 101 0
+ 2814 0470 10301BE5 		ldr	r3, [fp, #-16]
+ 2815 0474 DC229FE5 		ldr	r2, .L8+324
+ 2816 0478 1C2083E5 		str	r2, [r3, #28]
+ 102:../mensajes.c **** 	        men->JUEVES = "Jov: IX-XXI";
+ 2817              		.loc 1 102 0
+ 2818 047c 10301BE5 		ldr	r3, [fp, #-16]
+ 2819 0480 D4229FE5 		ldr	r2, .L8+328
+ 2820 0484 202083E5 		str	r2, [r3, #32]
+ 103:../mensajes.c **** 	        men->VIERNES = "Ven: IX-XXI";
+ 2821              		.loc 1 103 0
+ 2822 0488 10301BE5 		ldr	r3, [fp, #-16]
+ 2823 048c CC229FE5 		ldr	r2, .L8+332
+ 2824 0490 242083E5 		str	r2, [r3, #36]
+ 104:../mensajes.c **** 	        men->SABADO = "Sat: IX-XV";
+ 2825              		.loc 1 104 0
+ 2826 0494 10301BE5 		ldr	r3, [fp, #-16]
+ 2827 0498 C4229FE5 		ldr	r2, .L8+336
+ 2828 049c 282083E5 		str	r2, [r3, #40]
+ 105:../mensajes.c **** 	        men->SELECCIONE_PLAZA = "  Locum eligere";
+ 2829              		.loc 1 105 0
+ 2830 04a0 10301BE5 		ldr	r3, [fp, #-16]
+ 2831 04a4 BC229FE5 		ldr	r2, .L8+340
+ 2832 04a8 2C2083E5 		str	r2, [r3, #44]
+ 106:../mensajes.c **** 	        men->PULSE_PLAZA = "Unun locum carpere, amabo";
+ 2833              		.loc 1 106 0
+ 2834 04ac 10301BE5 		ldr	r3, [fp, #-16]
+ 2835 04b0 B4229FE5 		ldr	r2, .L8+344
+ 2836 04b4 302083E5 		str	r2, [r3, #48]
+ 107:../mensajes.c **** 	        men->TARIFAS = "PRETIUM";
+ 2837              		.loc 1 107 0
+ 2838 04b8 10301BE5 		ldr	r3, [fp, #-16]
+ 2839 04bc AC229FE5 		ldr	r2, .L8+348
+ 2840 04c0 342083E5 		str	r2, [r3, #52]
+ 108:../mensajes.c **** 	        men->PRECIO_MIN = "Pretium per minutum: 0,0I denarios";
+ 2841              		.loc 1 108 0
+ 2842 04c4 10301BE5 		ldr	r3, [fp, #-16]
+ 2843 04c8 A4229FE5 		ldr	r2, .L8+352
+ 2844 04cc 382083E5 		str	r2, [r3, #56]
+ 109:../mensajes.c **** 	        men->ESTANCIA_MIN = " Tempus minimus: XX denarios";
+ 2845              		.loc 1 109 0
+ 2846 04d0 10301BE5 		ldr	r3, [fp, #-16]
+ 2847 04d4 9C229FE5 		ldr	r2, .L8+356
+ 2848 04d8 3C2083E5 		str	r2, [r3, #60]
+ 110:../mensajes.c **** 	        men->ESTANCIA_MAX = " Tempus maximus: CCXL denarios";
+ 2849              		.loc 1 110 0
+ 2850 04dc 10301BE5 		ldr	r3, [fp, #-16]
+ 2851 04e0 94229FE5 		ldr	r2, .L8+360
+ 2852 04e4 402083E5 		str	r2, [r3, #64]
+ 111:../mensajes.c **** 	        men->PLAZA = "LOCUS: ";
+ 2853              		.loc 1 111 0
+ 2854 04e8 10301BE5 		ldr	r3, [fp, #-16]
+ 2855 04ec 8C229FE5 		ldr	r2, .L8+364
+ 2856 04f0 4C2083E5 		str	r2, [r3, #76]
+ 112:../mensajes.c **** 	        men->CREDITO_EUROS = "Quantitas:  ,   denarios";
+ 2857              		.loc 1 112 0
+ 2858 04f4 10301BE5 		ldr	r3, [fp, #-16]
+ 2859 04f8 84229FE5 		ldr	r2, .L8+368
+ 2860 04fc 502083E5 		str	r2, [r3, #80]
+ 113:../mensajes.c **** 	        men->INSERTE_MONEDA = "Denario insertus";
+ 2861              		.loc 1 113 0
+ 2862 0500 10301BE5 		ldr	r3, [fp, #-16]
+ 2863 0504 7C229FE5 		ldr	r2, .L8+372
+ 2864 0508 542083E5 		str	r2, [r3, #84]
+ 114:../mensajes.c **** 	        men->PULSE_ACEPTAR  = "Tabulam carpere at accipere";
+ 2865              		.loc 1 114 0
+ 2866 050c 10301BE5 		ldr	r3, [fp, #-16]
+ 2867 0510 74229FE5 		ldr	r2, .L8+376
+ 2868 0514 582083E5 		str	r2, [r3, #88]
+ 115:../mensajes.c **** 	        men->TARIFA_MAXIMA  = "Tempus maximus pervenit";
+ 2869              		.loc 1 115 0
+ 2870 0518 10301BE5 		ldr	r3, [fp, #-16]
+ 2871 051c 6C229FE5 		ldr	r2, .L8+380
+ 2872 0520 442083E5 		str	r2, [r3, #68]
+ 116:../mensajes.c **** 	        men->DEVOLUCION     = "redde monetas";
+ 2873              		.loc 1 116 0
+ 2874 0524 10301BE5 		ldr	r3, [fp, #-16]
+ 2875 0528 64229FE5 		ldr	r2, .L8+384
+ 2876 052c 482083E5 		str	r2, [r3, #72]
+ 117:../mensajes.c **** 	        men->FIN = "Finis: ";
+ 2877              		.loc 1 117 0
+ 2878 0530 10301BE5 		ldr	r3, [fp, #-16]
+ 2879 0534 5C229FE5 		ldr	r2, .L8+388
+ 2880 0538 5C2083E5 		str	r2, [r3, #92]
+ 118:../mensajes.c **** 	        men->PLAZA_LICPLATE = "LOCUS: ";
+ 2881              		.loc 1 118 0
+ 2882 053c 10301BE5 		ldr	r3, [fp, #-16]
+ 2883 0540 38229FE5 		ldr	r2, .L8+364
+ 2884 0544 602083E5 		str	r2, [r3, #96]
+ 119:../mensajes.c **** 	        men->MATRICULA = "Numeri vectura:";
+ 2885              		.loc 1 119 0
+ 2886 0548 10301BE5 		ldr	r3, [fp, #-16]
+ 2887 054c 48229FE5 		ldr	r2, .L8+392
+ 2888 0550 642083E5 		str	r2, [r3, #100]
+ 120:../mensajes.c **** 	        men->MATRICULA_VALIDA = "Insertus bona numeri vectura.";
+ 2889              		.loc 1 120 0
+ 2890 0554 10301BE5 		ldr	r3, [fp, #-16]
+ 2891 0558 40229FE5 		ldr	r2, .L8+396
+ 2892 055c 682083E5 		str	r2, [r3, #104]
+ 121:../mensajes.c **** 	        men->PLAZA_PAGADA = "Locus i solvit";
+ 2893              		.loc 1 121 0
+ 2894 0560 10301BE5 		ldr	r3, [fp, #-16]
+ 2895 0564 38229FE5 		ldr	r2, .L8+400
+ 2896 0568 6C2083E5 		str	r2, [r3, #108]
+ 122:../mensajes.c **** 	        men->FIN_APARCAMIENTO =  "    Finis: ";
+ 2897              		.loc 1 122 0
+ 2898 056c 10301BE5 		ldr	r3, [fp, #-16]
+ 2899 0570 30229FE5 		ldr	r2, .L8+404
+ 2900 0574 702083E5 		str	r2, [r3, #112]
+ 123:../mensajes.c **** 	        men->GRAN_DIA = "Habere bonum diem ";
+ 2901              		.loc 1 123 0
+ 2902 0578 10301BE5 		ldr	r3, [fp, #-16]
+ 2903 057c 28229FE5 		ldr	r2, .L8+408
+ 2904 0580 742083E5 		str	r2, [r3, #116]
+ 124:../mensajes.c **** 	        men->PLAZA_OCUPADA ="Locus i occupatus";
+ 2905              		.loc 1 124 0
+ 2906 0584 10301BE5 		ldr	r3, [fp, #-16]
+ 2907 0588 20229FE5 		ldr	r2, .L8+412
+ 2908 058c 782083E5 		str	r2, [r3, #120]
+ 125:../mensajes.c **** 	        men->FIN_FAILURE = "  Finis: ";
+ 2909              		.loc 1 125 0
+ 2910 0590 10301BE5 		ldr	r3, [fp, #-16]
+ 2911 0594 18229FE5 		ldr	r2, .L8+416
+ 2912 0598 7C2083E5 		str	r2, [r3, #124]
+ 126:../mensajes.c **** 	        men->SALDO_SUPERADO = "Quantitas maximus exceditur";
+ 2913              		.loc 1 126 0
+ 2914 059c 10301BE5 		ldr	r3, [fp, #-16]
+ 2915 05a0 10229FE5 		ldr	r2, .L8+420
+ 2916 05a4 802083E5 		str	r2, [r3, #128]
+ 127:../mensajes.c **** 	        men->SALDO_MAXIMO = "Maximus quantitas II,XL denarios est";
+ 2917              		.loc 1 127 0
+ 2918 05a8 10301BE5 		ldr	r3, [fp, #-16]
+ 2919 05ac 08229FE5 		ldr	r2, .L8+424
+ 2920 05b0 842083E5 		str	r2, [r3, #132]
+ 128:../mensajes.c **** 	        men->SALDO_INSUFICIENTE = "Quantitas deficiens";
+ 2921              		.loc 1 128 0
+ 2922 05b4 10301BE5 		ldr	r3, [fp, #-16]
+ 2923 05b8 00229FE5 		ldr	r2, .L8+428
+ 2924 05bc 882083E5 		str	r2, [r3, #136]
+ 129:../mensajes.c **** 	        men->SALDO_MIN = "Quantitas minimus 0,XX denarios est";
+ 2925              		.loc 1 129 0
+ 2926 05c0 10301BE5 		ldr	r3, [fp, #-16]
+ 2927 05c4 F8219FE5 		ldr	r2, .L8+432
+ 2928 05c8 8C2083E5 		str	r2, [r3, #140]
+ 130:../mensajes.c **** 	        men->SALIR = "RELINQUO";
+ 2929              		.loc 1 130 0
+ 2930 05cc 10301BE5 		ldr	r3, [fp, #-16]
+ 2931 05d0 F0219FE5 		ldr	r2, .L8+436
+ 2932 05d4 902083E5 		str	r2, [r3, #144]
+ 131:../mensajes.c **** 	        men->LIBERADA = "LIBERATUS";
+ 2933              		.loc 1 131 0
+ 2934 05d8 10301BE5 		ldr	r3, [fp, #-16]
+ 2935 05dc E8219FE5 		ldr	r2, .L8+440
+ 2936 05e0 942083E5 		str	r2, [r3, #148]
+ 132:../mensajes.c **** 	        men->MATRICULA_VEHIC = "Insertus numerum licentiae tuae carri";
+ 2937              		.loc 1 132 0
+ 2938 05e4 10301BE5 		ldr	r3, [fp, #-16]
+ 2939 05e8 E0219FE5 		ldr	r2, .L8+444
+ 2940 05ec 982083E5 		str	r2, [r3, #152]
+ 2941 05f0 030000EA 		b	.L7
+ 2942              	.L6:
+ 133:../mensajes.c **** 	    }
+ 134:../mensajes.c **** 	else
+ 135:../mensajes.c **** 		return -1;
+ 2943              		.loc 1 135 0
+ 2944 05f4 FF30A0E3 		mov	r3, #255
+ 2945 05f8 033CA0E1 		mov	r3, r3, asl #24
+ 2946 05fc 433CA0E1 		mov	r3, r3, asr #24
+ 2947 0600 FFFFFFEA 		b	.L2
+ 2948              	.L7:
+ 2949              	.L2:
+ 136:../mensajes.c **** }
+ 2950              		.loc 1 136 0
+ 2951 0604 0300A0E1 		mov	r0, r3
+ 2952 0608 0CD04BE2 		sub	sp, fp, #12
+ 2953 060c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 2954 0610 1EFF2FE1 		bx	lr
+ 2955              	.L9:
+ 2956              		.align	2
+ 2957              	.L8:
+ 2958 0614 00000000 		.word	.LC0
+ 2959 0618 04000000 		.word	.LC1
+ 2960 061c 18000000 		.word	.LC2
+ 2961 0620 28000000 		.word	.LC3
+ 2962 0624 44000000 		.word	.LC4
+ 2963 0628 50000000 		.word	.LC5
+ 2964 062c 64000000 		.word	.LC6
+ 2965 0630 78000000 		.word	.LC7
+ 2966 0634 8C000000 		.word	.LC8
+ 2967 0638 A0000000 		.word	.LC9
+ 2968 063c B4000000 		.word	.LC10
+ 2969 0640 C8000000 		.word	.LC11
+ 2970 0644 DC000000 		.word	.LC12
+ 2971 0648 F8000000 		.word	.LC13
+ 2972 064c 00010000 		.word	.LC14
+ 2973 0650 20010000 		.word	.LC15
+ 2974 0654 40010000 		.word	.LC16
+ 2975 0658 60010000 		.word	.LC17
+ 2976 065c 68010000 		.word	.LC18
+ 2977 0660 80010000 		.word	.LC19
+ 2978 0664 90010000 		.word	.LC20
+ 2979 0668 B0010000 		.word	.LC21
+ 2980 066c CC010000 		.word	.LC22
+ 2981 0670 E0010000 		.word	.LC23
+ 2982 0674 E8010000 		.word	.LC24
+ 2983 0678 F0010000 		.word	.LC25
+ 2984 067c FC010000 		.word	.LC26
+ 2985 0680 20020000 		.word	.LC27
+ 2986 0684 30020000 		.word	.LC28
+ 2987 0688 3C020000 		.word	.LC29
+ 2988 068c 54020000 		.word	.LC30
+ 2989 0690 64020000 		.word	.LC31
+ 2990 0694 84020000 		.word	.LC32
+ 2991 0698 98020000 		.word	.LC33
+ 2992 069c B8020000 		.word	.LC34
+ 2993 06a0 C4020000 		.word	.LC35
+ 2994 06a4 D0020000 		.word	.LC36
+ 2995 06a8 F8020000 		.word	.LC37
+ 2996 06ac FC020000 		.word	.LC38
+ 2997 06b0 0C030000 		.word	.LC39
+ 2998 06b4 1C030000 		.word	.LC40
+ 2999 06b8 30030000 		.word	.LC41
+ 3000 06bc 3C030000 		.word	.LC42
+ 3001 06c0 50030000 		.word	.LC43
+ 3002 06c4 64030000 		.word	.LC44
+ 3003 06c8 78030000 		.word	.LC45
+ 3004 06cc 8C030000 		.word	.LC46
+ 3005 06d0 A0030000 		.word	.LC47
+ 3006 06d4 B4030000 		.word	.LC48
+ 3007 06d8 C4030000 		.word	.LC49
+ 3008 06dc DC030000 		.word	.LC50
+ 3009 06e0 E4030000 		.word	.LC51
+ 3010 06e4 04040000 		.word	.LC52
+ 3011 06e8 20040000 		.word	.LC53
+ 3012 06ec 3C040000 		.word	.LC54
+ 3013 06f0 44040000 		.word	.LC55
+ 3014 06f4 5C040000 		.word	.LC56
+ 3015 06f8 6C040000 		.word	.LC57
+ 3016 06fc 88040000 		.word	.LC58
+ 3017 0700 A0040000 		.word	.LC59
+ 3018 0704 B0040000 		.word	.LC60
+ 3019 0708 B8040000 		.word	.LC61
+ 3020 070c C8040000 		.word	.LC62
+ 3021 0710 E8040000 		.word	.LC63
+ 3022 0714 F8040000 		.word	.LC64
+ 3023 0718 04050000 		.word	.LC65
+ 3024 071c 18050000 		.word	.LC66
+ 3025 0720 2C050000 		.word	.LC67
+ 3026 0724 44050000 		.word	.LC68
+ 3027 0728 68050000 		.word	.LC69
+ 3028 072c 80050000 		.word	.LC70
+ 3029 0730 A4050000 		.word	.LC71
+ 3030 0734 B0050000 		.word	.LC72
+ 3031 0738 B8050000 		.word	.LC73
+ 3032 073c D8050000 		.word	.LC74
+ 3033 0740 DC050000 		.word	.LC75
+ 3034 0744 F0050000 		.word	.LC76
+ 3035 0748 04060000 		.word	.LC77
+ 3036 074c 1C060000 		.word	.LC78
+ 3037 0750 30060000 		.word	.LC79
+ 3038 0754 3C060000 		.word	.LC80
+ 3039 0758 48060000 		.word	.LC81
+ 3040 075c 54060000 		.word	.LC82
+ 3041 0760 60060000 		.word	.LC83
+ 3042 0764 6C060000 		.word	.LC84
+ 3043 0768 78060000 		.word	.LC85
+ 3044 076c 88060000 		.word	.LC86
+ 3045 0770 A4060000 		.word	.LC87
+ 3046 0774 AC060000 		.word	.LC88
+ 3047 0778 D0060000 		.word	.LC89
+ 3048 077c F0060000 		.word	.LC90
+ 3049 0780 10070000 		.word	.LC91
+ 3050 0784 18070000 		.word	.LC92
+ 3051 0788 34070000 		.word	.LC93
+ 3052 078c 48070000 		.word	.LC94
+ 3053 0790 64070000 		.word	.LC95
+ 3054 0794 7C070000 		.word	.LC96
+ 3055 0798 8C070000 		.word	.LC97
+ 3056 079c 94070000 		.word	.LC98
+ 3057 07a0 A4070000 		.word	.LC99
+ 3058 07a4 C4070000 		.word	.LC100
+ 3059 07a8 D4070000 		.word	.LC101
+ 3060 07ac E0070000 		.word	.LC102
+ 3061 07b0 F4070000 		.word	.LC103
+ 3062 07b4 08080000 		.word	.LC104
+ 3063 07b8 14080000 		.word	.LC105
+ 3064 07bc 30080000 		.word	.LC106
+ 3065 07c0 58080000 		.word	.LC107
+ 3066 07c4 6C080000 		.word	.LC108
+ 3067 07c8 90080000 		.word	.LC109
+ 3068 07cc 9C080000 		.word	.LC110
+ 3069 07d0 A8080000 		.word	.LC111
+ 3070              		.cfi_endproc
+ 3071              	.LFE1:
+ 3073              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 mensajes.c
+C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2062   .text:00000000 $a
+C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2065   .text:00000000 init_mens
+C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2436   .text:0000002c set_lang
+C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2096   .rodata:00000000 $d
+C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2958   .text:00000614 $d
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS

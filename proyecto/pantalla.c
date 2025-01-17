@@ -8,6 +8,13 @@
 #include <rtc.h>
 #include "proyecto.h"
 
+tMensajes mensaje;
+
+void init_screen_mens()
+{
+	init_mens(&mensaje);
+}
+
 void plotTime()
 {
 
@@ -16,23 +23,38 @@ void plotTime()
 	rtc_gettime(&rtc_time);
 
 	lcd_puts(84,0,BLACK, rtc_stringDate(rtc_time));
+	lcd_puts_x2(LCD_WIDTH-48,0,BLACK,mensaje.IDIOMA);
+}
+
+void plotLangSelScreen(void)
+{
+	lcd_clear();
+	lcd_puts_x2( 24, 48, BLACK, "IDIOMA / LANGUAGE" );
+	lcd_puts_x2(LCD_WIDTH/4-24, 76, BLACK, "ESP");
+	lcd_puts_x2(LCD_WIDTH*3/4-24, 76, BLACK, "ENG");
+	lcd_puts_x2(LCD_WIDTH/2-24, 146, BLACK, "LAT");
+}
+
+void changeScreenLang(int8 lang)
+{
+	set_lang(&mensaje, lang);
 }
 
 void plotWelcomeScreen( void )
 {
 
     lcd_clear();
-    lcd_puts_x2( 24, 48, BLACK, "Pulse la pantalla" );
-    lcd_puts_x2( 24, 76, BLACK, "  para comenzar  " );
+    lcd_puts_x2( 24, 48, BLACK, mensaje.PULSE_PANTALLA );
+    lcd_puts_x2( 24, 76, BLACK, mensaje.PARA_COMENZAR );
     lcd_draw_box(0, 126, LCD_WIDTH-1 , LCD_HEIGHT-20, BLACK, 1);
-    lcd_puts(66, 122, BLACK, " HORARIO DE FUNCIONAMIENTO ");
-    lcd_puts(24, 140, BLACK, "dom: gratis");
-    lcd_puts(24, 156, BLACK, "lun: 09:00-21:00");
-    lcd_puts(24, 172, BLACK, "mar: 09:00-21:00");
-    lcd_puts(24, 188, BLACK, "mie: 09:00-21:00");
-    lcd_puts(166, 140, BLACK, "jue: 09:00-21:00");
-    lcd_puts(166, 156, BLACK, "vie: 09:00-21:00");
-    lcd_puts(166, 172, BLACK, "sab: 09:00-15:00");
+    lcd_puts(66, 122, BLACK, mensaje.HORARIO);
+    lcd_puts(24, 140, BLACK, mensaje.DOMINGO);
+    lcd_puts(24, 156, BLACK, mensaje.LUNES);
+    lcd_puts(24, 172, BLACK, mensaje.MARTES);
+    lcd_puts(24, 188, BLACK, mensaje.MIERCOLES);
+    lcd_puts(166, 140, BLACK, mensaje.JUEVES);
+    lcd_puts(166, 156, BLACK, mensaje.VIERNES);
+    lcd_puts(166, 172, BLACK, mensaje.SABADO);
 
 }
 
@@ -40,7 +62,7 @@ void plotWelcomeScreen( void )
 void plotSelectionScreen( parking_t* places)
 {
 	lcd_clear();
-	lcd_puts_x2( 32, 32, BLACK, "Seleccione plaza" );
+	lcd_puts_x2( 32, 32, BLACK, mensaje.SELECCIONE_PLAZA );
 	lcd_draw_box(0, 64, LCD_WIDTH/4, 128, BLACK, 1);
 	lcd_draw_box(LCD_WIDTH/4, 64, LCD_WIDTH*2/4, 128, BLACK, 1);
 	lcd_draw_box(LCD_WIDTH*2/4, 64, LCD_WIDTH*3/4, 128, BLACK, 1);
@@ -64,7 +86,7 @@ void plotSelectionScreen( parking_t* places)
 			lcd_putchar_x2(x,y,BLACK,id);
 		}
 
-		x += LCD_WIDTH/8;
+		x += LCD_WIDTH/4;
 		if(i == 3) {
 			x = LCD_WIDTH/16+8;
 			y = 145;
@@ -75,87 +97,143 @@ void plotSelectionScreen( parking_t* places)
 
 void plotSelEnc()
 {
-	lcd_puts( 32, LCD_HEIGHT - 35, BLACK, ("Pulse una plaza por favor."));
+	lcd_puts( 32, LCD_HEIGHT - 35, BLACK, (mensaje.PULSE_PLAZA));
+}
+
+void plotPayCredit(uint16 credit)
+{
+	lcd_putint((LCD_WIDTH/2)+8, 80 + 50, BLACK, credit/100);
+	lcd_putint((LCD_WIDTH/2)+24, 80 + 50, BLACK, credit%100);
+}
+
+void plotPayDeadline(rtc_time_t deadline)
+{
+	lcd_puts( (LCD_WIDTH/2) -100, 80 + 70, BLACK, mensaje.FIN);
+	lcd_puts( (LCD_WIDTH/2) -36, 80 + 70, BLACK, rtc_stringDate(deadline));
 }
 
 void plotPaymentScreen(parking_t parking, uint8 credit)
 {
 	lcd_clear();
-	lcd_draw_box(0,16,LCD_WIDTH-1,70,BLACK,1);
-	lcd_puts(LCD_WIDTH/2-32, 16, BLACK, " TARIFAS ");
-	lcd_puts(32,26,BLACK,"Precio por minuto: 0,01 euros");
-	lcd_puts(32,42,BLACK," Estancia minima:  20 minutos");
-	lcd_puts(32,58,BLACK," Estancia maxima: 240 minutos");
-	lcd_puts_x2( 64, 80, BLACK, "PLAZA ");
-	lcd_putint_x2( 64+48, 80, BLACK, parking.id);
-	lcd_puts((LCD_WIDTH/2) -80, 80 + 50, BLACK, "Credito:   ,   euros");
+	lcd_draw_box(0,18,LCD_WIDTH-1,80,BLACK,1);
+	lcd_puts(LCD_WIDTH/2-32, 14, BLACK, mensaje.TARIFAS);
+	lcd_puts(32,30,BLACK,mensaje.PRECIO_MIN);
+	lcd_puts(32,44,BLACK,mensaje.ESTANCIA_MAX);
+	lcd_puts(32,62,BLACK,mensaje.ESTANCIA_MIN);
+	lcd_puts_x2( 64, 90, BLACK, mensaje.PLAZA);
+	lcd_putint_x2( 64+112, 90, BLACK, parking.id);
+	lcd_puts((LCD_WIDTH/2) -80, 80 + 50, BLACK, mensaje.CREDITO_EUROS);
 	plotPayCredit(credit);
 	plotPayDeadline(parking.deadline);
-	lcd_puts( (LCD_WIDTH/2) -56, LCD_HEIGHT - 55, BLACK, ("Inserte monedas"));
-	lcd_puts( 32, LCD_HEIGHT - 35, BLACK, ("Pulse la pantalla para aceptar"));
+	lcd_puts( (LCD_WIDTH/2) -56, LCD_HEIGHT - 65, BLACK, mensaje.INSERTE_MONEDA);
+	lcd_puts( 32, LCD_HEIGHT - 49, BLACK, mensaje.PULSE_ACEPTAR);
 
 }
 
-void plotPayCredit(uint8 credit)
+void plotExcessReturn(int8 excess)
 {
-	lcd_putint((LCD_WIDTH/2), 80 + 50, BLACK, credit/100);
-	lcd_putint((LCD_WIDTH/2)+16, 80 + 50, BLACK, credit%100);
-}
-
-void plotPayDeadline(rtc_time_t deadline)
-{
-	lcd_puts( (LCD_WIDTH/2) -100, 80 + 70, BLACK, "Fin: ");
-	lcd_puts( (LCD_WIDTH/2) -60, 80 + 70, BLACK, rtc_stringDate(deadline));
+	lcd_puts(32, LCD_HEIGHT-33, BLACK, mensaje.TARIFA_MAXIMA);
+	lcd_puts(32, LCD_HEIGHT-17, BLACK, mensaje.DEVOLUCION);
+	lcd_putint(192, LCD_HEIGHT-17, BLACK, excess);
+	lcd_puts(216, LCD_HEIGHT-17, BLACK, "euros");
 }
 
 void plotLicPlateScreen(parking_t parking)
 {
 	lcd_clear();
-	lcd_puts_x2( 64, 40, BLACK, "PLAZA ");
-	lcd_putint_x2( 64+48, 40, BLACK, parking.id);
-	lcd_puts((LCD_WIDTH/2) -100, 95, BLACK, "Matricula: ?");
+	lcd_puts_x2( 64, 40, BLACK, mensaje.PLAZA);
+	lcd_putint_x2( 64+112, 40, BLACK, parking.id);
+	lcd_puts((LCD_WIDTH/2) -100, 95, BLACK, mensaje.MATRICULA);
 	plotPayDeadline(parking.deadline);
 }
 
 void plotLicPlateUpdate(int16 licPlate)
 {
-	lcd_puthex((LCD_WIDTH/2) -12, 95, BLACK, licPlate);
+	lcd_puthex((LCD_WIDTH/2) +28, 95, BLACK, licPlate);
 }
 
 void plotLicPlateEnc()
 {
-	lcd_puts( 16, LCD_HEIGHT - 35, BLACK, ("Introduzca una matricula valida por favor."));
+	lcd_puts( 16, LCD_HEIGHT - 35, BLACK, mensaje.MATRICULA_VALIDA);
 }
 
 void plotSucScreen(parking_t parking)
 {
 	lcd_clear();
-	lcd_puts_x2( 32, LCD_HEIGHT /2-50, BLACK, ("Plaza i pagada") );
-	lcd_putint_x2( 80, LCD_HEIGHT /2-50, BLACK, parking.id );
-	lcd_puts( 32, LCD_HEIGHT /2 -12, BLACK, ("    Fin: "));
-	lcd_puts( 104, LCD_HEIGHT /2 -12, BLACK, rtc_stringDate(parking.deadline));
-	lcd_puts( 32, LCD_HEIGHT /2 + 50, BLACK, ("    Que tenga un gran dia "));
+	lcd_puts_x2( 32, LCD_HEIGHT /2-50, BLACK, mensaje.PLAZA_PAGADA );
+	lcd_putint_x2( 128, LCD_HEIGHT /2-50, BLACK, parking.id );
+	lcd_puts( 32, LCD_HEIGHT /2 -24, BLACK, mensaje.MATRICULA);
+	lcd_puthex(160, 95, BLACK, parking.licPlate);
+	lcd_puts( 32, LCD_HEIGHT /2 +12, BLACK, mensaje.FIN_APARCAMIENTO);
+	lcd_puts( 104, LCD_HEIGHT /2 +12, BLACK, rtc_stringDate(parking.deadline));
+	lcd_puts( 32, LCD_HEIGHT /2 + 50, BLACK, mensaje.GRAN_DIA);
 }
 
 void plotSelecFailure(parking_t parking)
 {
 	lcd_clear();
-	lcd_puts_x2( 32, LCD_HEIGHT /2-50, BLACK, ("Plaza i ocupada") );
-	lcd_putint_x2( 80, LCD_HEIGHT /2-50, BLACK, parking.id );
-	lcd_puts( 32, LCD_HEIGHT /2 + 38, BLACK, ("    Fin: "));
+	lcd_puts_x2( 32, LCD_HEIGHT /2-70, BLACK, mensaje.PLAZA_OCUPADA );
+	lcd_putint_x2( 128, LCD_HEIGHT /2-70, BLACK, parking.id );
+	lcd_puts( 32, LCD_HEIGHT /2 + 38, BLACK, mensaje.FIN_FAILURE);
 	lcd_puts( 104, LCD_HEIGHT /2 + 38, BLACK, rtc_stringDate(parking.deadline));
+	lcd_draw_box(LCD_WIDTH/2-80, LCD_HEIGHT-64, LCD_WIDTH/2+80, LCD_HEIGHT-16, BLACK, 1);
+	lcd_puts(LCD_WIDTH/2-16, LCD_HEIGHT-48, BLACK, mensaje.SALIR);
 }
 
-void plotPayExcessFailure()
+void plotLicPlateDemand()
+{
+	lcd_puts(32, 79, BLACK, mensaje.MATRICULA_VALIDA);
+}
+
+void plotExitFailure(parking_t parking)
 {
 	lcd_clear();
-	lcd_puts_x2(16, (LCD_HEIGHT/2)-30, BLACK, "Saldo max superado");
-	lcd_puts(40, (LCD_HEIGHT/2), BLACK, "el maximo saldo es 2,40 euros");
+	lcd_puts(16, (LCD_HEIGHT/2)-30, BLACK, mensaje.MATRICULA_VEHIC);
 }
 
 void plotPayInsufFailure()
 {
 	lcd_clear();
-	lcd_puts_x2(16, (LCD_HEIGHT/2)-30, BLACK, "Saldo insuficiente");
-	lcd_puts(40, (LCD_HEIGHT/2), BLACK, "el saldo minimo es 0,20 euros");
+	lcd_puts_x2(16, (LCD_HEIGHT/2)-30, BLACK, mensaje.SALDO_INSUFICIENTE);
+	lcd_puts(40, (LCD_HEIGHT/2), BLACK, mensaje.SALDO_MIN);
 }
+
+void plotErrorScreen(parking_t parking)
+{
+	switch (parking.error)
+	{
+	case EXIT_ERROR:
+		plotExitFailure(parking);
+		break;
+	case INSUF_ERROR:
+		plotPayInsufFailure();
+		break;
+	case SELEC_ERROR:
+		plotSelecFailure(parking);
+		break;
+	}
+}
+
+void makeTicket( parking_t parking )
+{
+	uart0_puts("\n ------------------------\n");
+	uart0_puts(mensaje.PLAZA);
+	uart0_putint(parking.id);
+	uart0_putchar('\n');
+	uart0_puts(mensaje.MATRICULA);
+	uart0_puthex(parking.licPlate);
+	uart0_putchar('\n');
+	uart0_puts(mensaje.FIN);
+	uart0_puts(rtc_stringDate(parking.deadline));
+	uart0_puts("\n ------------------------\n");
+}
+
+void plotExitSuccess(parking_t parking)
+{
+	lcd_clear();
+	lcd_puts_x2( 32, 40, BLACK, mensaje.PLAZA);
+	lcd_putint_x2( 32+112, 40, BLACK, parking.id);
+	lcd_puts_x2( 32+128, 40, BLACK, mensaje.LIBERADA);
+	lcd_puts_x2(8,100,BLACK,mensaje.GRAN_DIA);
+}
+

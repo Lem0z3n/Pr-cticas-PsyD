@@ -5,16 +5,19 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../kernelcoop.c \
+../mensajes.c \
 ../pantalla.c \
 ../proyecto.c 
 
 OBJS += \
 ./kernelcoop.o \
+./mensajes.o \
 ./pantalla.o \
 ./proyecto.o 
 
 C_DEPS += \
 ./kernelcoop.d \
+./mensajes.d \
 ./pantalla.d \
 ./proyecto.d 
 
