@@ -170,6 +170,9 @@ void timer0_open_ms( void (*isr)(void), uint16 ms, uint8 mode )
 	TCON = (TCON & ~(0xf)) | (1<<0)| mode<<3;
 }
 
+
+
+
 void timer0_close( void )
 {
     TCNTB0 = 0x0;

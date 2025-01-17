@@ -29,4 +29,11 @@ uint8 segs_status( void )
     return state;
 };
 
+void segs_putsos(uint8 n)
+{
+	uint8 sos2segs[2] ={0x12, 0x54 };
+	state = 0x12 & 0x0f;
+	SEGS = sos2segs[n];
+}
+
 

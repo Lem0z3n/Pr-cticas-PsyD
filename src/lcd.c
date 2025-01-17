@@ -4,6 +4,8 @@
 extern uint8 font[];
 uint8 lcd_buffer[LCD_BUFFER_SIZE];
 
+static void isr_bdma0( void ) __attribute__ ((interrupt ("IRQ")));
+
 static uint8 state;
 
 void lcd_init( void )
@@ -60,6 +62,7 @@ void lcd_clear( void )
     }
 }
 
+
 void lcd_putpixel( uint16 x, uint16 y, uint8 c)
 {
     uint8 byte, bit;
@@ -115,6 +118,14 @@ void lcd_draw_box( uint16 xleft, uint16 yup, uint16 xright, uint16 ydown, uint8 
 	lcd_draw_vline(yup,ydown + width,xright,color,width);
 }
 
+void lcd_fill_box( uint16 xleft, uint16 yup, uint16 xright, uint16 ydown, uint8 color )
+{
+	uint16 i;
+	for(i = 0; i < ydown-yup; i++){
+		lcd_draw_hline(xleft+i,xright+i,yup+i,color, 1);
+	}
+}
+
 void lcd_putchar( uint16 x, uint16 y, uint8 color, char ch )
 {
     uint8 row, col;
@@ -127,6 +138,34 @@ void lcd_putchar( uint16 x, uint16 y, uint8 color, char ch )
                 lcd_putpixel( x+col, y+row, color );
             else
                 lcd_putpixel( x+col, y+row, WHITE );
+}
+
+void lcd_putchar_inverted( uint16 x, uint16 y, uint8 color, char ch )
+{
+    uint8 row, col;
+    uint8 *bitmap;
+
+    bitmap = font + ch*16;
+    for( row=0; row<16; row++ )
+        for( col=0; col<8; col++ )
+            if( bitmap[row] & (0x80 >> col) )
+                lcd_putpixel( x+col, y+row, WHITE );
+            else
+                lcd_putpixel( x+col, y+row, color );
+}
+
+void lcd_putchar_upsidedown( uint16 x, uint16 y, uint8 color, char ch )
+{
+    uint8 row, col;
+    uint8 *bitmap;
+
+    bitmap = font + ch*16;
+    for( row=0; row<16; row++ )
+        for( col=0; col<8; col++ )
+            if( bitmap[row] & (0x80 >> col) )
+                lcd_putpixel( x-col+7, y-row+15, color );
+            else
+                lcd_putpixel( x-col+7, y-row+15, WHITE );
 }
 
 void lcd_puts( uint16 x, uint16 y, uint8 color, char *s )
@@ -200,8 +239,12 @@ void lcd_putchar_x2( uint16 x, uint16 y, uint8 color, char ch )
 void lcd_puts_x2( uint16 x, uint16 y, uint8 color, char *s )
 {
 	while(*s != '\0'){
-		lcd_putchar_x2(x,y,color, *s++);
-		x += 8;
+		lcd_putchar_x2(x, y, color, *s++);
+		x += 16;
+		if(x > (320 - 16)){
+			y += 32;
+			x = 0;
+		}
 	}
 }
 
@@ -267,4 +310,30 @@ void lcd_putWallpaper( uint8 *bmp )
         for( x=0; x<LCD_WIDTH/2; x++ )
             lcd_buffer[offsetDst+x] = ~bmp[offsetSrc+x];
     }
+}
+
+void lcd_dumpBmp(uint8 *bmp, uint16 x, uint16 y, uint16 xsize, uint16 ysize)
+{
+    uint32 headerSize;
+
+    uint16 xSrc, ySrc, yDst;
+    uint16 offsetSrc, offsetDst;
+
+    headerSize = bmp[10] + (bmp[11] << 8) + (bmp[12] << 16) + (bmp[13] << 24);
+
+    bmp = bmp + headerSize;
+
+    for (ySrc = 0, yDst = ysize - 1; ySrc < ysize; ySrc++, yDst--)
+    {
+        offsetDst = (yDst + y) * LCD_WIDTH / 2 + x / 2;
+        offsetSrc = ySrc * xsize / 2;
+        for (xSrc = 0; xSrc < xsize / 2; xSrc++)
+            lcd_buffer[offsetDst + xSrc] = ~bmp[offsetSrc + xSrc];
+    }
+}
+
+static void isr_bdma0( void )
+{
+    IISCON &= ~1;
+    I_ISPC = BIT_BDMA0;
 }

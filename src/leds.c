@@ -32,3 +32,14 @@ uint8 led_status( uint8 led )
 		else return 1;
 }
 
+void leds_on()
+{
+	led_on(LEFT_LED);
+	led_on(RIGHT_LED);
+}
+
+void leds_off()
+{
+	led_off(LEFT_LED);
+	led_off(RIGHT_LED);
+}

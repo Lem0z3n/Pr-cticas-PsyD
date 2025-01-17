@@ -102,23 +102,6 @@ int32 uart0_getint( void )
 	result *= sign;
     return result;
 
-	/*
-	int32 salida = 0; //si no me guarda un valor anterior
-	int32 sig;
-	char car = uart0_getchar();
-	boolean neg= FALSE;
-	if(car == '-'){
-		neg = TRUE;
-		car = uart0_getchar();
-	}
-	while(car != '\n'){
-		sig = car - '0';
-		salida = salida*10;
-		if(neg) salida-= sig;
-		else salida += sig;
-		car = uart0_getchar();
-	}
-	return salida;*/
 }
 
 uint32 uart0_gethex( void )

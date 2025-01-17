@@ -1,4 +1,3 @@
-
 #include <s3c44b0x.h>
 #include <s3cev40.h>
 #include <timers.h>
@@ -26,7 +25,7 @@ void ts_init( void )
     timers_init();  
     lcd_init();
     adc_init();
-    PDATE = (1 << 4)|(1 <<5)|(0 << 6)|(1 << 7) ; //Y- a GND
+    PDATE = (1 << 4) | (1 << 5) | (0 << 6) | (1 << 7);
     sw_delay_ms( 1 );
     ts_on();
     ts_calibrate();
@@ -36,13 +35,13 @@ void ts_init( void )
 void ts_on( void )
 {
     adc_on();
-    state = TS_ON;
+    state = ON;
 }
 
 void ts_off( void )
 {
     adc_off();
-    state = TS_OFF;
+    state = OFF;
 }
 
 uint8 ts_status( void )
@@ -52,7 +51,7 @@ uint8 ts_status( void )
 
 uint8 ts_pressed( void )
 {
-	return !(PDATG & 1<<2);
+    return (PDATG & (1 << 2)) ? 0 : 1;
 }
 
 static void ts_calibrate( void )
@@ -61,97 +60,97 @@ static void ts_calibrate( void )
     
     lcd_on();
     do {    
+        // BORRAR PANTALLA
         lcd_clear();
+        // MOSTRAR MENSAJE DE CALIBRACION
         lcd_puts(10,80,BLACK,"SOFTWARE DE CALIBRACION DE TOUCHSCREEN\n");
-        lcd_puts(30,105,BLACK,"hecho por Lucas 'a secas' Arranz\n");
-        lcd_puts(115,125,BLACK,"INTEGRAMENTE\n");
+		lcd_puts(30,105,BLACK,"hecho por Lucas 'a secas' Arranz\n");
+		lcd_puts(115,125,BLACK,"INTEGRAMENTE\n");
+        sw_delay_s(2);
+        //PINTA CUADRADO 5X5 PX EN (0,0) Y SOLICITA PRESIONAR TOUCHSCREEN
+        lcd_clear();
+        lcd_puts(64, 128, BLACK, "Presione en el cuadrado");
+        lcd_draw_box(0, 0, 5, 5, BLACK, 1);
 
-        lcd_draw_box(0,0,5,5, BLACK, 1);
-        lcd_puts(15,5,BLACK,"<-- presione aqui\n");
-
-
-        while( ! ts_pressed() );
+        while(!ts_pressed()); // ESPERAMOS PRESION DE TOUCHSCREEN
         sw_delay_ms( TS_DOWN_DELAY );
         ts_scan( &Vxmin, &Vymax );
-        while( ts_pressed() );
+        while( ts_pressed() ); // ESPERAMOS DEPRESION DE TOUCHSCREEN
         sw_delay_ms( TS_UP_DELAY );
 
-        lcd_draw_box(314,234,319,239, BLACK, 1);
-        lcd_puts(200,210,BLACK,"presione aqui -->\n");
+        //PINTA CUADRADO 5X5 PX EN (319,239) Y SOLICITA PRESIONAR TOUCHSCREEN
+        lcd_clear();
+        lcd_puts(64, 128, BLACK, "Presione en el cuadrado");
+        lcd_draw_box(319-5, 239-5, 319, 239, BLACK, 1);
            
-        while( ! ts_pressed() );
+        while(!ts_pressed()); // ESPERAMOS PRESION DE TOUCHSCREEN
         sw_delay_ms( TS_DOWN_DELAY );
         ts_scan( &Vxmax, &Vymin );
-        while( ts_pressed() );
+        while( ts_pressed() ); // ESPERAMOS DEPRESION DE TOUCHSCREEN
         sw_delay_ms( TS_UP_DELAY );
-
-        lcd_clear();
-        lcd_draw_box((LCD_WIDTH/2)-3, (LCD_HEIGHT/2)-3,(LCD_WIDTH/2)+3, (LCD_HEIGHT/2)+3, BLACK,1);
-        lcd_puts(100,140,BLACK,"presione aqui ^\n");
-
-        while( ! ts_pressed() );
-        sw_delay_ms( TS_DOWN_DELAY );
-        ts_getpos( &x, &y );      
-        while( ts_pressed() );
-		sw_delay_ms( TS_UP_DELAY );
-
     
+        //PINTA CUADRADO 5X5 PX EN (160,120) Y SOLICITA PRESIONAR TOUCHSCREEN
+        lcd_clear();
+        lcd_puts(80, 128, BLACK, "Presione en el cuadrado");
+        lcd_draw_box(158, 118, 163, 123, BLACK, 1);
+
+        ts_getpos( &x, &y );
+
     } while( (x > LCD_WIDTH/2+PX_ERROR) || (x < LCD_WIDTH/2-PX_ERROR) || (y > LCD_HEIGHT/2+PX_ERROR) || (y < LCD_HEIGHT/2-PX_ERROR) );
     lcd_clear();
 }
 
 void ts_getpos( uint16 *x, uint16 *y )
 {
-    sw_delay_ms(1);
-    sw_delay_ms(TS_DOWN_DELAY);
-
-    uint16 Vx=0, Vy=0;
-    ts_scan(&Vx,&Vy);
-
-    sw_delay_ms(TS_UP_DELAY);
-
-    ts_sample2coord(Vx,Vy,x,y);
-
+    uint16 Vx, Vy;
+    while ( !ts_pressed() );
+    sw_delay_ms( TS_DOWN_DELAY );
+    ts_scan( &Vx, &Vy );
+    while ( ts_pressed() );
+    sw_delay_ms( TS_UP_DELAY );
+    ts_sample2coord( Vx, Vy, x, y );
 }
 
 void ts_getpostime( uint16 *x, uint16 *y, uint16 *ms )
 {
+    uint16 Vx, Vy;
+    while ( !ts_pressed() );
+    timer3_start();
+    sw_delay_ms( TS_DOWN_DELAY );
+    ts_scan( &Vx, &Vy );
 
-	while(!ts_pressed());
-	timer3_start();
-	ts_getpos(x,y);
-	while(ts_pressed());
-
-	*ms = timer3_stop() / 10;
-	sw_delay_ms( KEYPAD_KEYUP_DELAY );
-
+    while ( ts_pressed() );
+    *ms = timer3_stop() / 10;
+    sw_delay_ms( TS_UP_DELAY );
+    ts_sample2coord( Vx, Vy, x, y );
 }
 
 uint8 ts_timeout_getpos( uint16 *x, uint16 *y, uint16 ms )
 {
-    ms *= 10;
-    timer3_start_timeout(ms);
-
-    uint16 og_x = *x;
-    uint16 og_y = *y;
-    do{
-
-    	ts_getpos(x,y);
-
-    }while(og_x == *x && og_y == *y && !timer3_timeout());
-
-    return (og_x == *x && og_y == *y) ? TS_TIMEOUT : TS_OK;
+    uint16 Vx, Vy;
+    timer3_start();
+    while ( !ts_pressed() )
+    {
+        if (timer3_timeout())
+            return TS_TIMEOUT;
+    }
+    sw_delay_ms( TS_DOWN_DELAY );
+    ts_scan( &Vx, &Vy );
+    while ( ts_pressed() );
+    sw_delay_ms( TS_UP_DELAY );
+    ts_sample2coord( Vx, Vy, x, y );
+    return TS_OK;
 }
 
 static void ts_scan( uint16 *Vx, uint16 *Vy )
 {
-    PDATE = (0 << 4)| (1 << 5) |(1 << 6) | (0 <<7); //X- a GND, X+ a Vdd
-    *Vx = adc_getSample( ADC_AIN1 );
+    PDATE = (0 << 4) | (1 << 5) | (1 << 6) | (0 << 7); // X- tierra, X+ VDD, resto abiertos
+    *Vx = adc_getSample(1);
     
-    PDATE =  (1<<4) | (0<<5) | (0 <<6) | (1 << 7); //Y- a GND, Y+ a Vdd
-    *Vy = adc_getSample( ADC_AIN0 );
+    PDATE = (1 << 4) | (0 << 5) | (0 << 6) | (1 << 7); // Y- tierra, Y+ VDD, resto abiertos
+    *Vy = adc_getSample(0);
     
-    PDATE = (1 << 4)|(1 <<5)|(0 << 6)|(1 << 7); //Y- a GND
+    PDATE = (1 << 4) | (1 << 5) | (0 << 6) | (1 << 7); // Y- tierra, resto abiertos
     sw_delay_ms( 1 );
 }
 
@@ -162,26 +161,25 @@ static void ts_sample2coord( uint16 Vx, uint16 Vy, uint16 *x, uint16 *y )
     else if( Vx > Vxmax )
         *x = LCD_WIDTH-1;
     else 
-        *x = LCD_WIDTH*(Vx-Vxmin) / (Vxmax-Vxmin);    
+        *x = LCD_WIDTH*(Vx-Vxmin) / (Vxmax-Vxmin);
 
-    if(Vy < Vymin)
-    	*y = LCD_HEIGHT-1;
-    else if( Vx > Vxmax)
-    	*y = 0;
+    if( Vy < Vymin )
+        *y = LCD_HEIGHT-1;
+    else if( Vy > Vymax )
+        *y = 0;
     else
-    	*y =LCD_HEIGHT- LCD_HEIGHT*(Vy-Vymin) / (Vymax-Vymin);
-
+        *y = LCD_HEIGHT*(Vymax - Vy) / (Vymax-Vymin);
 }
 
 void ts_open( void (*isr)(void) )
 {
-    pISR_TS = (uint32) isr;
-    I_ISPC |= BIT_TS;
-    INTMSK &= ~(BIT_GLOBAL | BIT_TS);
+    pISR_TS = (uint32)isr;
+    INTPND &= ~(BIT_EINT2);
+    INTMSK &= ~(BIT_GLOBAL | BIT_EINT2);
 }
 
 void ts_close( void )
 {
-	INTMSK |= (BIT_TS);
-	pISR_TS  = (uint32) isr_TS_dummy;
+    INTMSK |= BIT_EINT2;
+    pISR_TS = (uint32)isr_TS_dummy;
 }

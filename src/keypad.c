@@ -136,6 +136,139 @@ uint8 keypad_timeout_getchar( uint16 ms )
 	return scancode;
 }
 
+uint16 keypad_fullscan( void )
+{
+	uint8 aux;
+	uint16 scancode = 0;
+	    aux = *( KEYPAD_ADDR + 0x1c );
+	    if( (aux & 0x0f) != 0x0f )
+	    {
+	        if( (aux & 0x8) == 0 )
+	           scancode |= (1 << 0);
+	        else if( (aux & 0x4) == 0 )
+	           scancode |= (1 << 1);
+	        else if( (aux & 0x2) == 0 )
+	        	scancode |= (1 << 2);
+	        else if( (aux & 0x1) == 0 )
+	        	scancode |= (1 << 3);
+	    }
+		aux = *( KEYPAD_ADDR + 0x1a );
+		if( (aux & 0x0f) != 0x0f )
+		{
+			if( (aux & 0x8) == 0 )
+				scancode |= (1 << 4);
+			else if( (aux & 0x4) == 0 )
+				scancode |= (1 << 5);
+			else if( (aux & 0x2) == 0 )
+				scancode |= (1 << 6);
+			else if( (aux & 0x1) == 0 )
+				scancode |= (1 << 7);
+		}
+		aux = *( KEYPAD_ADDR + 0x16 );
+			if( (aux & 0x0f) != 0x0f )
+			{
+				if( (aux & 0x8) == 0 )
+					scancode |= (1 << 8);
+				else if( (aux & 0x4) == 0 )
+					scancode |= (1 << 9);
+				else if( (aux & 0x2) == 0 )
+					scancode |= (1 << 10);
+				else if( (aux & 0x1) == 0 )
+					scancode |= (1 << 11);
+			}
+		aux = *( KEYPAD_ADDR + 0x0e );
+				if( (aux & 0x0f) != 0x0f )
+				{
+					if( (aux & 0x8) == 0 )
+						scancode |= (1 << 12);
+					else if( (aux & 0x4) == 0 )
+						scancode |= (1 << 13);
+					else if( (aux & 0x2) == 0 )
+						scancode |= (1 << 14);
+					else if( (aux & 0x1) == 0 )
+						scancode |= (1 << 15);
+				}
+	    return (scancode) ? scancode : KEYPAD_FAILURE;
+
+}
+
+uint8 keypad_keycount( void ){
+	uint8 aux;
+	uint16 scancode = 0;
+	while(keypad_pressed()){
+	    aux = *( KEYPAD_ADDR + 0x1c );
+	    if( (aux & 0x0f) != 0x0f )
+	    {
+	        if( (aux & 0x8) == 0 )
+	           scancode |= (1 << 0);
+	        if( (aux & 0x4) == 0 )
+	           scancode |= (1 << 1);
+	        if( (aux & 0x2) == 0 )
+	        	scancode |= (1 << 2);
+	        if( (aux & 0x1) == 0 )
+	        	scancode |= (1 << 3);
+	    }
+		aux = *( KEYPAD_ADDR + 0x1a );
+		if( (aux & 0x0f) != 0x0f )
+		{
+			if( (aux & 0x8) == 0 )
+				scancode |= (1 << 4);
+			if( (aux & 0x4) == 0 )
+				scancode |= (1 << 5);
+			if( (aux & 0x2) == 0 )
+				scancode |= (1 << 6);
+			if( (aux & 0x1) == 0 )
+				scancode |= (1 << 7);
+		}
+		aux = *( KEYPAD_ADDR + 0x16 );
+			if( (aux & 0x0f) != 0x0f )
+			{
+				if( (aux & 0x8) == 0 )
+					scancode |= (1 << 8);
+				if( (aux & 0x4) == 0 )
+					scancode |= (1 << 9);
+				if( (aux & 0x2) == 0 )
+					scancode |= (1 << 10);
+				if( (aux & 0x1) == 0 )
+					scancode |= (1 << 11);
+			}
+		aux = *( KEYPAD_ADDR + 0x0e );
+				if( (aux & 0x0f) != 0x0f )
+				{
+					if( (aux & 0x8) == 0 )
+						scancode |= (1 << 12);
+					if( (aux & 0x4) == 0 )
+						scancode |= (1 << 13);
+					if( (aux & 0x2) == 0 )
+						scancode |= (1 << 14);
+					if( (aux & 0x1) == 0 )
+						scancode |= (1 << 15);
+				}
+	}
+	uint8 count;
+	uint8 i;
+	for(i=0; i < 16; i++){
+		if((scancode & (1 << i))) count++;
+	}
+	return	count;
+}
+
+uint16 keypad_getfullchar( void )
+{
+	uint16 scan_code,aux= keypad_fullscan();
+	while((aux) == KEYPAD_FAILURE){
+		aux = keypad_fullscan();
+	}
+	sw_delay_ms( KEYPAD_KEYDOWN_DELAY );
+	scan_code = aux;
+	while(keypad_fullscan() != KEYPAD_FAILURE){
+		aux = keypad_fullscan();
+		scan_code = aux;
+	}
+	sw_delay_ms( KEYPAD_KEYUP_DELAY );
+	return scan_code;
+}
+
 #elif KEYPAD_IO_METHOD == INTERRUPT
 
 static uint8 key = KEYPAD_FAILURE;
