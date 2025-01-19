@@ -122,7 +122,7 @@ void mainTask( void )
     		if( tsPressedMsg.flag && !tsPressedMsg.langFlag )                    /* Chequea si se ha pulsado la pantalla (mensaje recibido de la tarea tsPressedTask) */
 			{
 				tsPressedMsg.flag = FALSE;                 /* Marca el mensaje como leido */
-				if( changeLang() > 0)
+				if( changeLang() >= 0)
 				{									/* Borra pantalla */
 					plotState(prevState, placeSelected);
 					state = prevState;                  /* Salta al estado previo ... */
@@ -271,6 +271,7 @@ void mainTask( void )
 			if( !(--ticks) )                           /* Decrementa ticks y chequea si ha permanecido en este estado el tiempo maximo */
 			{
 				plotState(waiting,placeSelected);                          /* Visualiza pantalla inicial */
+				parking[placeSelected].credit=0;
 				kpPressedMsg.licPlateInput = FALSE;			//limpio el flag del keypress porque voy a cambiar de estado.
 				coinsMoverMsg.accept = FALSE;              /* Envia un mensaje para que la moneda se devuelva */
 				coinsMoverMsg.flag   = TRUE;
@@ -752,7 +753,7 @@ int8 changeLang()
 	else if(tsPressedMsg.x > LCD_WIDTH/2-24 && tsPressedMsg.x < LCD_WIDTH/2 + 24 && tsPressedMsg.y > 146 && tsPressedMsg.y < 214)
 		lang = LAT;
 
-	if(lang > 0)
+	if(lang >= 0)
 		changeScreenLang(lang);
 
 	return lang;
@@ -761,7 +762,7 @@ int8 changeLang()
 int8 exitSol()
 {
 
-	if(tsPressedMsg.x > LCD_WIDTH/2-80 && tsPressedMsg.x < LCD_WIDTH/2+80 && tsPressedMsg.y > LCD_HEIGHT-64 && tsPressedMsg.y < LCD_HEIGHT-16)
+	if(tsPressedMsg.x > LCD_WIDTH/2-80 && tsPressedMsg.x < LCD_WIDTH/2+80 && tsPressedMsg.y > LCD_HEIGHT-64 && tsPressedMsg.y < LCD_HEIGHT)
 		return 1;
 	return 0;
 }

@@ -231,515 +231,515 @@
  2182      2000
  2183 023a 0000     		.align	2
  2184              	.LC29:
- 2185 023c 51756520 		.ascii	"Que tenga un gran dia \000"
+ 2185 023c 51756520 		.ascii	"Que tenga un gran   dia \000"
  2185      74656E67 
  2185      6120756E 
  2185      20677261 
- 2185      6E206469 
- 2186 0253 00       		.align	2
+ 2185      6E202020 
+ 2186 0255 000000   		.align	2
  2187              	.LC30:
- 2188 0254 506C617A 		.ascii	"Plaza i ocupada\000"
+ 2188 0258 506C617A 		.ascii	"Plaza i ocupada\000"
  2188      61206920 
  2188      6F637570 
  2188      61646100 
  2189              		.align	2
  2190              	.LC31:
- 2191 0264 656C206D 		.ascii	"el maximo saldo es 2,40 euros\000"
+ 2191 0268 656C206D 		.ascii	"el maximo saldo es 2,40 euros\000"
  2191      6178696D 
  2191      6F207361 
  2191      6C646F20 
  2191      65732032 
- 2192 0282 0000     		.align	2
+ 2192 0286 0000     		.align	2
  2193              	.LC32:
- 2194 0284 53616C64 		.ascii	"Saldo insuficiente\000"
+ 2194 0288 53616C64 		.ascii	"Saldo insuficiente\000"
  2194      6F20696E 
  2194      73756669 
  2194      6369656E 
  2194      746500
- 2195 0297 00       		.align	2
+ 2195 029b 00       		.align	2
  2196              	.LC33:
- 2197 0298 656C2073 		.ascii	"el saldo minimo es 0,20 euros\000"
+ 2197 029c 656C2073 		.ascii	"el saldo minimo es 0,20 euros\000"
  2197      616C646F 
  2197      206D696E 
  2197      696D6F20 
  2197      65732030 
- 2198 02b6 0000     		.align	2
+ 2198 02ba 0000     		.align	2
  2199              	.LC34:
- 2200 02b8 20202020 		.ascii	"    IRSE\000"
+ 2200 02bc 20202020 		.ascii	"    IRSE\000"
  2200      49525345 
  2200      00
- 2201 02c1 000000   		.align	2
+ 2201 02c5 000000   		.align	2
  2202              	.LC35:
- 2203 02c4 4C494245 		.ascii	"LIBERADA\000"
+ 2203 02c8 4C494245 		.ascii	"LIBERADA\000"
  2203      52414441 
  2203      00
- 2204 02cd 000000   		.align	2
+ 2204 02d1 000000   		.align	2
  2205              	.LC36:
- 2206 02d0 496E7472 		.ascii	"Introduzca la matricula de su coche.\000"
+ 2206 02d4 496E7472 		.ascii	"Introduzca la matricula de su coche.\000"
  2206      6F64757A 
  2206      6361206C 
  2206      61206D61 
  2206      74726963 
- 2207 02f5 000000   		.align	2
+ 2207 02f9 000000   		.align	2
  2208              	.LC37:
- 2209 02f8 454E4700 		.ascii	"ENG\000"
+ 2209 02fc 454E4700 		.ascii	"ENG\000"
  2210              		.align	2
  2211              	.LC38:
- 2212 02fc 0909546F 		.ascii	"\011\011Touch screen\000"
+ 2212 0300 0909546F 		.ascii	"\011\011Touch screen\000"
  2212      75636820 
  2212      73637265 
  2212      656E00
- 2213 030b 00       		.align	2
+ 2213 030f 00       		.align	2
  2214              	.LC39:
- 2215 030c 20090920 		.ascii	" \011\011  to start \000"
+ 2215 0310 20090920 		.ascii	" \011\011  to start \000"
  2215      20746F20 
  2215      73746172 
  2215      742000
- 2216 031b 00       		.align	2
+ 2216 031f 00       		.align	2
  2217              	.LC40:
- 2218 031c 204F5045 		.ascii	" OPERATING HOURS \000"
+ 2218 0320 204F5045 		.ascii	" OPERATING HOURS \000"
  2218      52415449 
  2218      4E472048 
  2218      4F555253 
  2218      2000
- 2219 032e 0000     		.align	2
+ 2219 0332 0000     		.align	2
  2220              	.LC41:
- 2221 0330 53756E3A 		.ascii	"Sun: free\000"
+ 2221 0334 53756E3A 		.ascii	"Sun: free\000"
  2221      20667265 
  2221      6500
- 2222 033a 0000     		.align	2
+ 2222 033e 0000     		.align	2
  2223              	.LC42:
- 2224 033c 4D6F6E3A 		.ascii	"Mon: 09:00-21:00\000"
+ 2224 0340 4D6F6E3A 		.ascii	"Mon: 09:00-21:00\000"
  2224      2030393A 
  2224      30302D32 
  2224      313A3030 
  2224      00
- 2225 034d 000000   		.align	2
+ 2225 0351 000000   		.align	2
  2226              	.LC43:
- 2227 0350 5475653A 		.ascii	"Tue: 09:00-21:00\000"
+ 2227 0354 5475653A 		.ascii	"Tue: 09:00-21:00\000"
  2227      2030393A 
  2227      30302D32 
  2227      313A3030 
  2227      00
- 2228 0361 000000   		.align	2
+ 2228 0365 000000   		.align	2
  2229              	.LC44:
- 2230 0364 5765643A 		.ascii	"Wed: 09:00-21:00\000"
+ 2230 0368 5765643A 		.ascii	"Wed: 09:00-21:00\000"
  2230      2030393A 
  2230      30302D32 
  2230      313A3030 
  2230      00
- 2231 0375 000000   		.align	2
+ 2231 0379 000000   		.align	2
  2232              	.LC45:
- 2233 0378 5468753A 		.ascii	"Thu: 09:00-21:00\000"
+ 2233 037c 5468753A 		.ascii	"Thu: 09:00-21:00\000"
  2233      2030393A 
  2233      30302D32 
  2233      313A3030 
  2233      00
- 2234 0389 000000   		.align	2
+ 2234 038d 000000   		.align	2
  2235              	.LC46:
- 2236 038c 4672693A 		.ascii	"Fri: 09:00-21:00\000"
+ 2236 0390 4672693A 		.ascii	"Fri: 09:00-21:00\000"
  2236      2030393A 
  2236      30302D32 
  2236      313A3030 
  2236      00
- 2237 039d 000000   		.align	2
+ 2237 03a1 000000   		.align	2
  2238              	.LC47:
- 2239 03a0 5361743A 		.ascii	"Sat: 09:00-15:00\000"
+ 2239 03a4 5361743A 		.ascii	"Sat: 09:00-15:00\000"
  2239      2030393A 
  2239      30302D31 
  2239      353A3030 
  2239      00
- 2240 03b1 000000   		.align	2
+ 2240 03b5 000000   		.align	2
  2241              	.LC48:
- 2242 03b4 0953656C 		.ascii	"\011Select spot\000"
+ 2242 03b8 0953656C 		.ascii	"\011Select spot\000"
  2242      65637420 
  2242      73706F74 
  2242      00
- 2243 03c1 000000   		.align	2
+ 2243 03c5 000000   		.align	2
  2244              	.LC49:
- 2245 03c4 506C6561 		.ascii	"Please select a spot\000"
+ 2245 03c8 506C6561 		.ascii	"Please select a spot\000"
  2245      73652073 
  2245      656C6563 
  2245      74206120 
  2245      73706F74 
- 2246 03d9 000000   		.align	2
+ 2246 03dd 000000   		.align	2
  2247              	.LC50:
- 2248 03dc 52415445 		.ascii	"RATES\000"
+ 2248 03e0 52415445 		.ascii	"RATES\000"
  2248      5300
- 2249 03e2 0000     		.align	2
+ 2249 03e6 0000     		.align	2
  2250              	.LC51:
- 2251 03e4 50726963 		.ascii	"Price per minute: 0.01 euros\000"
+ 2251 03e8 50726963 		.ascii	"Price per minute: 0.01 euros\000"
  2251      65207065 
  2251      72206D69 
  2251      6E757465 
  2251      3A20302E 
- 2252 0401 000000   		.align	2
+ 2252 0405 000000   		.align	2
  2253              	.LC52:
- 2254 0404 204D696E 		.ascii	" Minimum stay: 20 minutes\000"
+ 2254 0408 204D696E 		.ascii	" Minimum stay: 20 minutes\000"
  2254      696D756D 
  2254      20737461 
  2254      793A2032 
  2254      30206D69 
- 2255 041e 0000     		.align	2
+ 2255 0422 0000     		.align	2
  2256              	.LC53:
- 2257 0420 204D6178 		.ascii	" Maximum stay: 240 minutes\000"
+ 2257 0424 204D6178 		.ascii	" Maximum stay: 240 minutes\000"
  2257      696D756D 
  2257      20737461 
  2257      793A2032 
  2257      3430206D 
- 2258 043b 00       		.align	2
+ 2258 043f 00       		.align	2
  2259              	.LC54:
- 2260 043c 53504F54 		.ascii	"SPOT:  \000"
+ 2260 0440 53504F54 		.ascii	"SPOT:  \000"
  2260      3A202000 
  2261              		.align	2
  2262              	.LC55:
- 2263 0444 43726564 		.ascii	"Credit:     ,   euros\000"
+ 2263 0448 43726564 		.ascii	"Credit:     ,   euros\000"
  2263      69743A20 
  2263      20202020 
  2263      2C202020 
  2263      6575726F 
- 2264 045a 0000     		.align	2
+ 2264 045e 0000     		.align	2
  2265              	.LC56:
- 2266 045c 496E7365 		.ascii	"Insert coins\000"
+ 2266 0460 496E7365 		.ascii	"Insert coins\000"
  2266      72742063 
  2266      6F696E73 
  2266      00
- 2267 0469 000000   		.align	2
+ 2267 046d 000000   		.align	2
  2268              	.LC57:
- 2269 046c 546F7563 		.ascii	"Touch the screen to confirm\000"
+ 2269 0470 546F7563 		.ascii	"Touch the screen to confirm\000"
  2269      68207468 
  2269      65207363 
  2269      7265656E 
  2269      20746F20 
  2270              		.align	2
  2271              	.LC58:
- 2272 0488 4D617869 		.ascii	"Maximum stay reached\000"
+ 2272 048c 4D617869 		.ascii	"Maximum stay reached\000"
  2272      6D756D20 
  2272      73746179 
  2272      20726561 
  2272      63686564 
- 2273 049d 000000   		.align	2
+ 2273 04a1 000000   		.align	2
  2274              	.LC59:
- 2275 04a0 52657475 		.ascii	"Returning coins\000"
+ 2275 04a4 52657475 		.ascii	"Returning coins\000"
  2275      726E696E 
  2275      6720636F 
  2275      696E7300 
  2276              		.align	2
  2277              	.LC60:
- 2278 04b0 2020456E 		.ascii	"  End: \000"
+ 2278 04b4 2020456E 		.ascii	"  End: \000"
  2278      643A2000 
  2279              		.align	2
  2280              	.LC61:
- 2281 04b8 4C696365 		.ascii	"License plate:\000"
+ 2281 04bc 4C696365 		.ascii	"License plate:\000"
  2281      6E736520 
  2281      706C6174 
  2281      653A00
- 2282 04c7 00       		.align	2
+ 2282 04cb 00       		.align	2
  2283              	.LC62:
- 2284 04c8 456E7465 		.ascii	"Enter a valid license plate.\000"
+ 2284 04cc 456E7465 		.ascii	"Enter a valid license plate.\000"
  2284      72206120 
  2284      76616C69 
  2284      64206C69 
  2284      63656E73 
- 2285 04e5 000000   		.align	2
+ 2285 04e9 000000   		.align	2
  2286              	.LC63:
- 2287 04e8 53706F74 		.ascii	"Spot  i paid\000"
+ 2287 04ec 53706F74 		.ascii	"Spot  i paid\000"
  2287      20206920 
  2287      70616964 
  2287      00
- 2288 04f5 000000   		.align	2
+ 2288 04f9 000000   		.align	2
  2289              	.LC64:
- 2290 04f8 20202020 		.ascii	"    End: \000"
+ 2290 04fc 20202020 		.ascii	"    End: \000"
  2290      456E643A 
  2290      2000
- 2291 0502 0000     		.align	2
+ 2291 0506 0000     		.align	2
  2292              	.LC65:
- 2293 0504 48617665 		.ascii	"Have a great day \000"
+ 2293 0508 48617665 		.ascii	"Have a great day \000"
  2293      20612067 
  2293      72656174 
  2293      20646179 
  2293      2000
- 2294 0516 0000     		.align	2
+ 2294 051a 0000     		.align	2
  2295              	.LC66:
- 2296 0518 53706F74 		.ascii	"Spot  i occupied\000"
+ 2296 051c 53706F74 		.ascii	"Spot  i occupied\000"
  2296      20206920 
  2296      6F636375 
  2296      70696564 
  2296      00
- 2297 0529 000000   		.align	2
+ 2297 052d 000000   		.align	2
  2298              	.LC67:
- 2299 052c 4D617820 		.ascii	"Max balance exceeded\000"
+ 2299 0530 4D617820 		.ascii	"Max balance exceeded\000"
  2299      62616C61 
  2299      6E636520 
  2299      65786365 
  2299      65646564 
- 2300 0541 000000   		.align	2
+ 2300 0545 000000   		.align	2
  2301              	.LC68:
- 2302 0544 74686520 		.ascii	"the maximum balance is 2.40 euros\000"
+ 2302 0548 74686520 		.ascii	"the maximum balance is 2.40 euros\000"
  2302      6D617869 
  2302      6D756D20 
  2302      62616C61 
  2302      6E636520 
- 2303 0566 0000     		.align	2
+ 2303 056a 0000     		.align	2
  2304              	.LC69:
- 2305 0568 496E7375 		.ascii	"Insufficient balance\000"
+ 2305 056c 496E7375 		.ascii	"Insufficient balance\000"
  2305      66666963 
  2305      69656E74 
  2305      2062616C 
  2305      616E6365 
- 2306 057d 000000   		.align	2
+ 2306 0581 000000   		.align	2
  2307              	.LC70:
- 2308 0580 74686520 		.ascii	"the minimum balance is 0.20 euros\000"
+ 2308 0584 74686520 		.ascii	"the minimum balance is 0.20 euros\000"
  2308      6D696E69 
  2308      6D756D20 
  2308      62616C61 
  2308      6E636520 
- 2309 05a2 0000     		.align	2
+ 2309 05a6 0000     		.align	2
  2310              	.LC71:
- 2311 05a4 2020204C 		.ascii	"   LEAVE\000"
+ 2311 05a8 2020204C 		.ascii	"   LEAVE\000"
  2311      45415645 
  2311      00
- 2312 05ad 000000   		.align	2
+ 2312 05b1 000000   		.align	2
  2313              	.LC72:
- 2314 05b0 46524545 		.ascii	"FREED\000"
+ 2314 05b4 46524545 		.ascii	"FREED\000"
  2314      4400
- 2315 05b6 0000     		.align	2
+ 2315 05ba 0000     		.align	2
  2316              	.LC73:
- 2317 05b8 496E7365 		.ascii	"Insert your cars license plate.\000"
+ 2317 05bc 496E7365 		.ascii	"Insert your cars license plate.\000"
  2317      72742079 
  2317      6F757220 
  2317      63617273 
  2317      206C6963 
  2318              		.align	2
  2319              	.LC74:
- 2320 05d8 4C415400 		.ascii	"LAT\000"
+ 2320 05dc 4C415400 		.ascii	"LAT\000"
  2321              		.align	2
  2322              	.LC75:
- 2323 05dc 09205461 		.ascii	"\011 Tabulam carpere\000"
+ 2323 05e0 09205461 		.ascii	"\011 Tabulam carpere\000"
  2323      62756C61 
  2323      6D206361 
  2323      72706572 
  2323      6500
- 2324 05ee 0000     		.align	2
+ 2324 05f2 0000     		.align	2
  2325              	.LC76:
- 2326 05f0 20202020 		.ascii	"    ad incipere \000"
+ 2326 05f4 20202020 		.ascii	"    ad incipere \000"
  2326      61642069 
  2326      6E636970 
  2326      65726520 
  2326      00
- 2327 0601 000000   		.align	2
+ 2327 0605 000000   		.align	2
  2328              	.LC77:
- 2329 0604 20534348 		.ascii	" SCHEDULA OPERATIONIS \000"
+ 2329 0608 20534348 		.ascii	" SCHEDULA OPERATIONIS \000"
  2329      4544554C 
  2329      41204F50 
  2329      45524154 
  2329      494F4E49 
- 2330 061b 00       		.align	2
+ 2330 061f 00       		.align	2
  2331              	.LC78:
- 2332 061c 536F6C3A 		.ascii	"Sol: non solvere\000"
+ 2332 0620 536F6C3A 		.ascii	"Sol: non solvere\000"
  2332      206E6F6E 
  2332      20736F6C 
  2332      76657265 
  2332      00
- 2333 062d 000000   		.align	2
+ 2333 0631 000000   		.align	2
  2334              	.LC79:
- 2335 0630 4C756E3A 		.ascii	"Lun: IX-XXI\000"
+ 2335 0634 4C756E3A 		.ascii	"Lun: IX-XXI\000"
  2335      2049582D 
  2335      58584900 
  2336              		.align	2
  2337              	.LC80:
- 2338 063c 4D61723A 		.ascii	"Mar: IX-XXI\000"
+ 2338 0640 4D61723A 		.ascii	"Mar: IX-XXI\000"
  2338      2049582D 
  2338      58584900 
  2339              		.align	2
  2340              	.LC81:
- 2341 0648 4D65723A 		.ascii	"Mer: IX-XXI\000"
+ 2341 064c 4D65723A 		.ascii	"Mer: IX-XXI\000"
  2341      2049582D 
  2341      58584900 
  2342              		.align	2
  2343              	.LC82:
- 2344 0654 4A6F763A 		.ascii	"Jov: IX-XXI\000"
+ 2344 0658 4A6F763A 		.ascii	"Jov: IX-XXI\000"
  2344      2049582D 
  2344      58584900 
  2345              		.align	2
  2346              	.LC83:
- 2347 0660 56656E3A 		.ascii	"Ven: IX-XXI\000"
+ 2347 0664 56656E3A 		.ascii	"Ven: IX-XXI\000"
  2347      2049582D 
  2347      58584900 
  2348              		.align	2
  2349              	.LC84:
- 2350 066c 5361743A 		.ascii	"Sat: IX-XV\000"
+ 2350 0670 5361743A 		.ascii	"Sat: IX-XV\000"
  2350      2049582D 
  2350      585600
- 2351 0677 00       		.align	2
+ 2351 067b 00       		.align	2
  2352              	.LC85:
- 2353 0678 20204C6F 		.ascii	"  Locum eligere\000"
+ 2353 067c 20204C6F 		.ascii	"  Locum eligere\000"
  2353      63756D20 
  2353      656C6967 
  2353      65726500 
  2354              		.align	2
  2355              	.LC86:
- 2356 0688 556E756E 		.ascii	"Unun locum carpere, amabo\000"
+ 2356 068c 556E756E 		.ascii	"Unun locum carpere, amabo\000"
  2356      206C6F63 
  2356      756D2063 
  2356      61727065 
  2356      72652C20 
- 2357 06a2 0000     		.align	2
+ 2357 06a6 0000     		.align	2
  2358              	.LC87:
- 2359 06a4 50524554 		.ascii	"PRETIUM\000"
+ 2359 06a8 50524554 		.ascii	"PRETIUM\000"
  2359      49554D00 
  2360              		.align	2
  2361              	.LC88:
- 2362 06ac 50726574 		.ascii	"Pretium per minutum: 0,0I denarios\000"
+ 2362 06b0 50726574 		.ascii	"Pretium per minutum: 0,0I denarios\000"
  2362      69756D20 
  2362      70657220 
  2362      6D696E75 
  2362      74756D3A 
- 2363 06cf 00       		.align	2
+ 2363 06d3 00       		.align	2
  2364              	.LC89:
- 2365 06d0 2054656D 		.ascii	" Tempus minimus: XX denarios\000"
+ 2365 06d4 2054656D 		.ascii	" Tempus minimus: XX denarios\000"
  2365      70757320 
  2365      6D696E69 
  2365      6D75733A 
  2365      20585820 
- 2366 06ed 000000   		.align	2
+ 2366 06f1 000000   		.align	2
  2367              	.LC90:
- 2368 06f0 2054656D 		.ascii	" Tempus maximus: CCXL denarios\000"
+ 2368 06f4 2054656D 		.ascii	" Tempus maximus: CCXL denarios\000"
  2368      70757320 
  2368      6D617869 
  2368      6D75733A 
  2368      20434358 
- 2369 070f 00       		.align	2
+ 2369 0713 00       		.align	2
  2370              	.LC91:
- 2371 0710 4C4F4355 		.ascii	"LOCUS: \000"
+ 2371 0714 4C4F4355 		.ascii	"LOCUS: \000"
  2371      533A2000 
  2372              		.align	2
  2373              	.LC92:
- 2374 0718 5175616E 		.ascii	"Quantitas:  ,   denarios\000"
+ 2374 071c 5175616E 		.ascii	"Quantitas:  ,   denarios\000"
  2374      74697461 
  2374      733A2020 
  2374      2C202020 
  2374      64656E61 
- 2375 0731 000000   		.align	2
+ 2375 0735 000000   		.align	2
  2376              	.LC93:
- 2377 0734 44656E61 		.ascii	"Denario insertus\000"
+ 2377 0738 44656E61 		.ascii	"Denario insertus\000"
  2377      72696F20 
  2377      696E7365 
  2377      72747573 
  2377      00
- 2378 0745 000000   		.align	2
+ 2378 0749 000000   		.align	2
  2379              	.LC94:
- 2380 0748 54616275 		.ascii	"Tabulam carpere at accipere\000"
+ 2380 074c 54616275 		.ascii	"Tabulam carpere at accipere\000"
  2380      6C616D20 
  2380      63617270 
  2380      65726520 
  2380      61742061 
  2381              		.align	2
  2382              	.LC95:
- 2383 0764 54656D70 		.ascii	"Tempus maximus pervenit\000"
+ 2383 0768 54656D70 		.ascii	"Tempus maximus pervenit\000"
  2383      7573206D 
  2383      6178696D 
  2383      75732070 
  2383      65727665 
  2384              		.align	2
  2385              	.LC96:
- 2386 077c 72656464 		.ascii	"redde monetas\000"
+ 2386 0780 72656464 		.ascii	"redde monetas\000"
  2386      65206D6F 
  2386      6E657461 
  2386      7300
- 2387 078a 0000     		.align	2
+ 2387 078e 0000     		.align	2
  2388              	.LC97:
- 2389 078c 46696E69 		.ascii	"Finis: \000"
+ 2389 0790 46696E69 		.ascii	"Finis: \000"
  2389      733A2000 
  2390              		.align	2
  2391              	.LC98:
- 2392 0794 4E756D65 		.ascii	"Numeri vectura:\000"
+ 2392 0798 4E756D65 		.ascii	"Numeri vectura:\000"
  2392      72692076 
  2392      65637475 
  2392      72613A00 
  2393              		.align	2
  2394              	.LC99:
- 2395 07a4 496E7365 		.ascii	"Insertus bona numeri vectura.\000"
+ 2395 07a8 496E7365 		.ascii	"Insertus bona numeri vectura.\000"
  2395      72747573 
  2395      20626F6E 
  2395      61206E75 
  2395      6D657269 
- 2396 07c2 0000     		.align	2
+ 2396 07c6 0000     		.align	2
  2397              	.LC100:
- 2398 07c4 4C6F6375 		.ascii	"Locus i solvit\000"
+ 2398 07c8 4C6F6375 		.ascii	"Locus i solvit\000"
  2398      73206920 
  2398      736F6C76 
  2398      697400
- 2399 07d3 00       		.align	2
+ 2399 07d7 00       		.align	2
  2400              	.LC101:
- 2401 07d4 20202020 		.ascii	"    Finis: \000"
+ 2401 07d8 20202020 		.ascii	"    Finis: \000"
  2401      46696E69 
  2401      733A2000 
  2402              		.align	2
  2403              	.LC102:
- 2404 07e0 48616265 		.ascii	"Habere bonum diem \000"
+ 2404 07e4 48616265 		.ascii	"Habere bonum diem \000"
  2404      72652062 
  2404      6F6E756D 
  2404      20646965 
  2404      6D2000
- 2405 07f3 00       		.align	2
+ 2405 07f7 00       		.align	2
  2406              	.LC103:
- 2407 07f4 4C6F6375 		.ascii	"Locus i occupatus\000"
+ 2407 07f8 4C6F6375 		.ascii	"Locus i occupatus\000"
  2407      73206920 
  2407      6F636375 
  2407      70617475 
  2407      7300
- 2408 0806 0000     		.align	2
+ 2408 080a 0000     		.align	2
  2409              	.LC104:
- 2410 0808 20204669 		.ascii	"  Finis: \000"
+ 2410 080c 20204669 		.ascii	"  Finis: \000"
  2410      6E69733A 
  2410      2000
- 2411 0812 0000     		.align	2
+ 2411 0816 0000     		.align	2
  2412              	.LC105:
- 2413 0814 5175616E 		.ascii	"Quantitas maximus exceditur\000"
+ 2413 0818 5175616E 		.ascii	"Quantitas maximus exceditur\000"
  2413      74697461 
  2413      73206D61 
  2413      78696D75 
  2413      73206578 
  2414              		.align	2
  2415              	.LC106:
- 2416 0830 4D617869 		.ascii	"Maximus quantitas II,XL denarios est\000"
+ 2416 0834 4D617869 		.ascii	"Maximus quantitas II,XL denarios est\000"
  2416      6D757320 
  2416      7175616E 
  2416      74697461 
  2416      73204949 
- 2417 0855 000000   		.align	2
+ 2417 0859 000000   		.align	2
  2418              	.LC107:
- 2419 0858 5175616E 		.ascii	"Quantitas deficiens\000"
+ 2419 085c 5175616E 		.ascii	"Quantitas deficiens\000"
  2419      74697461 
  2419      73206465 
  2419      66696369 
  2419      656E7300 
  2420              		.align	2
  2421              	.LC108:
- 2422 086c 5175616E 		.ascii	"Quantitas minimus 0,XX denarios est\000"
+ 2422 0870 5175616E 		.ascii	"Quantitas minimus 0,XX denarios est\000"
  2422      74697461 
  2422      73206D69 
  2422      6E696D75 
  2422      7320302C 
  2423              		.align	2
  2424              	.LC109:
- 2425 0890 52454C49 		.ascii	"RELINQUO\000"
+ 2425 0894 52454C49 		.ascii	"RELINQUO\000"
  2425      4E51554F 
  2425      00
- 2426 0899 000000   		.align	2
+ 2426 089d 000000   		.align	2
  2427              	.LC110:
- 2428 089c 4C494245 		.ascii	"LIBERATUS\000"
+ 2428 08a0 4C494245 		.ascii	"LIBERATUS\000"
  2428      52415455 
  2428      5300
- 2429 08a6 0000     		.align	2
+ 2429 08aa 0000     		.align	2
  2430              	.LC111:
- 2431 08a8 496E7365 		.ascii	"Insertus numerum licentiae tuae carri\000"
+ 2431 08ac 496E7365 		.ascii	"Insertus numerum licentiae tuae carri\000"
  2431      72747573 
  2431      206E756D 
  2431      6572756D 
  2431      206C6963 
- 2432 08ce 0000     		.text
+ 2432 08d2 0000     		.text
  2433              		.align	2
  2434              		.global	set_lang
  2436              	set_lang:
@@ -915,7 +915,7 @@
  2574 01a4 10301BE5 		ldr	r3, [fp, #-16]
  2575 01a8 D4249FE5 		ldr	r2, .L8+112
  2576 01ac 702083E5 		str	r2, [r3, #112]
-  41:../mensajes.c **** 	        men->GRAN_DIA = "Que tenga un gran dia ";
+  41:../mensajes.c **** 	        men->GRAN_DIA = "Que tenga un gran   dia ";
  2577              		.loc 1 41 0
  2578 01b0 10301BE5 		ldr	r3, [fp, #-16]
  2579 01b4 CC249FE5 		ldr	r2, .L8+116
@@ -1422,98 +1422,98 @@
  2985 0680 20020000 		.word	.LC27
  2986 0684 30020000 		.word	.LC28
  2987 0688 3C020000 		.word	.LC29
- 2988 068c 54020000 		.word	.LC30
- 2989 0690 64020000 		.word	.LC31
- 2990 0694 84020000 		.word	.LC32
- 2991 0698 98020000 		.word	.LC33
- 2992 069c B8020000 		.word	.LC34
- 2993 06a0 C4020000 		.word	.LC35
- 2994 06a4 D0020000 		.word	.LC36
- 2995 06a8 F8020000 		.word	.LC37
- 2996 06ac FC020000 		.word	.LC38
- 2997 06b0 0C030000 		.word	.LC39
- 2998 06b4 1C030000 		.word	.LC40
- 2999 06b8 30030000 		.word	.LC41
- 3000 06bc 3C030000 		.word	.LC42
- 3001 06c0 50030000 		.word	.LC43
- 3002 06c4 64030000 		.word	.LC44
- 3003 06c8 78030000 		.word	.LC45
- 3004 06cc 8C030000 		.word	.LC46
- 3005 06d0 A0030000 		.word	.LC47
- 3006 06d4 B4030000 		.word	.LC48
- 3007 06d8 C4030000 		.word	.LC49
- 3008 06dc DC030000 		.word	.LC50
- 3009 06e0 E4030000 		.word	.LC51
- 3010 06e4 04040000 		.word	.LC52
- 3011 06e8 20040000 		.word	.LC53
- 3012 06ec 3C040000 		.word	.LC54
- 3013 06f0 44040000 		.word	.LC55
- 3014 06f4 5C040000 		.word	.LC56
- 3015 06f8 6C040000 		.word	.LC57
- 3016 06fc 88040000 		.word	.LC58
- 3017 0700 A0040000 		.word	.LC59
- 3018 0704 B0040000 		.word	.LC60
- 3019 0708 B8040000 		.word	.LC61
- 3020 070c C8040000 		.word	.LC62
- 3021 0710 E8040000 		.word	.LC63
- 3022 0714 F8040000 		.word	.LC64
- 3023 0718 04050000 		.word	.LC65
- 3024 071c 18050000 		.word	.LC66
- 3025 0720 2C050000 		.word	.LC67
- 3026 0724 44050000 		.word	.LC68
- 3027 0728 68050000 		.word	.LC69
- 3028 072c 80050000 		.word	.LC70
- 3029 0730 A4050000 		.word	.LC71
- 3030 0734 B0050000 		.word	.LC72
- 3031 0738 B8050000 		.word	.LC73
- 3032 073c D8050000 		.word	.LC74
- 3033 0740 DC050000 		.word	.LC75
- 3034 0744 F0050000 		.word	.LC76
- 3035 0748 04060000 		.word	.LC77
- 3036 074c 1C060000 		.word	.LC78
- 3037 0750 30060000 		.word	.LC79
- 3038 0754 3C060000 		.word	.LC80
- 3039 0758 48060000 		.word	.LC81
- 3040 075c 54060000 		.word	.LC82
- 3041 0760 60060000 		.word	.LC83
- 3042 0764 6C060000 		.word	.LC84
- 3043 0768 78060000 		.word	.LC85
- 3044 076c 88060000 		.word	.LC86
- 3045 0770 A4060000 		.word	.LC87
- 3046 0774 AC060000 		.word	.LC88
- 3047 0778 D0060000 		.word	.LC89
- 3048 077c F0060000 		.word	.LC90
- 3049 0780 10070000 		.word	.LC91
- 3050 0784 18070000 		.word	.LC92
- 3051 0788 34070000 		.word	.LC93
- 3052 078c 48070000 		.word	.LC94
- 3053 0790 64070000 		.word	.LC95
- 3054 0794 7C070000 		.word	.LC96
- 3055 0798 8C070000 		.word	.LC97
- 3056 079c 94070000 		.word	.LC98
- 3057 07a0 A4070000 		.word	.LC99
- 3058 07a4 C4070000 		.word	.LC100
- 3059 07a8 D4070000 		.word	.LC101
- 3060 07ac E0070000 		.word	.LC102
- 3061 07b0 F4070000 		.word	.LC103
- 3062 07b4 08080000 		.word	.LC104
- 3063 07b8 14080000 		.word	.LC105
- 3064 07bc 30080000 		.word	.LC106
- 3065 07c0 58080000 		.word	.LC107
- 3066 07c4 6C080000 		.word	.LC108
- 3067 07c8 90080000 		.word	.LC109
- 3068 07cc 9C080000 		.word	.LC110
- 3069 07d0 A8080000 		.word	.LC111
+ 2988 068c 58020000 		.word	.LC30
+ 2989 0690 68020000 		.word	.LC31
+ 2990 0694 88020000 		.word	.LC32
+ 2991 0698 9C020000 		.word	.LC33
+ 2992 069c BC020000 		.word	.LC34
+ 2993 06a0 C8020000 		.word	.LC35
+ 2994 06a4 D4020000 		.word	.LC36
+ 2995 06a8 FC020000 		.word	.LC37
+ 2996 06ac 00030000 		.word	.LC38
+ 2997 06b0 10030000 		.word	.LC39
+ 2998 06b4 20030000 		.word	.LC40
+ 2999 06b8 34030000 		.word	.LC41
+ 3000 06bc 40030000 		.word	.LC42
+ 3001 06c0 54030000 		.word	.LC43
+ 3002 06c4 68030000 		.word	.LC44
+ 3003 06c8 7C030000 		.word	.LC45
+ 3004 06cc 90030000 		.word	.LC46
+ 3005 06d0 A4030000 		.word	.LC47
+ 3006 06d4 B8030000 		.word	.LC48
+ 3007 06d8 C8030000 		.word	.LC49
+ 3008 06dc E0030000 		.word	.LC50
+ 3009 06e0 E8030000 		.word	.LC51
+ 3010 06e4 08040000 		.word	.LC52
+ 3011 06e8 24040000 		.word	.LC53
+ 3012 06ec 40040000 		.word	.LC54
+ 3013 06f0 48040000 		.word	.LC55
+ 3014 06f4 60040000 		.word	.LC56
+ 3015 06f8 70040000 		.word	.LC57
+ 3016 06fc 8C040000 		.word	.LC58
+ 3017 0700 A4040000 		.word	.LC59
+ 3018 0704 B4040000 		.word	.LC60
+ 3019 0708 BC040000 		.word	.LC61
+ 3020 070c CC040000 		.word	.LC62
+ 3021 0710 EC040000 		.word	.LC63
+ 3022 0714 FC040000 		.word	.LC64
+ 3023 0718 08050000 		.word	.LC65
+ 3024 071c 1C050000 		.word	.LC66
+ 3025 0720 30050000 		.word	.LC67
+ 3026 0724 48050000 		.word	.LC68
+ 3027 0728 6C050000 		.word	.LC69
+ 3028 072c 84050000 		.word	.LC70
+ 3029 0730 A8050000 		.word	.LC71
+ 3030 0734 B4050000 		.word	.LC72
+ 3031 0738 BC050000 		.word	.LC73
+ 3032 073c DC050000 		.word	.LC74
+ 3033 0740 E0050000 		.word	.LC75
+ 3034 0744 F4050000 		.word	.LC76
+ 3035 0748 08060000 		.word	.LC77
+ 3036 074c 20060000 		.word	.LC78
+ 3037 0750 34060000 		.word	.LC79
+ 3038 0754 40060000 		.word	.LC80
+ 3039 0758 4C060000 		.word	.LC81
+ 3040 075c 58060000 		.word	.LC82
+ 3041 0760 64060000 		.word	.LC83
+ 3042 0764 70060000 		.word	.LC84
+ 3043 0768 7C060000 		.word	.LC85
+ 3044 076c 8C060000 		.word	.LC86
+ 3045 0770 A8060000 		.word	.LC87
+ 3046 0774 B0060000 		.word	.LC88
+ 3047 0778 D4060000 		.word	.LC89
+ 3048 077c F4060000 		.word	.LC90
+ 3049 0780 14070000 		.word	.LC91
+ 3050 0784 1C070000 		.word	.LC92
+ 3051 0788 38070000 		.word	.LC93
+ 3052 078c 4C070000 		.word	.LC94
+ 3053 0790 68070000 		.word	.LC95
+ 3054 0794 80070000 		.word	.LC96
+ 3055 0798 90070000 		.word	.LC97
+ 3056 079c 98070000 		.word	.LC98
+ 3057 07a0 A8070000 		.word	.LC99
+ 3058 07a4 C8070000 		.word	.LC100
+ 3059 07a8 D8070000 		.word	.LC101
+ 3060 07ac E4070000 		.word	.LC102
+ 3061 07b0 F8070000 		.word	.LC103
+ 3062 07b4 0C080000 		.word	.LC104
+ 3063 07b8 18080000 		.word	.LC105
+ 3064 07bc 34080000 		.word	.LC106
+ 3065 07c0 5C080000 		.word	.LC107
+ 3066 07c4 70080000 		.word	.LC108
+ 3067 07c8 94080000 		.word	.LC109
+ 3068 07cc A0080000 		.word	.LC110
+ 3069 07d0 AC080000 		.word	.LC111
  3070              		.cfi_endproc
  3071              	.LFE1:
  3073              	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 mensajes.c
-C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2062   .text:00000000 $a
-C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2065   .text:00000000 init_mens
-C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2436   .text:0000002c set_lang
-C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2096   .rodata:00000000 $d
-C:\Users\guill\AppData\Local\Temp\cc8WJG3S.s:2958   .text:00000614 $d
+C:\Users\guill\AppData\Local\Temp\ccfQYUeG.s:2062   .text:00000000 $a
+C:\Users\guill\AppData\Local\Temp\ccfQYUeG.s:2065   .text:00000000 init_mens
+C:\Users\guill\AppData\Local\Temp\ccfQYUeG.s:2436   .text:0000002c set_lang
+C:\Users\guill\AppData\Local\Temp\ccfQYUeG.s:2096   .rodata:00000000 $d
+C:\Users\guill\AppData\Local\Temp\ccfQYUeG.s:2958   .text:00000614 $d
                      .debug_frame:00000010 $d
 
 NO UNDEFINED SYMBOLS

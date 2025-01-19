@@ -925,7 +925,7 @@
  2987              		.section	.rodata
  2988              		.align	2
  2989              	.LC4:
- 2990 0020 6575726F 		.ascii	"euros\000"
+ 2990 0020 63656E74 		.ascii	"cents\000"
  2990      7300
  2991              		.text
  2992              		.align	2
@@ -976,7 +976,7 @@
  3032 07b4 DF10A0E3 		mov	r1, #223
  3033 07b8 0F20A0E3 		mov	r2, #15
  3034 07bc FEFFFFEB 		bl	lcd_putint
- 138:../pantalla.c **** 	lcd_puts(216, LCD_HEIGHT-17, BLACK, "euros");
+ 138:../pantalla.c **** 	lcd_puts(216, LCD_HEIGHT-17, BLACK, "cents");
  3035              		.loc 1 138 0
  3036 07c0 D800A0E3 		mov	r0, #216
  3037 07c4 DF10A0E3 		mov	r1, #223
@@ -1770,69 +1770,69 @@
 DEFINED SYMBOLS
                             *ABS*:00000000 pantalla.c
                             *COM*:0000009c mensaje
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2193   .text:00000000 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2196   .text:00000000 init_screen_mens
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2223   .text:00000020 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2227   .text:00000024 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2230   .text:00000024 plotTime
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2275   .text:00000084 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2280   .rodata:00000000 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2293   .text:00000088 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2296   .text:00000088 plotLangSelScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2346   .text:000000f4 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2353   .text:00000104 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2356   .text:00000104 changeScreenLang
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2388   .text:00000138 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2392   .text:0000013c $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2395   .text:0000013c plotWelcomeScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2502   .text:00000270 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2507   .text:00000278 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2510   .text:00000278 plotSelectionScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2698   .text:000004b4 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2703   .text:000004bc $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2706   .text:000004bc plotSelEnc
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2737   .text:000004ec $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2741   .text:000004f0 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2744   .text:000004f0 plotPayCredit
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2800   .text:00000580 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2804   .text:00000584 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2807   .text:00000584 plotPayDeadline
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2850   .text:000005e0 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2854   .text:000005e4 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2857   .text:000005e4 plotPaymentScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2982   .text:0000075c $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2992   .text:00000764 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:2995   .text:00000764 plotExcessReturn
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3048   .text:000007e0 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3053   .text:000007e8 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3056   .text:000007e8 plotLicPlateScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3123   .text:00000898 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3127   .text:0000089c $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3130   .text:0000089c plotLicPlateUpdate
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3166   .text:000008d4 plotLicPlateEnc
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3197   .text:00000904 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3201   .text:00000908 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3204   .text:00000908 plotSucScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3296   .text:00000a10 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3300   .text:00000a14 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3303   .text:00000a14 plotSelecFailure
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3392   .text:00000b14 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3396   .text:00000b18 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3399   .text:00000b18 plotLicPlateDemand
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3430   .text:00000b48 $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3434   .text:00000b4c $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3437   .text:00000b4c plotExitFailure
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3473   .text:00000b8c $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3477   .text:00000b90 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3480   .text:00000b90 plotPayInsufFailure
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3520   .text:00000bdc $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3524   .text:00000be0 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3527   .text:00000be0 plotErrorScreen
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3592   .text:00000c50 makeTicket
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3675   .text:00000d2c $d
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3680   .text:00000d34 $a
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3683   .text:00000d34 plotExitSuccess
-C:\Users\guill\AppData\Local\Temp\cc6J4cw3.s:3739   .text:00000db8 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2193   .text:00000000 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2196   .text:00000000 init_screen_mens
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2223   .text:00000020 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2227   .text:00000024 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2230   .text:00000024 plotTime
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2275   .text:00000084 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2280   .rodata:00000000 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2293   .text:00000088 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2296   .text:00000088 plotLangSelScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2346   .text:000000f4 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2353   .text:00000104 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2356   .text:00000104 changeScreenLang
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2388   .text:00000138 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2392   .text:0000013c $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2395   .text:0000013c plotWelcomeScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2502   .text:00000270 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2507   .text:00000278 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2510   .text:00000278 plotSelectionScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2698   .text:000004b4 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2703   .text:000004bc $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2706   .text:000004bc plotSelEnc
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2737   .text:000004ec $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2741   .text:000004f0 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2744   .text:000004f0 plotPayCredit
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2800   .text:00000580 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2804   .text:00000584 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2807   .text:00000584 plotPayDeadline
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2850   .text:000005e0 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2854   .text:000005e4 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2857   .text:000005e4 plotPaymentScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2982   .text:0000075c $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2992   .text:00000764 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:2995   .text:00000764 plotExcessReturn
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3048   .text:000007e0 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3053   .text:000007e8 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3056   .text:000007e8 plotLicPlateScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3123   .text:00000898 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3127   .text:0000089c $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3130   .text:0000089c plotLicPlateUpdate
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3166   .text:000008d4 plotLicPlateEnc
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3197   .text:00000904 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3201   .text:00000908 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3204   .text:00000908 plotSucScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3296   .text:00000a10 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3300   .text:00000a14 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3303   .text:00000a14 plotSelecFailure
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3392   .text:00000b14 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3396   .text:00000b18 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3399   .text:00000b18 plotLicPlateDemand
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3430   .text:00000b48 $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3434   .text:00000b4c $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3437   .text:00000b4c plotExitFailure
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3473   .text:00000b8c $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3477   .text:00000b90 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3480   .text:00000b90 plotPayInsufFailure
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3520   .text:00000bdc $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3524   .text:00000be0 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3527   .text:00000be0 plotErrorScreen
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3592   .text:00000c50 makeTicket
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3675   .text:00000d2c $d
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3680   .text:00000d34 $a
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3683   .text:00000d34 plotExitSuccess
+C:\Users\guill\AppData\Local\Temp\ccTgyweS.s:3739   .text:00000db8 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS

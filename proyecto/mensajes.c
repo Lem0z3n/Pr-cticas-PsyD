@@ -38,7 +38,7 @@ int8 set_lang(tMensajes *men,uint8 lang){
 	        men->MATRICULA_VALIDA = "Introduzca una matricula valida.";
 	        men->PLAZA_PAGADA = "Plaza i pagada";
 	        men->FIN_APARCAMIENTO = "    Fin: ";
-	        men->GRAN_DIA = "Que tenga un gran dia ";
+	        men->GRAN_DIA = "Que tenga un gran   dia ";
 	        men->PLAZA_OCUPADA = "Plaza i ocupada";
 	        men->FIN_FAILURE = "    Fin: ";
 	        men->SALDO_SUPERADO = "el maximo saldo es 2,40 euros";

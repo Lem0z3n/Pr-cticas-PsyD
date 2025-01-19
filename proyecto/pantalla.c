@@ -135,7 +135,7 @@ void plotExcessReturn(int8 excess)
 	lcd_puts(32, LCD_HEIGHT-33, BLACK, mensaje.TARIFA_MAXIMA);
 	lcd_puts(32, LCD_HEIGHT-17, BLACK, mensaje.DEVOLUCION);
 	lcd_putint(192, LCD_HEIGHT-17, BLACK, excess);
-	lcd_puts(216, LCD_HEIGHT-17, BLACK, "euros");
+	lcd_puts(216, LCD_HEIGHT-17, BLACK, "cents");
 }
 
 void plotLicPlateScreen(parking_t parking)
